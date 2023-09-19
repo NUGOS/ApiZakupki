@@ -1,0 +1,98 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimal-ui">
+    <title>Кол-во найдкных результатов</title>
+    <link type="text/css" rel="stylesheet" href="assets/css/github-markdown.css">
+    <link type="text/css" rel="stylesheet" href="assets/css/pilcrow.css">
+    <link type="text/css" rel="stylesheet" href="assets/css/hljs-github.min.css"/>
+  </head>
+  <body>
+    <article class="markdown-body"><h1 id="кол-во-найдкных-результатов"><a class="header-link" href="#кол-во-найдкных-результатов"></a>Кол-во найдкных результатов</h1>
+<p><strong>GET remote/api/v1/search_count</strong></p>
+<p><strong>GET remote/api/v2/search_count</strong></p>
+<p><strong>UPDATE 2018-05-11</strong></p>
+<blockquote>
+<p>entity_type filter param added, only <strong>v2</strong></p>
+</blockquote>
+<p>request headers:</p>
+<ul class="list">
+<li><em>Api-Agent</em> - type: string, required</li>
+<li><em>Acc-Token</em> - type: string, required</li>
+</ul>
+<p>possible request arguments:</p>
+<ul class="list">
+<li><em>saved_filter_id</em> - type: int, value - one of id from saved_filter list returned in auth response, single</li>
+<li><em>mode</em> - type: str, one of <code>[&quot;all&quot;, &quot;starred&quot;, &quot;planned&quot;, &quot;participated&quot;, &quot;won&quot;, &quot;supplier_recommended&quot;]</code>, single</li>
+<li><em>search</em> - type: str, search phrase, single</li>
+<li><em>locations</em> - type: str, value - one of <code>[&quot;95-98&quot;, &quot;01-06&quot;, &quot;76-78&quot;, &quot;40-42&quot;, &quot;83-87&quot;, &quot;07-09&quot;, &quot;65-68&quot;, &quot;21-24&quot;, &quot;43-45&quot;, &quot;91-94&quot;, &quot;79-82&quot;, &quot;33-35&quot;, &quot;36-39&quot;, &quot;73-75&quot;, &quot;18-20&quot;, &quot;10-13&quot;, &quot;69-72&quot;, &quot;99&quot;, &quot;61-64&quot;, &quot;29-32&quot;, &quot;58-60&quot;, &quot;88-90&quot;, &quot;54-57&quot;, &quot;14-17&quot;, &quot;46-48&quot;, &quot;25-28&quot;, &quot;49-53&quot;]</code>, multiply</li>
+<li><em>use_delivery_location</em> - type: str, value - one of <code>[&quot;true&quot;, &quot;false&quot;]</code>, single</li>
+<li><em>primary_classifier_id</em> - type: int, value - one of CPV classifier id, multiply</li>
+<li><em>classifier_id</em> - type: int, value - one of DKPP classifier id, multiply</li>
+<li><em>amount_from</em> - type: float, single</li>
+<li><em>amount_to</em> - type: float, single</li>
+<li><em>method_type</em> - type: int, value - one of <code>[0, 1, 2, 7, 3, 4, 5, 8, 9, 14]</code>, multiply</li>
+<li><em>range_date_created_dt_start</em> - type: date, format: dd.mm.yyyy, single</li>
+<li><em>range_date_created_dt_end</em> - type: date, format: dd.mm.yyyy, single </li>
+<li><em>range_date_tendering_start_dt_start</em> - type: date, format: dd.mm.yyyy, single </li>
+<li><em>range_date_tendering_start_dt_end</em> - type: date, format: dd.mm.yyyy, single </li>
+<li><em>range_date_tendering_end_dt_start</em> - type: date, format: dd.mm.yyyy, single </li>
+<li><em>range_date_tendering_end_dt_end</em> - type: date, format: dd.mm.yyyy, single </li>
+<li><em>range_date_auction_start_dt_start</em> - type: date, format: dd.mm.yyyy, single </li>
+<li><em>range_date_auction_start_dt_end</em> - type: date, format: dd.mm.yyyy, single</li>
+<li><em>merchant_name</em> - type: text, multiply</li>
+<li><em>status</em> - type: int, values - one of <code>[0, 1, 2, 10, 3, 4, 5, 6, 7, 12]</code>, multiply</li>
+<li><em>entity_type</em> - type: int, values - one of <code>[0, 2]</code>, by default or if not provided - both will be applied, <strong>not supported in v1</strong>, <a href="./static_data.html">details</a></li>
+</ul>
+<p>possible response fields:</p>
+<ul class="list">
+<li><em>status</em> - type: str, values: ok/error</li>
+<li><em>errors</em> - type: array of objects, validation errors</li>
+<li><em>data</em> - type: object</li>
+<li><em>system</em> - type: str, system error messages</li>
+</ul>
+<p>possible response data fields:</p>
+<ul class="list">
+<li><em>total_items</em> - type: int, total found entities</li>
+</ul>
+<p>request:</p>
+<pre class="hljs"><code>curl --header <span class="hljs-string">"Acc-Token: eyJlbXBsb3llZSI6NjEyNjEsIm1lcmNoYW50Ijo1NTEzOH0.C8di6Q.JPtyyp32oH7KaM7WqyjQPE0SoXA"</span> -X GET <span class="hljs-string">"http://my.example.com:5001/remote/api/v1/entity?\
+search=search_query&amp;\
+mode=all&amp;\
+amount_order_by=&amp;\
+saved_filter_id=&amp;\
+locations=95-98&amp;\
+locations=01-06&amp;\
+use_delivery_location=true&amp;\
+primary_classifier_id=16662&amp;\
+primary_classifier_id=14649&amp;\
+classifier_id=1&amp;\
+classifier_id=2&amp;\
+amount_from=20&amp;\
+amount_to=30&amp;\
+merchant_name=test&amp;\
+merchant_name=dfadf&amp;\
+method_type=0&amp;\
+method_type=1&amp;\
+range_date_created_dt_start=03.04.2017&amp;\
+range_date_created_dt_end=04.04.2017&amp;\
+range_date_tendering_start_dt_start=05.04.2017&amp;\
+range_date_tendering_start_dt_end=06.04.2017&amp;\
+range_date_tendering_end_dt_start=07.04.2017&amp;\
+range_date_tendering_end_dt_end=08.04.2017&amp;\
+range_date_auction_start_dt_start=09.04.2017&amp;\
+range_date_auction_start_dt_end=10.04.2017&amp;\
+status=0&amp;\
+status=1"</span></code></pre><p>response example:</p>
+<pre class="hljs"><code>{
+  <span class="hljs-attr">"status"</span>: <span class="hljs-string">"ok"</span>,
+  <span class="hljs-attr">"errors"</span>: [
+  ],
+  <span class="hljs-attr">"data"</span>: {
+    <span class="hljs-attr">"total_items"</span>: <span class="hljs-number">5</span>
+  },
+  <span class="hljs-attr">"system"</span>: <span class="hljs-string">""</span>
+}</code></pre>    </article>
+  </body>
+</html>

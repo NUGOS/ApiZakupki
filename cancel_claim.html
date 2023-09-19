@@ -1,0 +1,64 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimal-ui">
+    <title>Отмена требования</title>
+    <link type="text/css" rel="stylesheet" href="assets/css/github-markdown.css">
+    <link type="text/css" rel="stylesheet" href="assets/css/pilcrow.css">
+    <link type="text/css" rel="stylesheet" href="assets/css/hljs-github.min.css"/>
+  </head>
+  <body>
+    <article class="markdown-body"><h1 id="отмена-требования"><a class="header-link" href="#отмена-требования"></a>Отмена требования</h1>
+<p><strong>POST remote/api/v2/claim/{id}/cancel</strong></p>
+<p>request headers:</p>
+<ul class="list">
+<li><em>Api-Agent</em> - type: string, reuqired</li>
+<li><em>Acc-Token</em> - type: string, required</li>
+</ul>
+<p>possible response fields:</p>
+<ul class="list">
+<li><em>status</em> - type: str, values: ok/error</li>
+<li><em>errors</em> - type: array of objects, validation errors</li>
+<li><em>data</em> - type: object</li>
+<li><em>system</em> - type: str, system error messages</li>
+</ul>
+<p>request fields:</p>
+<ul class="list">
+<li><em>reason</em> - type: str, required</li>
+</ul>
+<p>possible response data fields:</p>
+<ul class="list">
+<li><em>id</em> - type: int</li>
+</ul>
+<h1 id="examples"><a class="header-link" href="#examples"></a>Examples</h1>
+<h2 id="valid-request"><a class="header-link" href="#valid-request"></a>valid request</h2>
+<p>request:</p>
+<pre class="hljs"><code>curl --header <span class="hljs-string">"Acc-Token: auth_token"</span> --header <span class="hljs-string">"Api-Agent: zk_ios"</span> --header <span class="hljs-string">"Content-Type: application/json"</span> -X POST <span class="hljs-string">"http://my.zakupki.example.com:8000/remote/api/v2/claim/31901/cancel"</span> --data @request_data</code></pre><p>request_data:</p>
+<pre class="hljs"><code>{
+    <span class="hljs-attr">"reason"</span>: <span class="hljs-string">"This purchasing business is awful, I'm going to Bahamas!"</span>
+}</code></pre><p>response:</p>
+<pre class="hljs"><code>{
+  <span class="hljs-attr">"status"</span>: <span class="hljs-string">"ok"</span>,
+  <span class="hljs-attr">"errors"</span>: [],
+  <span class="hljs-attr">"data"</span>: {
+    <span class="hljs-attr">"id"</span>: <span class="hljs-number">31901</span>
+  },
+  <span class="hljs-attr">"system"</span>: <span class="hljs-string">""</span>
+}</code></pre><h2 id="incorrect-claim-id"><a class="header-link" href="#incorrect-claim-id"></a>incorrect claim id</h2>
+<p>request:</p>
+<pre class="hljs"><code>curl --header <span class="hljs-string">"Acc-Token: auth_token"</span> --header <span class="hljs-string">"Api-Agent: zk_ios"</span> --header <span class="hljs-string">"Content-Type: application/json"</span> -X POST <span class="hljs-string">"http://my.zakupki.example.com:8000/remote/api/v2/claim/821905867740/cancel"</span> --data @request_data</code></pre><p>response:</p>
+<pre class="hljs"><code>{
+  <span class="hljs-attr">"status"</span>: <span class="hljs-string">"error"</span>,
+  <span class="hljs-attr">"errors"</span>: [],
+  <span class="hljs-attr">"system"</span>: <span class="hljs-string">"state claim is not found"</span>
+}</code></pre><h2 id="valid-auth-token,-but-wrong-employee-(not-claim-owner)"><a class="header-link" href="#valid-auth-token,-but-wrong-employee-(not-claim-owner)"></a>valid auth token, but wrong employee (not claim owner)</h2>
+<p>request:</p>
+<pre class="hljs"><code>curl --header <span class="hljs-string">"Acc-Token: wrong_auth_token"</span> --header <span class="hljs-string">"Api-Agent: zk_ios"</span> --header <span class="hljs-string">"Content-Type: application/json"</span> -X POST <span class="hljs-string">"http://my.zakupki.example.com:8000/remote/api/v2/claim/821905867740/cancel"</span> --data @request_data</code></pre><p>response:</p>
+<pre class="hljs"><code>{
+  <span class="hljs-attr">"status"</span>: <span class="hljs-string">"error"</span>,
+  <span class="hljs-attr">"errors"</span>: [],
+  <span class="hljs-attr">"system"</span>: <span class="hljs-string">"employee is not allowed to cancel the claim"</span>
+}</code></pre>    </article>
+  </body>
+</html>

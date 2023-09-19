@@ -1,0 +1,147 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimal-ui">
+    <title>Push уведомления</title>
+    <link type="text/css" rel="stylesheet" href="assets/css/github-markdown.css">
+    <link type="text/css" rel="stylesheet" href="assets/css/pilcrow.css">
+    <link type="text/css" rel="stylesheet" href="assets/css/hljs-github.min.css"/>
+  </head>
+  <body>
+    <article class="markdown-body"><h1 id="push-уведомления"><a class="header-link" href="#push-уведомления"></a>Push уведомления</h1>
+<h2 id="реистрация-клиентского-токена-(firebase-cloud-messaging-registration-token)"><a class="header-link" href="#реистрация-клиентского-токена-(firebase-cloud-messaging-registration-token)"></a>реистрация клиентского токена (firebase cloud messaging registration token)</h2>
+<h2 id="для-получения-приложением-push-уведомлений"><a class="header-link" href="#для-получения-приложением-push-уведомлений"></a>для получения приложением push уведомлений</h2>
+<p><strong>POST /remote/api/v1/fcm</strong></p>
+<p>request headers:</p>
+<ul class="list">
+<li><em>Api-Agent</em> - type: string, reuqired</li>
+<li><em>Acc-Token</em> - type: string, required</li>
+</ul>
+<p>possible request arguments:</p>
+<ul class="list">
+<li><em>fcm_token</em> - type: string, required</li>
+</ul>
+<p>possible response fields:</p>
+<ul class="list">
+<li><em>status</em> - type: str, values: ok/error</li>
+<li><em>errors</em> - type: array of objects, validation errors</li>
+<li><em>data</em> - type: object</li>
+<li><em>system</em> - type: str, system error messages</li>
+</ul>
+<p>успешный запрос всегда возвращает &quot;пустой&quot; успешный ответ</p>
+<p>request:</p>
+<pre class="hljs"><code>curl --header <span class="hljs-string">"Acc-Token: eyJlbXBsb3llZSI6NjEyNjEsIm1lcmNoYW50Ijo1NTEzOH0.C8di6Q.JPtyyp32oH7KaM7WqyjQPE0SoXA"</span> -X POST <span class="hljs-string">"http://my.example.com:5001/remote/api/v1/fcm"</span> <span class="hljs-_">-d</span>\
+<span class="hljs-string">'{"fcm_token": "e36cL79ylvw:APA91bFfG9JkBxQ_1BFIOL6GND1GCGl83cH82aGiwGsVyc-3fxFjl2T1X0sRrGEnAqCbvrLaNyqmjhEiYRvcsF_FBE-zMDAoi7-nlW7_3FL_kNUwvjM8hGwcShpyLrmvBSt1RyzAGEbl,e36cL79ylvw:APA91bFfG9JkBxQ_1BFIOL6GND1GCGl83cH82aGiwGsVyc-3fxFjl2T1X0sRrGEnAqCbvrLaNyqmjhEiYRvcsF_FBE-zMDAoi7-nlW7_3FL_kNUwvjM8hGwcShpyLrmvBSt1RyzAGEbl"}'</span></code></pre><p>response:</p>
+<pre class="hljs"><code>{
+  <span class="hljs-attr">"status"</span>: <span class="hljs-string">"ok"</span>,
+  <span class="hljs-attr">"errors"</span>: [
+  ],
+  <span class="hljs-attr">"data"</span>: {
+  },
+  <span class="hljs-attr">"system"</span>: <span class="hljs-string">""</span>
+}</code></pre><h2 id="инвалидация-клиентского-токена"><a class="header-link" href="#инвалидация-клиентского-токена"></a>инвалидация клиентского токена</h2>
+<p><strong>POST /remote/api/v1/fcm_invalidate</strong></p>
+<p>request headers:</p>
+<ul class="list">
+<li><em>Acc-Token</em> - type: string, required</li>
+</ul>
+<p>possible request arguments:</p>
+<ul class="list">
+<li><em>fcm_token</em> - type: string, required</li>
+</ul>
+<p>possible response fields:</p>
+<ul class="list">
+<li><em>status</em> - type: str, values: ok/error</li>
+<li><em>errors</em> - type: array of objects, validation errors</li>
+<li><em>data</em> - type: object</li>
+<li><em>system</em> - type: str, system error messages</li>
+</ul>
+<p>успешный запрос всегда возвращает &quot;пустой&quot; успешный ответ</p>
+<p>request:</p>
+<pre class="hljs"><code>curl --header <span class="hljs-string">"Acc-Token: eyJlbXBsb3llZSI6NjEyNjEsIm1lcmNoYW50Ijo1NTEzOH0.C8di6Q.JPtyyp32oH7KaM7WqyjQPE0SoXA"</span> -X POST <span class="hljs-string">"http://my.example.com:5001/remote/api/v1/fcm_invalidate"</span> <span class="hljs-_">-d</span>\
+<span class="hljs-string">'{"fcm_token": "e36cL79ylvw:APA91bFfG9JkBxQ_1BFIOL6GND1GCGl83cH82aGiwGsVyc-3fxFjl2T1X0sRrGEnAqCbvrLaNyqmjhEiYRvcsF_FBE-zMDAoi7-nlW7_3FL_kNUwvjM8hGwcShpyLrmvBSt1RyzAGEbl,e36cL79ylvw:APA91bFfG9JkBxQ_1BFIOL6GND1GCGl83cH82aGiwGsVyc-3fxFjl2T1X0sRrGEnAqCbvrLaNyqmjhEiYRvcsF_FBE-zMDAoi7-nlW7_3FL_kNUwvjM8hGwcShpyLrmvBSt1RyzAGEbl"}'</span></code></pre><p>response:</p>
+<pre class="hljs"><code>{
+  <span class="hljs-attr">"status"</span>: <span class="hljs-string">"ok"</span>,
+  <span class="hljs-attr">"errors"</span>: [
+  ],
+  <span class="hljs-attr">"data"</span>: {
+  },
+  <span class="hljs-attr">"system"</span>: <span class="hljs-string">""</span>
+}</code></pre><h2 id="уведомления-генерируемые-сервером"><a class="header-link" href="#уведомления-генерируемые-сервером"></a>Уведомления генерируемые сервером</h2>
+<p>На данный момент сервер генерирует 3 типа пуш уведомлений:</p>
+<ul class="list">
+<li>info_question_answered - ответ на вопрос в закупке</li>
+<li>info_note_publication - системное уведомление</li>
+<li>state_purchase_edited_event - произошли изменения в закупке, в которую пользователь подавал предложение</li>
+<li>auction_start_soon_lot_push_event - уведомление о скором начале аукциона в лоте</li>
+<li>auction_start_soon_push_event - уведомление о скором начале аукциона в тендере</li>
+</ul>
+<h2 id="структура/содержание-уведомлений"><a class="header-link" href="#структура/содержание-уведомлений"></a>Структура/содержание уведомлений</h2>
+<pre class="hljs"><code>{
+    <span class="hljs-attr">"from"</span>: <span class="hljs-string">"XXXX"</span>,
+    <span class="hljs-attr">"collapse_key"</span>: <span class="hljs-string">"XXXXX"</span>, 
+    <span class="hljs-attr">"data"</span>: {
+        <span class="hljs-attr">"action"</span>: <span class="hljs-string">"http://zakupki.example.com:6544/gov/tenders/UA-2016-09-14-000019/questions"</span>,
+        <span class="hljs-attr">"action_data"</span>: {}
+    }, 
+    <span class="hljs-attr">"priority"</span>: <span class="hljs-string">"high"</span>, 
+    <span class="hljs-attr">"notification"</span>: {
+        <span class="hljs-attr">"body"</span>: <span class="hljs-string">"Ви отримали відповідь на своє запитання UA-2016-09-14-000019"</span>
+    }
+}</code></pre><ul class="list">
+<li><em>data</em> - используется сервером для передчи информации о необходимом действии при нажатии на уведомление
+само действие содержится в поле <strong>action</strong>, дополнительная информация содержится в поле <strong>action_data</strong></li>
+<li><em>action_data</em> - опциональное поле, может содержать объект или быть <strong>null</strong></li>
+<li><em>notification</em> - текст самого уведомления передается всегда в поле <strong>body</strong> </li>
+</ul>
+<h3 id="возможное-содержимое-поля-action"><a class="header-link" href="#возможное-содержимое-поля-action"></a>возможное содержимое поля action</h3>
+<p>Планируется два возможных варианта действий:</p>
+<ul class="list">
+<li>открытие ссылки в браузере</li>
+<li>открытие приложения по заданному пути</li>
+</ul>
+<p>Разница в действиях определеятся протоколом в поле action.
+Так, для открытия ссылки в браузере action будет начинаться с <strong>http(s)://</strong>,
+для действий в приложении - <strong>app://</strong></p>
+<p>Пример с app протоколом:</p>
+<pre class="hljs"><code>{
+    <span class="hljs-attr">"from"</span>: <span class="hljs-string">"XXXX"</span>,
+    <span class="hljs-attr">"collapse_key"</span>: <span class="hljs-string">"XXXXX"</span>, 
+    <span class="hljs-attr">"data"</span>: {
+        <span class="hljs-attr">"action"</span>: <span class="hljs-string">"app://tender/1233/questions"</span>
+    }, 
+    <span class="hljs-attr">"priority"</span>: <span class="hljs-string">"high"</span>, 
+    <span class="hljs-attr">"notification"</span>: {
+        <span class="hljs-attr">"body"</span>: <span class="hljs-string">"Ви отримали відповідь на своє запитання UA-2016-09-14-000019"</span>
+    }
+}</code></pre><p>данный <em>action</em> описывает открытие раздела вопросы для тендера с указамым в пути id</p>
+<h2 id="v3-modifications"><a class="header-link" href="#v3-modifications"></a>v3 modifications</h2>
+<p><strong>action_data</strong> field can cantain additional data for new <strong>v3</strong> api resolvers</p>
+<p>content of <strong>action_data</strong> field for each push notification described below</p>
+<h3 id="info_question_answered"><a class="header-link" href="#info_question_answered"></a>info_question_answered</h3>
+<ul class="list">
+<li><em>event_name</em> - str</li>
+<li><em>purchase_uid</em> - str</li>
+<li><em>lot_uid</em> - str or null</li>
+<li><em>uid</em> - str</li>
+</ul>
+<h3 id="auction_start_soon_lot_push_event"><a class="header-link" href="#auction_start_soon_lot_push_event"></a>auction_start_soon_lot_push_event</h3>
+<ul class="list">
+<li><em>event_name</em> - str</li>
+<li><em>purchase_uid</em> - str</li>
+<li><em>lot_uid</em> - str</li>
+</ul>
+<h3 id="auction_start_soon_push_event"><a class="header-link" href="#auction_start_soon_push_event"></a>auction_start_soon_push_event</h3>
+<ul class="list">
+<li><em>event_name</em> - str</li>
+<li><em>purchase_uid</em> - str</li>
+</ul>
+<h3 id="state_purchase_edited_event-(deprecated,-not-working)"><a class="header-link" href="#state_purchase_edited_event-(deprecated,-not-working)"></a>state_purchase_edited_event (DEPRECATED, NOT WORKING)</h3>
+<ul class="list">
+<li><em>event_name</em> - str</li>
+<li><em>purchase_uid</em> - str</li>
+</ul>
+    </article>
+  </body>
+</html>

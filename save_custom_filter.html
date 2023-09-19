@@ -1,0 +1,325 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimal-ui">
+    <title>Сохранение, переименование, удаление фильтров</title>
+    <link type="text/css" rel="stylesheet" href="assets/css/github-markdown.css">
+    <link type="text/css" rel="stylesheet" href="assets/css/pilcrow.css">
+    <link type="text/css" rel="stylesheet" href="assets/css/hljs-github.min.css"/>
+  </head>
+  <body>
+    <article class="markdown-body"><h1 id="сохранение,-переименование,-удаление-фильтров"><a class="header-link" href="#сохранение,-переименование,-удаление-фильтров"></a>Сохранение, переименование, удаление фильтров</h1>
+<p><strong>POST remote/api/v1/save_filter</strong></p>
+<blockquote>
+<p>сохранить поисковый фильтр</p>
+</blockquote>
+<p><strong>UPDATE 2018-05-24</strong></p>
+<blockquote>
+<p>add entity_type</p>
+</blockquote>
+<p>request headers:</p>
+<ul class="list">
+<li><em>Api-Agent</em> - type: string, required</li>
+<li><em>Acc-Token</em> - type: string, required</li>
+</ul>
+<p>possible request arguments:</p>
+<ul class="list">
+<li><em>filter_name</em> - type: string, required</li>
+<li><em>locations</em> - type: array of string, possible values - one or more <a href="./static_data.html">locations.value</a></li>
+<li><em>use_delivery_location</em> - type: bool</li>
+<li><em>primary_classifier_id</em> - type: array of int, possible values - one or more <a href="./primary_classifiers.html">primary_classifier.value</a></li>
+<li><em>amount_from</em> - type: float</li>
+<li><em>amount_to</em> - type: float</li>
+<li><em>merchant_name</em> - type: array of string, possible values - one or more <a href="./merchant_suggester.html">merchant_suggest.value</a></li>
+<li><em>method_type</em> - type: array of int, possible values - one or more <a href="./static_data.html">method_type.value</a></li>
+<li><em>range_date_created_dt_end</em> - type: string, values format <strong>DD.MM.YYYY</strong></li>
+<li><em>range_date_tendering_start_dt_start</em> - type: string, values format <strong>DD.MM.YYYY</strong></li>
+<li><em>range_date_tendering_start_dt_end</em> - type: string, values format <strong>DD.MM.YYYY</strong></li>
+<li><em>range_date_tendering_end_dt_start</em> - type: type: string, values format <strong>DD.MM.YYYY</strong></li>
+<li><em>range_date_tendering_end_dt_end</em> - type: type: string, values format <strong>DD.MM.YYYY</strong></li>
+<li><em>range_date_auction_start_dt_start</em> - type: type: string, values format <strong>DD.MM.YYYY</strong></li>
+<li><em>range_date_auction_start_dt_end</em> - type: string, values format <strong>DD.MM.YYYY</strong></li>
+<li><em>status</em> - type: array of int, possible values - one or more <a href="./static_data.html">status.value</a></li>
+<li><em>entity_type</em> - type: array of int, possible values - one or more <a href="./static_data.html">entity_type.value</a></li>
+<li><em>assignee_employee</em> - type: array of int, possible values - one or more <a href="./user_profile.html">idsassignment_data.available_users.id</a></li>
+</ul>
+<p>possible response fields:</p>
+<ul class="list">
+<li><em>status</em> - type: str, values: ok/error</li>
+<li><em>errors</em> - type: array of objects, validation errors</li>
+<li><em>data</em> - type: object</li>
+<li><em>system</em> - type: str, system error messages</li>
+</ul>
+<p>possible response data fields:</p>
+<ul class="list">
+<li><em>status</em> - type: array of <strong>status</strong> objects or empty, possible values - one or more <a href="./static_data.html">stauses</a>, described below</li>
+<li><em>method_type</em> - type: array <strong>method_type</strong> objects or empty, possible values - one or more <a href="./static_data.html">method_types</a>, described below</li>
+<li><em>range_date_auction_start_dt_end</em> - type: date str or null, format <strong>DD.MM.YYYY</strong></li>
+<li><em>range_date_tendering_end_dt_start</em> - type: date str or null, format <strong>DD.MM.YYYY</strong></li>
+<li><em>locations</em> - type: array of <strong>location</strong> objects or empty, possible values - one or more <a href="./static_data.html">locations</a>, described below</li>
+<li><em>range_date_tendering_end_dt_end</em> - type: date str or null, format <strong>DD.MM.YYYY</strong></li>
+<li><em>amount_from</em> - type: float str or null</li>
+<li><em>amount_to</em> - type: float str or null</li>
+<li><em>range_date_created_dt_start</em> - type: date str or null, format <strong>DD.MM.YYYY</strong></li>
+<li><em>range_date_created_dt_end</em> - type: date str or null, format <strong>DD.MM.YYYY</strong></li>
+<li><em>keywords</em> - type: array of str or empty</li>
+<li><em>filter_id</em> - type: int (signed)</li>
+<li><em>range_date_auction_start_dt_start</em> - type: date str or null, format <strong>DD.MM.YYYY</strong></li>
+<li><em>range_date_tendering_start_dt_end</em> - type: date str or null, format <strong>DD.MM.YYYY</strong></li>
+<li><em>primary_classifier_id</em> - type: array of <strong>primary_classifier_id</strong> objects or empty, described below</li>
+<li><em>classifier_id</em> - type: array, always empty</li>
+<li><em>range_date_tendering_start_dt_start</em> - type: date str or null, format <strong>DD.MM.YYYY</strong></li>
+<li><em>merchant_name</em> - type: array of <strong>merchant_name</strong> objects or empty</li>
+<li><em>entity_type</em> - type: array of <strong>entity_type</strong> objects, described below</li>
+</ul>
+<p>status object fields:</p>
+<ul class="list">
+<li><em>value_label</em> - type: str</li>
+<li><em>value</em> - type: int</li>
+<li><em>label</em> - type: str</li>
+</ul>
+<p>method_type object fields:</p>
+<ul class="list">
+<li><em>value_label</em> - type: str</li>
+<li><em>value</em> - type: int</li>
+<li><em>label</em> - type: str</li>
+</ul>
+<p>location object fields:</p>
+<ul class="list">
+<li><em>id</em> - type: int</li>
+<li><em>value</em> - type: str</li>
+<li><em>label</em> - type: str</li>
+</ul>
+<p>merchant_name object fields:</p>
+<ul class="list">
+<li><em>text</em> - type: str</li>
+<li><em>srn</em> - type: str</li>
+<li><em>value</em> - type: str</li>
+</ul>
+<p>primary_classifier_id object fields:</p>
+<ul class="list">
+<li><em>full_title</em> - type: text</li>
+<li><em>code</em> - type: text</li>
+<li><em>value</em> - type: int</li>
+<li><em>title</em> - type: text</li>
+</ul>
+<p>entity_type object fields:</p>
+<ul class="list">
+<li><em>value</em> - type: int</li>
+<li><em>value_label</em> - type: str</li>
+<li><em>label</em> - type: str</li>
+</ul>
+<blockquote>
+<p><em>NOTE:</em> во время написания документации пришло понимание, что у нас есть дублирующиеся данные
+а именно - amount и amount_form/amount_to, есть подозрение, что что-то из этого явно лишнее
+и можно от этого избавится, но, в рамках этой задачи реализовываться это не будет
+мы сохраним данный набор полей, для поддержания работы api и совместимости с приложение
+но, когда будет производить рефакторинг учтем этот нюанс и предупредим в случаях изменений</p>
+</blockquote>
+<p>request example:</p>
+<pre class="hljs"><code>// request body
+{  
+    <span class="hljs-attr">"locations"</span>:[  
+        <span class="hljs-string">"95-98"</span>,
+        <span class="hljs-string">"01-06"</span>
+    ],
+    <span class="hljs-attr">"use_delivery_location"</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">"primary_classifier_id"</span>:[  
+        <span class="hljs-number">32636</span>,
+        <span class="hljs-number">30623</span>
+    ],
+    <span class="hljs-attr">"classifier_id"</span>:[  
+        <span class="hljs-number">1</span>,
+        <span class="hljs-number">2</span>
+    ],
+    <span class="hljs-attr">"amount_from"</span>:<span class="hljs-number">123</span>,
+    <span class="hljs-attr">"amount_to"</span>:<span class="hljs-number">123</span>,
+    <span class="hljs-attr">"merchant_name"</span>:[  
+        <span class="hljs-string">"12345678 - Садок"</span>
+    ],
+    <span class="hljs-attr">"method_type"</span>:[  
+        <span class="hljs-number">0</span>,
+        <span class="hljs-number">1</span>
+    ],
+    <span class="hljs-attr">"range_date_created_dt_start"</span>:<span class="hljs-string">"19.12.2017"</span>,
+    <span class="hljs-attr">"range_date_created_dt_end"</span>:<span class="hljs-string">"20.12.2017"</span>,
+    <span class="hljs-attr">"range_date_tendering_start_dt_start"</span>:<span class="hljs-string">"21.12.2017"</span>,
+    <span class="hljs-attr">"range_date_tendering_start_dt_end"</span>:<span class="hljs-string">"22.12.2017"</span>,
+    <span class="hljs-attr">"range_date_tendering_end_dt_start"</span>:<span class="hljs-string">"23.12.2017"</span>,
+    <span class="hljs-attr">"range_date_tendering_end_dt_end"</span>:<span class="hljs-string">"24.12.2017"</span>,
+    <span class="hljs-attr">"range_date_auction_start_dt_start"</span>:<span class="hljs-string">"25.12.2017"</span>,
+    <span class="hljs-attr">"range_date_auction_start_dt_end"</span>:<span class="hljs-string">"26.12.2017"</span>,
+    <span class="hljs-attr">"status"</span>:[  
+        <span class="hljs-number">0</span>,
+        <span class="hljs-number">1</span>
+    ],
+    <span class="hljs-attr">"filter_name"</span>:<span class="hljs-string">"adsfasdfasdf"</span>,
+    <span class="hljs-attr">"entity_type"</span>: [<span class="hljs-number">0</span>, <span class="hljs-number">2</span>]
+}
+</code></pre><pre class="hljs"><code>curl --header <span class="hljs-string">"Acc-Token: eyJlbXBsb3llZSI6NjEyNjEsIm1lcmNoYW50Ijo1NTEzOH0.C8di6Q.JPtyyp32oH7KaM7WqyjQPE0SoXA"</span> -X POST <span class="hljs-string">"http://my.example.com:5001/remote/api/v1/save_filter"</span> <span class="hljs-_">-d</span>@request_body.json</code></pre><p>response example:</p>
+<pre class="hljs"><code>{
+  <span class="hljs-attr">"status"</span>: <span class="hljs-string">"ok"</span>,
+  <span class="hljs-attr">"errors"</span>: [
+  ],
+  <span class="hljs-attr">"data"</span>: {
+    <span class="hljs-attr">"status"</span>: [
+      {
+        <span class="hljs-attr">"value_label"</span>: <span class="hljs-string">"enquiries"</span>,
+        <span class="hljs-attr">"value"</span>: <span class="hljs-number">0</span>,
+        <span class="hljs-attr">"label"</span>: <span class="hljs-string">"період уточнень"</span>
+      },
+      {
+        <span class="hljs-attr">"value_label"</span>: <span class="hljs-string">"cancelled"</span>,
+        <span class="hljs-attr">"value"</span>: <span class="hljs-number">1</span>,
+        <span class="hljs-attr">"label"</span>: <span class="hljs-string">"скасована"</span>
+      }
+    ],
+    <span class="hljs-attr">"method_type"</span>: [
+      {
+        <span class="hljs-attr">"value_label"</span>: <span class="hljs-string">"belowThreshold"</span>,
+        <span class="hljs-attr">"value"</span>: <span class="hljs-number">0</span>,
+        <span class="hljs-attr">"label"</span>: <span class="hljs-string">"Допорогова закупівля"</span>
+      },
+      {
+        <span class="hljs-attr">"value_label"</span>: <span class="hljs-string">"aboveThresholdUA"</span>,
+        <span class="hljs-attr">"value"</span>: <span class="hljs-number">1</span>,
+        <span class="hljs-attr">"label"</span>: <span class="hljs-string">"Відкриті торги"</span>
+      }
+    ],
+    <span class="hljs-attr">"range_date_tendering_end_dt_start"</span>: <span class="hljs-string">"23.12.2017"</span>,
+    <span class="hljs-attr">"locations"</span>: [
+      {
+        <span class="hljs-attr">"id"</span>: <span class="hljs-number">25</span>,
+        <span class="hljs-attr">"value"</span>: <span class="hljs-string">"95-98"</span>,
+        <span class="hljs-attr">"label"</span>: <span class="hljs-string">"АР Крим"</span>
+      },
+      {
+        <span class="hljs-attr">"id"</span>: <span class="hljs-number">26</span>,
+        <span class="hljs-attr">"value"</span>: <span class="hljs-string">"01-06"</span>,
+        <span class="hljs-attr">"label"</span>: <span class="hljs-string">"Київ"</span>
+      }
+    ],
+    <span class="hljs-attr">"primary_classifier_id"</span>: [
+      {
+        <span class="hljs-attr">"full_title"</span>: <span class="hljs-string">"09000000-3 Нафтопродукти, паливо, електроенергія та інші джерела енергії"</span>,
+        <span class="hljs-attr">"code"</span>: <span class="hljs-string">"09000000-3"</span>,
+        <span class="hljs-attr">"value"</span>: <span class="hljs-number">30623</span>,
+        <span class="hljs-attr">"title"</span>: <span class="hljs-string">"Нафтопродукти, паливо, електроенергія та інші джерела енергії"</span>
+      },
+      {
+        <span class="hljs-attr">"full_title"</span>: <span class="hljs-string">"03000000-1 Сільськогосподарська, фермерська продукція, продукція рибальства, лісівництва та супутня продукція"</span>,
+        <span class="hljs-attr">"code"</span>: <span class="hljs-string">"03000000-1"</span>,
+        <span class="hljs-attr">"value"</span>: <span class="hljs-number">32636</span>,
+        <span class="hljs-attr">"title"</span>: <span class="hljs-string">"Сільськогосподарська, фермерська продукція, продукція рибальства, лісівництва та супутня продукція"</span>
+      }
+    ],
+    <span class="hljs-attr">"range_date_tendering_end_dt_end"</span>: <span class="hljs-string">"24.12.2017"</span>,
+    <span class="hljs-attr">"amount_from"</span>: <span class="hljs-string">"123"</span>,
+    <span class="hljs-attr">"amount_to"</span>: <span class="hljs-string">"123"</span>,
+    <span class="hljs-attr">"range_date_created_dt_start"</span>: <span class="hljs-string">"19.12.2017"</span>,
+    <span class="hljs-attr">"range_date_auction_start_dt_end"</span>: <span class="hljs-string">"26.12.2017"</span>,
+    <span class="hljs-attr">"keywords"</span>: [
+    ],
+    <span class="hljs-attr">"filter_id"</span>: <span class="hljs-number">19</span>,
+    <span class="hljs-attr">"range_date_auction_start_dt_start"</span>: <span class="hljs-string">"25.12.2017"</span>,
+    <span class="hljs-attr">"range_date_tendering_start_dt_end"</span>: <span class="hljs-string">"22.12.2017"</span>,
+    <span class="hljs-attr">"merchant_name"</span>: [
+      {
+        <span class="hljs-attr">"text"</span>: <span class="hljs-string">"Садок"</span>,
+        <span class="hljs-attr">"srn"</span>: <span class="hljs-string">"12345678"</span>,
+        <span class="hljs-attr">"value"</span>: <span class="hljs-string">"12345678 - Садок"</span>
+      }
+    ],
+    <span class="hljs-attr">"classifier_id"</span>: [
+      {
+        <span class="hljs-attr">"full_title"</span>: <span class="hljs-string">"01 Продукція сільського господарства, мисливства та пов’язані з цим послуги"</span>,
+        <span class="hljs-attr">"value"</span>: <span class="hljs-number">1</span>
+      },
+      {
+        <span class="hljs-attr">"full_title"</span>: <span class="hljs-string">"02 Продукція лісового господарства, лісозаготівлі та послуги, пов’язані з лісівництвом"</span>,
+        <span class="hljs-attr">"value"</span>: <span class="hljs-number">2</span>
+      }
+    ],
+    <span class="hljs-attr">"range_date_tendering_start_dt_start"</span>: <span class="hljs-string">"21.12.2017"</span>,
+    <span class="hljs-attr">"range_date_created_dt_end"</span>: <span class="hljs-string">"20.12.2017"</span>,
+    <span class="hljs-attr">"entity_type"</span>: [
+      {
+        <span class="hljs-attr">"value_label"</span>: <span class="hljs-string">"general"</span>,
+        <span class="hljs-attr">"value"</span>: <span class="hljs-number">0</span>,
+        <span class="hljs-attr">"label"</span>: <span class="hljs-string">"\u0413\u043e\u0441\u0443\u0434\u0430\u0440\u0441\u0442\u0432\u0435\u043d\u043d\u044b\u0439 \u0442\u0435\u043d\u0434\u0435\u0440"</span>
+      },
+      {
+        <span class="hljs-attr">"value_label"</span>: <span class="hljs-string">"com"</span>,
+        <span class="hljs-attr">"value"</span>: <span class="hljs-number">2</span>,
+        <span class="hljs-attr">"label"</span>: <span class="hljs-string">"\u041a\u043e\u043c\u043c\u0435\u0440\u0447\u0435\u0441\u043a\u0438\u0439 \u0442\u0435\u043d\u0434\u0435\u0440"</span>
+      }
+    ]
+  },
+  <span class="hljs-attr">"system"</span>: <span class="hljs-string">""</span>
+}</code></pre><p><strong>DELETE remote/api/v1/delete_filter/{filter_id}</strong></p>
+<blockquote>
+<p>сохранить поисковый фильтр
+<strong>filter_id</strong> - id сохраненного фильтра, можно получить из предыдущего метода или же <a href="./saved_filters_list.html">тут</a></p>
+</blockquote>
+<p>request headers:</p>
+<ul class="list">
+<li><em>Acc-Token</em> - type: string, required</li>
+</ul>
+<p>possible response fields:</p>
+<ul class="list">
+<li><em>status</em> - type: str, values: ok/error</li>
+<li><em>errors</em> - type: array of objects, validation errors</li>
+<li><em>data</em> - type: object</li>
+<li><em>system</em> - type: str, system error messages</li>
+</ul>
+<blockquote>
+<p>при успешном выполнении запроса всегда возвращается пустой ответ</p>
+</blockquote>
+<pre class="hljs"><code>curl --header <span class="hljs-string">"Acc-Token: eyJlbXBsb3llZSI6NjEyNjEsIm1lcmNoYW50Ijo1NTEzOH0.C8di6Q.JPtyyp32oH7KaM7WqyjQPE0SoXA"</span> -X DELETE <span class="hljs-string">"http://my.example.com:5001/remote/api/v1/delete_filter/100500"</span></code></pre><pre class="hljs"><code>{
+  <span class="hljs-attr">"status"</span>: <span class="hljs-string">"ok"</span>,
+  <span class="hljs-attr">"errors"</span>: [
+  ],
+  <span class="hljs-attr">"data"</span>: {
+  },
+  <span class="hljs-attr">"system"</span>: <span class="hljs-string">""</span>
+}</code></pre><p><strong>POST remote/api/v1/rename_filter/{filter_id}</strong></p>
+<blockquote>
+<p>переименовать фильтр
+<strong>filter_id</strong> - id сохраненного фильтра можно получить <a href="./saved_filters_list.html">тут</a></p>
+</blockquote>
+<p>request headers:</p>
+<ul class="list">
+<li><em>Acc-Token</em> - type: string, required</li>
+</ul>
+<p>possible request arguments:</p>
+<ul class="list">
+<li><em>filter_name</em> - type: string, required</li>
+</ul>
+<p>possible response fields:</p>
+<ul class="list">
+<li><em>status</em> - type: str, values: ok/error</li>
+<li><em>errors</em> - type: array of objects, validation errors</li>
+<li><em>data</em> - type: object</li>
+<li><em>system</em> - type: str, system error messages</li>
+</ul>
+<p>possible response data fields:</p>
+<ul class="list">
+<li><em>id</em> - type: int, filter id</li>
+<li><em>name</em> - type: str, new filter name</li>
+</ul>
+<pre class="hljs"><code>// request body
+{  
+    <span class="hljs-attr">"filter_name"</span>:<span class="hljs-string">"new awesome filter name"</span>
+}</code></pre><pre class="hljs"><code>curl --header <span class="hljs-string">"Acc-Token: eyJlbXBsb3llZSI6NjEyNjEsIm1lcmNoYW50Ijo1NTEzOH0.C8di6Q.JPtyyp32oH7KaM7WqyjQPE0SoXA"</span> -X POST <span class="hljs-string">"http://my.example.com:5001/remote/api/v1/rename_filter/100500"</span> <span class="hljs-_">-d</span> @request_bodu.json</code></pre><pre class="hljs"><code>{
+  <span class="hljs-attr">"status"</span>: <span class="hljs-string">"ok"</span>,
+  <span class="hljs-attr">"errors"</span>: [
+  ],
+  <span class="hljs-attr">"data"</span>: {
+    <span class="hljs-attr">"id"</span>:<span class="hljs-number">10050</span>,
+    <span class="hljs-attr">"name"</span>: <span class="hljs-string">"new awesome filter name"</span>
+  },
+  <span class="hljs-attr">"system"</span>: <span class="hljs-string">""</span>
+}</code></pre>    </article>
+  </body>
+</html>

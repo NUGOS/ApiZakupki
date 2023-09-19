@@ -1,0 +1,154 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimal-ui">
+    <title>Получение аукционов за выбраный период</title>
+    <link type="text/css" rel="stylesheet" href="assets/css/github-markdown.css">
+    <link type="text/css" rel="stylesheet" href="assets/css/pilcrow.css">
+    <link type="text/css" rel="stylesheet" href="assets/css/hljs-github.min.css"/>
+  </head>
+  <body>
+    <article class="markdown-body"><h1 id="получение-аукционов-за-выбраный-период"><a class="header-link" href="#получение-аукционов-за-выбраный-период"></a>Получение аукционов за выбраный период</h1>
+<p><strong>GET remote/purchases/mobile_api/v2/auctions_in_range</strong></p>
+<blockquote>
+<p>Принимает page(страницу пагинации, обязательный параметр) юзера, dt_from и dt_to в диапазоне которых(включительно) ищет аукционы и возвращает &quot;status&quot;:&quot;ok&quot; в случае если запрос валидный и поле &quot;data&quot;.</p>
+</blockquote>
+<blockquote>
+<p>Аукционы в выборку попадают государственные и коммерческие, в которых мы берем участие, со статусами [<em>прием предложений</em>, <em>преквалификация</em>, <em>аукцион</em>]</p>
+</blockquote>
+<blockquote>
+<p>В случае если запрос не валидный (к примеру нету <em>page</em>) возвращаем описание ошибки</p>
+</blockquote>
+<blockquote>
+<p>По умолчанию размер одной страницы - это 20 аукционов</p>
+</blockquote>
+<blockquote>
+<p>Поля dt_from и dt_to являються опциональным, в случае если нету одного из полей будет происходить выборка за текущий день</p>
+</blockquote>
+<p>request headers:</p>
+<ul class="list">
+<li><em>Api-Agent</em> - type: string, required</li>
+<li><em>Acc-Token</em> - type: string, required</li>
+</ul>
+<p>posible request GET params:</p>
+<ul class="list">
+<li><em>page</em> - type: str, required</li>
+<li><em>dt_from</em> - type: str, optional</li>
+<li><em>dt_to</em> - type: str, optional</li>
+</ul>
+<p>possible response fields:</p>
+<ul class="list">
+<li><em>status</em> - type: str, values: ok/error</li>
+<li><em>errors</em> - type: array of objects, validation errors</li>
+<li><em>data</em> - type: object</li>
+<li><em>system</em> - type: str, system error messages</li>
+</ul>
+<p>possible response data fields:</p>
+<ul class="list">
+<li><em>next_page</em> - type: int or NoneType,</li>
+<li><em>total</em> - type: int or NoneType,</li>
+<li><em>total_by_days</em> - type: object, keys: str in format &#39;%d.%m.%Y&#39;, values: int,</li>
+<li><em>auctions</em> - type: list of objects.</li>
+</ul>
+<p>response auctions fields:</p>
+<ul class="list">
+<li><em>lotId</em> - type: int or NoneType,</li>
+<li><em>purchaseTitle</em> - type: str,</li>
+<li><em>auctionState</em> - type: int, one of [0, 1, 2, 3], described below</li>
+<li><em>auctionDt</em> - type: str if format &#39;%Y-%m-%dT%H:%M:%S&#39;,</li>
+<li><em>auctionUrl</em> - type: str or NoneType,</li>
+<li><em>id</em> - type: int.</li>
+</ul>
+<p>auctionState values:</p>
+<ul class="list">
+<li><em>0</em> - type: int, - auction will take place in the future,</li>
+<li><em>1</em> - type: int, - auction is happening now</li>
+<li><em>2</em> - type: int, - auction has already taken place</li>
+<li><em>3</em> - type: int, - auction fail (purchase in unsuccessful status)</li>
+</ul>
+<h2 id="пример-правильного-валидного-запроса-аукционов-на-месяц"><a class="header-link" href="#пример-правильного-валидного-запроса-аукционов-на-месяц"></a>Пример правильного валидного запроса аукционов на месяц</h2>
+<p>pycharm request:</p>
+<pre class="hljs"><code>GET <span class="hljs-string">http:</span><span class="hljs-comment">//my.zakupki.example.com:5001/remote/purchases/mobile_api/v2/auctions_in_range?page=1&amp;dt_from=01.03.2019&amp;dt_to=31.03.2019</span>
+Acc-<span class="hljs-string">Token:</span> <span class="hljs-number">7</span>d3cada3f5128e410370640756f7a11b008f4bb9</code></pre><p>curl request</p>
+<pre class="hljs"><code><span class="hljs-attribute">curl -X GET --header "Acc-Token</span>: 7d3cada3f5128e410370640756f7a11b008f4bb9" -X GET "http://my.zakupki.example.com:5001/remote/purchases/mobile_api/v2/auctions_in_range?page=1&amp;dt_from=01.03.2019&amp;dt_to=31.03.2019"</code></pre><p>response:</p>
+<pre class="hljs"><code>{
+  <span class="hljs-attr">"status"</span>: <span class="hljs-string">"ok"</span>,
+  <span class="hljs-attr">"data"</span>: {
+    <span class="hljs-attr">"next_page"</span>: <span class="hljs-literal">null</span>,
+    <span class="hljs-attr">"total"</span>: <span class="hljs-number">2</span>,
+    <span class="hljs-attr">"total_by_days"</span>: {
+      <span class="hljs-attr">"19.03.2019"</span>: <span class="hljs-number">2</span>
+    },
+    <span class="hljs-attr">"auctions"</span>: [
+      {
+        <span class="hljs-attr">"lotId"</span>: <span class="hljs-literal">null</span>,
+        <span class="hljs-attr">"purchaseTitle"</span>: <span class="hljs-string">"Плед"</span>,
+        <span class="hljs-attr">"auctionState"</span>: <span class="hljs-number">1</span>,
+        <span class="hljs-attr">"auctionDt"</span>: <span class="hljs-string">"2019-03-19T12:08:47"</span>,
+        <span class="hljs-attr">"auctionUrl"</span>: <span class="hljs-string">"https://auction.openprocurement.org"</span>,
+        <span class="hljs-attr">"id"</span>: <span class="hljs-number">10884205</span>
+      },
+      {
+        <span class="hljs-attr">"lotId"</span>: <span class="hljs-number">425026</span>,
+        <span class="hljs-attr">"purchaseTitle"</span>: <span class="hljs-string">"ЛОТ №2 «Обладнання для кабінету лікувальної фізкультури, спортивного та ігрового призначення»"</span>,
+        <span class="hljs-attr">"auctionState"</span>: <span class="hljs-number">1</span>,
+        <span class="hljs-attr">"auctionDt"</span>: <span class="hljs-string">"2019-03-19T14:58:04"</span>,
+        <span class="hljs-attr">"auctionUrl"</span>: <span class="hljs-string">"https://auction.openprocurement.org"</span>,
+        <span class="hljs-attr">"id"</span>: <span class="hljs-number">10742282</span>
+      },
+    ]
+  }
+}
+</code></pre><h2 id="пример-правильного-валидного-запроса-аукционов-на-сегодня"><a class="header-link" href="#пример-правильного-валидного-запроса-аукционов-на-сегодня"></a>Пример правильного валидного запроса аукционов на сегодня</h2>
+<p>pycharm request:</p>
+<pre class="hljs"><code>GET <span class="hljs-string">http:</span><span class="hljs-comment">//my.zakupki.example.com:5001/remote/purchases/mobile_api/v2/auctions_in_range?page=1</span>
+Acc-<span class="hljs-string">Token:</span> <span class="hljs-number">7</span>d3cada3f5128e410370640756f7a11b008f4bb9</code></pre><p>curl request</p>
+<pre class="hljs"><code><span class="hljs-attribute">curl -X GET --header "Acc-Token</span>: 7d3cada3f5128e410370640756f7a11b008f4bb9" -X GET "http://my.zakupki.example.com:5001/remote/purchases/mobile_api/v2/auctions_in_range?page=1"</code></pre><p>response:</p>
+<pre class="hljs"><code>{
+  <span class="hljs-attr">"status"</span>: <span class="hljs-string">"ok"</span>,
+  <span class="hljs-attr">"data"</span>: {
+    <span class="hljs-attr">"next_page"</span>: <span class="hljs-literal">null</span>,
+    <span class="hljs-attr">"total"</span>: <span class="hljs-number">2</span>,
+    <span class="hljs-attr">"total_by_days"</span>: {
+      <span class="hljs-attr">"19.03.2019"</span>: <span class="hljs-number">1</span>
+    },
+    <span class="hljs-attr">"auctions"</span>: [
+      {
+        <span class="hljs-attr">"lotId"</span>: <span class="hljs-literal">null</span>,
+        <span class="hljs-attr">"purchaseTitle"</span>: <span class="hljs-string">"Сало"</span>,
+        <span class="hljs-attr">"auctionState"</span>: <span class="hljs-number">0</span>,
+        <span class="hljs-attr">"auctionDt"</span>: <span class="hljs-string">"2019-03-19T12:08:47"</span>,
+        <span class="hljs-attr">"auctionUrl"</span>: <span class="hljs-string">"https://auction.openprocurement.org"</span>,
+        <span class="hljs-attr">"id"</span>: <span class="hljs-number">10427605</span>
+      }
+    ]
+  }
+}
+</code></pre><h2 id="пример-ошибки-при-запросе-без-обязательного-параметра-page"><a class="header-link" href="#пример-ошибки-при-запросе-без-обязательного-параметра-page"></a>Пример ошибки при запросе без обязательного параметра page</h2>
+<p>pycharm request:</p>
+<pre class="hljs"><code>GET <span class="hljs-string">http:</span><span class="hljs-comment">//my.zakupki.example.com:5001/remote/purchases/mobile_api/v2/auctions_in_range?dt_from=01.03.2019&amp;dt_to=31.03.2019</span>
+Acc-<span class="hljs-string">Token:</span> <span class="hljs-number">7</span>d3cada3f5128e410370640756f7a11b008f4bb9</code></pre><p>curl request</p>
+<pre class="hljs"><code><span class="hljs-attribute">curl -X GET --header "Acc-Token</span>: 7d3cada3f5128e410370640756f7a11b008f4bb9" -X GET "http://my.zakupki.example.com:5001/remote/purchases/mobile_api/v2/auctions_in_range?dt_from=01.03.2019&amp;dt_to=31.03.2019"</code></pre><p>response:</p>
+<pre class="hljs"><code>{
+  <span class="hljs-attr">"status"</span>: <span class="hljs-string">"error"</span>,
+  <span class="hljs-attr">"errors"</span>: [],
+  <span class="hljs-attr">"system"</span>: <span class="hljs-string">"page is required parameter"</span>
+}</code></pre><h2 id="пример-запроса-c-неправильной-датой-01.001.2019"><a class="header-link" href="#пример-запроса-c-неправильной-датой-01.001.2019"></a>Пример запроса c неправильной датой 01.001.2019</h2>
+<p>pycharm request:</p>
+<pre class="hljs"><code>GET <span class="hljs-string">http:</span><span class="hljs-comment">//my.zakupki.example.com:5001/remote/purchases/mobile_api/v2/auctions_in_range?page=1&amp;dt_from=01.001.2019&amp;dt_to=31.03.2019</span>
+Acc-<span class="hljs-string">Token:</span> <span class="hljs-number">7</span>d3cada3f5128e410370640756f7a11b008f4bb9</code></pre><p>curl request</p>
+<pre class="hljs"><code><span class="hljs-attribute">curl -X GET --header "Acc-Token</span>: 7d3cada3f5128e410370640756f7a11b008f4bb9" -X GET "http://my.zakupki.example.com:5001/remote/purchases/mobile_api/v2/auctions_in_range?page=1&amp;dt_from=01.001.2019&amp;dt_to=31.03.2019"</code></pre><p>response:</p>
+<pre class="hljs"><code>{
+  <span class="hljs-attr">"status"</span>: <span class="hljs-string">"error"</span>,
+  <span class="hljs-attr">"errors"</span>: [],
+  <span class="hljs-attr">"system"</span>: <span class="hljs-string">"time data '01.001.2019' does not match format '%d.%m.%Y'"</span>
+}</code></pre><h2 id="возможный-вариант-ошибки-когда-параметр-page-не-типа-int:"><a class="header-link" href="#возможный-вариант-ошибки-когда-параметр-page-не-типа-int:"></a>Возможный вариант ошибки когда параметр page не типа int:</h2>
+<p>response:</p>
+<pre class="hljs"><code>{
+  <span class="hljs-attr">"status"</span>: <span class="hljs-string">"error"</span>,
+  <span class="hljs-attr">"errors"</span>: [],
+  <span class="hljs-attr">"system"</span>: <span class="hljs-string">"invalid literal for int() with base 10: 'ololo'"</span>
+}</code></pre>    </article>
+  </body>
+</html>

@@ -1,0 +1,955 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimal-ui">
+    <title>Claims list for tender</title>
+    <link type="text/css" rel="stylesheet" href="../assets/css/github-markdown.css">
+    <link type="text/css" rel="stylesheet" href="../assets/css/pilcrow.css">
+    <link type="text/css" rel="stylesheet" href="../assets/css/hljs-github.min.css"/>
+  </head>
+  <body>
+    <article class="markdown-body"><h1 id="claims-list-for-tender"><a class="header-link" href="#claims-list-for-tender"></a>Claims list for tender</h1>
+<p><strong>GET /remote/api/v3/claims/{uid}</strong></p>
+<blockquote>
+<p><strong>uid</strong> - purchase uid from <a href="./view.html">view</a>, <a href="./search.html">search</a></p>
+</blockquote>
+<p>request headers:</p>
+<ul class="list">
+<li><em>Api-Agent</em> - type: string, reuqired</li>
+<li><em>Acc-Token</em> - type: string, required</li>
+</ul>
+<p>possible response fields:</p>
+<ul class="list">
+<li><em>status</em> - type: str, values: ok/error</li>
+<li><em>errors</em> - type: array of objects, validation errors</li>
+<li><em>data</em> - type: object</li>
+<li><em>system</em> - type: str, system error messages</li>
+</ul>
+<p>response data fields</p>
+<ul class="list">
+<li><em>complaints</em> - type: array of <strong>complaints</strong> objects or empty, see <a href="./claim_view.html">claim view</a></li>
+<li><em>lots</em> - type: array of <strong>lot complaints</strong> objects or empty, described below</li>
+<li><em>permissions</em>: - type: <strong>complaints permissions</strong> object, described below</li>
+<li><em>uid</em> - type: str</li>
+<li><em>url</em> - type: str</li>
+</ul>
+<p>lot complaints object fields</p>
+<ul class="list">
+<li><em>complaints</em> - type: array of <strong>complaints</strong> objects or empty, see <a href="./claim_view.html">claim view</a></li>
+<li><em>uid</em> - type: str</li>
+<li><em>url</em> - type: str</li>
+</ul>
+<p>permission object data fields</p>
+<ul class="list">
+<li><em>award_choices</em> - type: array of <strong>award choice</strong> objects or empty, described below</li>
+<li><em>can_create</em> - type: bool</li>
+<li><em>create_scope</em> - type: int</li>
+<li><em>create_title</em> - type: str</li>
+<li><em>create_until</em> - type: date str or null, format <strong>yyyy-mm-ddTHH:MM:SS.fZ</strong></li>
+<li><em>id</em> - type: str</li>
+<li><em>lots</em> - type: array of <strong>lot permission</strong> objects or empty, described below</li>
+<li><em>qualification_choices</em> - type: array of <strong>qualification choice</strong> objects or empty, described below</li>
+</ul>
+<p>lot permission object data fields</p>
+<ul class="list">
+<li><em>award_choices</em> - type: array of <strong>award choice</strong> objects or empty, described below</li>
+<li><em>can_create</em> - type: bool</li>
+<li><em>create_until</em> - type: date str or null, format <strong>yyyy-mm-ddTHH:MM:SS.fZ</strong></li>
+<li><em>id</em> - type: str</li>
+<li><em>qualification_choices</em> - type: array of <strong>qualification choice</strong> objects or empty, described below</li>
+</ul>
+<p>award choice object fields</p>
+<ul class="list">
+<li><em>id</em> - type: str (award id)</li>
+<li><em>name</em> - type: str (merchant name)</li>
+</ul>
+<p>qualification choice object fields</p>
+<ul class="list">
+<li><em>id</em> - type: str (qualification id)</li>
+<li><em>name</em> - type: str (merchant name)</li>
+</ul>
+<p>award choices and qualification choices are needed to create a claim or complaint on specific supplier during &quot;prequalification_stand_still&quot; and &quot;qualification&quot; tender statuses (see create_claim doc)</p>
+<p>Example:</p>
+<p>request:</p>
+<pre class="hljs"><code>clear &amp;&amp; curl -X GET --header <span class="hljs-string">"Acc-Token: 5a119647c3fa191ab60d41ed9fabf784453999d4"</span> --header <span class="hljs-string">"Api-Agent: zk_ios"</span> <span class="hljs-string">"http://my.example.com:5001/remote/api/v3/claims/ae54ad50899147e88fa5675917288e78"</span> | json_pp</code></pre><p>response:</p>
+<pre class="hljs"><code>{
+   <span class="hljs-attr">"data"</span> : {
+      <span class="hljs-attr">"complaints"</span> : [
+         {
+            <span class="hljs-attr">"author"</span> : {},
+            <span class="hljs-attr">"cancellation_reason"</span> : <span class="hljs-string">"adfasdf"</span>,
+            <span class="hljs-attr">"date_accepted"</span> : <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"date_answered"</span> : <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"date_decision"</span> : <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"date_escalated"</span> : <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"date_submitted"</span> : <span class="hljs-string">"2018-01-31T12:11:24"</span>,
+            <span class="hljs-attr">"description"</span> : <span class="hljs-string">"on purchase"</span>,
+            <span class="hljs-attr">"files"</span> : {
+               <span class="hljs-attr">"complaintOwnerFiles"</span> : [
+                  {
+                     <span class="hljs-attr">"confidentiality"</span> : <span class="hljs-string">"public"</span>,
+                     <span class="hljs-attr">"dateModified"</span> : <span class="hljs-string">"2018-01-31T12:11:18"</span>,
+                     <span class="hljs-attr">"datePublished"</span> : <span class="hljs-string">"2018-01-31T12:11:18"</span>,
+                     <span class="hljs-attr">"history"</span> : [],
+                     <span class="hljs-attr">"id"</span> : <span class="hljs-string">"a3690a184b8b467ab036fa48a6b2446f"</span>,
+                     <span class="hljs-attr">"mimetype"</span> : <span class="hljs-string">"image/png"</span>,
+                     <span class="hljs-attr">"title"</span> : <span class="hljs-string">"test_img.png"</span>,
+                     <span class="hljs-attr">"url"</span> : <span class="hljs-string">"http://my.example.com:5001/media/files/1244076_test_img.png"</span>
+                  },
+                  {
+                     <span class="hljs-attr">"confidentiality"</span> : <span class="hljs-string">"public"</span>,
+                     <span class="hljs-attr">"dateModified"</span> : <span class="hljs-string">"2018-01-31T12:11:22"</span>,
+                     <span class="hljs-attr">"datePublished"</span> : <span class="hljs-string">"2018-01-31T12:11:22"</span>,
+                     <span class="hljs-attr">"history"</span> : [],
+                     <span class="hljs-attr">"id"</span> : <span class="hljs-string">"1c60c290a0db4fbc87c667b9aca3fa4e"</span>,
+                     <span class="hljs-attr">"mimetype"</span> : <span class="hljs-string">"text/html"</span>,
+                     <span class="hljs-attr">"title"</span> : <span class="hljs-string">"test.html"</span>,
+                     <span class="hljs-attr">"url"</span> : <span class="hljs-string">"http://my.example.com:5001/media/files/1244077_test.html"</span>
+                  },
+                  {
+                     <span class="hljs-attr">"confidentiality"</span> : <span class="hljs-string">"public"</span>,
+                     <span class="hljs-attr">"dateModified"</span> : <span class="hljs-string">"2018-01-31T12:11:23"</span>,
+                     <span class="hljs-attr">"datePublished"</span> : <span class="hljs-string">"2018-01-31T12:11:23"</span>,
+                     <span class="hljs-attr">"history"</span> : [],
+                     <span class="hljs-attr">"id"</span> : <span class="hljs-string">"43fc36898ef949f8b3aaef90150c9015"</span>,
+                     <span class="hljs-attr">"mimetype"</span> : <span class="hljs-string">"text/plain"</span>,
+                     <span class="hljs-attr">"title"</span> : <span class="hljs-string">"test.txt"</span>,
+                     <span class="hljs-attr">"url"</span> : <span class="hljs-string">"http://my.example.com:5001/media/files/1244079_test.txt"</span>
+                  },
+                  {
+                     <span class="hljs-attr">"confidentiality"</span> : <span class="hljs-string">"public"</span>,
+                     <span class="hljs-attr">"dateModified"</span> : <span class="hljs-string">"2018-01-31T12:11:20"</span>,
+                     <span class="hljs-attr">"datePublished"</span> : <span class="hljs-string">"2018-01-31T12:11:20"</span>,
+                     <span class="hljs-attr">"history"</span> : [],
+                     <span class="hljs-attr">"id"</span> : <span class="hljs-string">"1d6971ee5fed4fc39d699539c40d0712"</span>,
+                     <span class="hljs-attr">"mimetype"</span> : <span class="hljs-string">"application/json"</span>,
+                     <span class="hljs-attr">"title"</span> : <span class="hljs-string">"test.json"</span>,
+                     <span class="hljs-attr">"url"</span> : <span class="hljs-string">"http://my.example.com:5001/media/files/1244078_test.json"</span>
+                  },
+                  {
+                     <span class="hljs-attr">"confidentiality"</span> : <span class="hljs-string">"public"</span>,
+                     <span class="hljs-attr">"dateModified"</span> : <span class="hljs-string">"2018-01-31T12:11:23"</span>,
+                     <span class="hljs-attr">"datePublished"</span> : <span class="hljs-string">"2018-01-31T12:11:23"</span>,
+                     <span class="hljs-attr">"history"</span> : [],
+                     <span class="hljs-attr">"id"</span> : <span class="hljs-string">"d10f3d2989ee4fb0ab1d3309780e971f"</span>,
+                     <span class="hljs-attr">"mimetype"</span> : <span class="hljs-string">"text/plain"</span>,
+                     <span class="hljs-attr">"title"</span> : <span class="hljs-string">"test1.txt"</span>,
+                     <span class="hljs-attr">"url"</span> : <span class="hljs-string">"http://my.example.com:5001/media/files/1244080_test1.txt"</span>
+                  }
+               ],
+               <span class="hljs-attr">"purchaseOwnerFiles"</span> : [],
+               <span class="hljs-attr">"reviewerAboveOwnerFiles"</span> : [],
+               <span class="hljs-attr">"reviewerOwnerFiles"</span> : []
+            },
+            <span class="hljs-attr">"id"</span> : <span class="hljs-string">"6fd857afafef476b865c92e4182919b2"</span>,
+            <span class="hljs-attr">"resolution"</span> : <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"resolution_type"</span> : <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"satisfied"</span> : <span class="hljs-literal">false</span>,
+            <span class="hljs-attr">"status"</span> : <span class="hljs-number">4</span>,
+            <span class="hljs-attr">"status_text"</span> : <span class="hljs-string">"скасована"</span>,
+            <span class="hljs-attr">"tenderer_action"</span> : <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"title"</span> : <span class="hljs-string">"on purchase"</span>,
+            <span class="hljs-attr">"tuid"</span> : <span class="hljs-string">"UA-2018-01-30-000075-a.a2"</span>,
+            <span class="hljs-attr">"type_title"</span> : <span class="hljs-string">"Оскарження умов тендеру"</span>,
+            <span class="hljs-attr">"visible_name"</span> : <span class="hljs-string">"Вимога"</span>
+         },
+         {
+            <span class="hljs-attr">"author"</span> : {},
+            <span class="hljs-attr">"cancellation_reason"</span> : <span class="hljs-string">"adsgafds"</span>,
+            <span class="hljs-attr">"date_accepted"</span> : <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"date_answered"</span> : <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"date_decision"</span> : <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"date_escalated"</span> : <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"date_submitted"</span> : <span class="hljs-string">"2018-01-31T18:08:39"</span>,
+            <span class="hljs-attr">"description"</span> : <span class="hljs-string">"for cancel"</span>,
+            <span class="hljs-attr">"files"</span> : {
+               <span class="hljs-attr">"complaintOwnerFiles"</span> : [],
+               <span class="hljs-attr">"purchaseOwnerFiles"</span> : [],
+               <span class="hljs-attr">"reviewerAboveOwnerFiles"</span> : [],
+               <span class="hljs-attr">"reviewerOwnerFiles"</span> : []
+            },
+            <span class="hljs-attr">"id"</span> : <span class="hljs-string">"a3ecd0d55f744619af307aa35b772f54"</span>,
+            <span class="hljs-attr">"resolution"</span> : <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"resolution_type"</span> : <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"satisfied"</span> : <span class="hljs-literal">false</span>,
+            <span class="hljs-attr">"status"</span> : <span class="hljs-number">4</span>,
+            <span class="hljs-attr">"status_text"</span> : <span class="hljs-string">"скасована"</span>,
+            <span class="hljs-attr">"tenderer_action"</span> : <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"title"</span> : <span class="hljs-string">"for cancel"</span>,
+            <span class="hljs-attr">"tuid"</span> : <span class="hljs-string">"UA-2018-01-30-000075-a.a5"</span>,
+            <span class="hljs-attr">"type_title"</span> : <span class="hljs-string">"Оскарження умов тендеру"</span>,
+            <span class="hljs-attr">"visible_name"</span> : <span class="hljs-string">"Вимога"</span>
+         },
+         {
+            <span class="hljs-attr">"author"</span> : {},
+            <span class="hljs-attr">"cancellation_reason"</span> : <span class="hljs-string">"gads"</span>,
+            <span class="hljs-attr">"date_accepted"</span> : <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"date_answered"</span> : <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"date_decision"</span> : <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"date_escalated"</span> : <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"date_submitted"</span> : <span class="hljs-string">"2018-01-31T18:40:45"</span>,
+            <span class="hljs-attr">"description"</span> : <span class="hljs-string">"p1"</span>,
+            <span class="hljs-attr">"files"</span> : {
+               <span class="hljs-attr">"complaintOwnerFiles"</span> : [],
+               <span class="hljs-attr">"purchaseOwnerFiles"</span> : [],
+               <span class="hljs-attr">"reviewerAboveOwnerFiles"</span> : [],
+               <span class="hljs-attr">"reviewerOwnerFiles"</span> : []
+            },
+            <span class="hljs-attr">"id"</span> : <span class="hljs-string">"2a314cc3ab744510967b10376bf53713"</span>,
+            <span class="hljs-attr">"resolution"</span> : <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"resolution_type"</span> : <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"satisfied"</span> : <span class="hljs-literal">false</span>,
+            <span class="hljs-attr">"status"</span> : <span class="hljs-number">4</span>,
+            <span class="hljs-attr">"status_text"</span> : <span class="hljs-string">"скасована"</span>,
+            <span class="hljs-attr">"tenderer_action"</span> : <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"title"</span> : <span class="hljs-string">"p1"</span>,
+            <span class="hljs-attr">"tuid"</span> : <span class="hljs-string">"UA-2018-01-30-000075-a.a14"</span>,
+            <span class="hljs-attr">"type_title"</span> : <span class="hljs-string">"Оскарження умов тендеру"</span>,
+            <span class="hljs-attr">"visible_name"</span> : <span class="hljs-string">"Вимога"</span>
+         }
+      ],
+      <span class="hljs-attr">"lots"</span> : [
+         {
+            <span class="hljs-attr">"complaints"</span> : [
+               {
+                  <span class="hljs-attr">"author"</span> : {},
+                  <span class="hljs-attr">"cancellation_reason"</span> : <span class="hljs-string">"cancel"</span>,
+                  <span class="hljs-attr">"date_accepted"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"date_answered"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"date_decision"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"date_escalated"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"date_submitted"</span> : <span class="hljs-string">"2018-01-31T11:30:30"</span>,
+                  <span class="hljs-attr">"description"</span> : <span class="hljs-string">"agasdfasdf"</span>,
+                  <span class="hljs-attr">"files"</span> : {
+                     <span class="hljs-attr">"complaintOwnerFiles"</span> : [
+                        {
+                           <span class="hljs-attr">"confidentiality"</span> : <span class="hljs-string">"public"</span>,
+                           <span class="hljs-attr">"dateModified"</span> : <span class="hljs-string">"2018-01-31T11:30:30"</span>,
+                           <span class="hljs-attr">"datePublished"</span> : <span class="hljs-string">"2018-01-31T11:30:30"</span>,
+                           <span class="hljs-attr">"history"</span> : [],
+                           <span class="hljs-attr">"id"</span> : <span class="hljs-string">"9fde2dea38864894bb463bcef518ac92"</span>,
+                           <span class="hljs-attr">"mimetype"</span> : <span class="hljs-string">"text/plain"</span>,
+                           <span class="hljs-attr">"title"</span> : <span class="hljs-string">"test.txt"</span>,
+                           <span class="hljs-attr">"url"</span> : <span class="hljs-string">"http://my.example.com:5001/media/files/1244074_test.txt"</span>
+                        },
+                        {
+                           <span class="hljs-attr">"confidentiality"</span> : <span class="hljs-string">"public"</span>,
+                           <span class="hljs-attr">"dateModified"</span> : <span class="hljs-string">"2018-01-31T11:30:30"</span>,
+                           <span class="hljs-attr">"datePublished"</span> : <span class="hljs-string">"2018-01-31T11:30:30"</span>,
+                           <span class="hljs-attr">"history"</span> : [],
+                           <span class="hljs-attr">"id"</span> : <span class="hljs-string">"c89c5267dcb444eca8645ea1124145ba"</span>,
+                           <span class="hljs-attr">"mimetype"</span> : <span class="hljs-string">"text/plain"</span>,
+                           <span class="hljs-attr">"title"</span> : <span class="hljs-string">"test1.txt"</span>,
+                           <span class="hljs-attr">"url"</span> : <span class="hljs-string">"http://my.example.com:5001/media/files/1244075_test1.txt"</span>
+                        },
+                        {
+                           <span class="hljs-attr">"confidentiality"</span> : <span class="hljs-string">"public"</span>,
+                           <span class="hljs-attr">"dateModified"</span> : <span class="hljs-string">"2018-01-31T11:30:25"</span>,
+                           <span class="hljs-attr">"datePublished"</span> : <span class="hljs-string">"2018-01-31T11:30:25"</span>,
+                           <span class="hljs-attr">"history"</span> : [],
+                           <span class="hljs-attr">"id"</span> : <span class="hljs-string">"e5d9e51574b047018d839b23a87574d7"</span>,
+                           <span class="hljs-attr">"mimetype"</span> : <span class="hljs-string">"image/png"</span>,
+                           <span class="hljs-attr">"title"</span> : <span class="hljs-string">"test_img.png"</span>,
+                           <span class="hljs-attr">"url"</span> : <span class="hljs-string">"http://my.example.com:5001/media/files/1244071_test_img.png"</span>
+                        },
+                        {
+                           <span class="hljs-attr">"confidentiality"</span> : <span class="hljs-string">"public"</span>,
+                           <span class="hljs-attr">"dateModified"</span> : <span class="hljs-string">"2018-01-31T11:30:29"</span>,
+                           <span class="hljs-attr">"datePublished"</span> : <span class="hljs-string">"2018-01-31T11:30:29"</span>,
+                           <span class="hljs-attr">"history"</span> : [],
+                           <span class="hljs-attr">"id"</span> : <span class="hljs-string">"62d19c494a4c474b83d42bac9a19980e"</span>,
+                           <span class="hljs-attr">"mimetype"</span> : <span class="hljs-string">"application/json"</span>,
+                           <span class="hljs-attr">"title"</span> : <span class="hljs-string">"test.json"</span>,
+                           <span class="hljs-attr">"url"</span> : <span class="hljs-string">"http://my.example.com:5001/media/files/1244073_test.json"</span>
+                        },
+                        {
+                           <span class="hljs-attr">"confidentiality"</span> : <span class="hljs-string">"public"</span>,
+                           <span class="hljs-attr">"dateModified"</span> : <span class="hljs-string">"2018-01-31T11:30:28"</span>,
+                           <span class="hljs-attr">"datePublished"</span> : <span class="hljs-string">"2018-01-31T11:30:28"</span>,
+                           <span class="hljs-attr">"history"</span> : [],
+                           <span class="hljs-attr">"id"</span> : <span class="hljs-string">"30080bb9c8444c28a06a0d336ebce6ea"</span>,
+                           <span class="hljs-attr">"mimetype"</span> : <span class="hljs-string">"text/html"</span>,
+                           <span class="hljs-attr">"title"</span> : <span class="hljs-string">"test.html"</span>,
+                           <span class="hljs-attr">"url"</span> : <span class="hljs-string">"http://my.example.com:5001/media/files/1244072_test.html"</span>
+                        }
+                     ],
+                     <span class="hljs-attr">"purchaseOwnerFiles"</span> : [],
+                     <span class="hljs-attr">"reviewerAboveOwnerFiles"</span> : [],
+                     <span class="hljs-attr">"reviewerOwnerFiles"</span> : []
+                  },
+                  <span class="hljs-attr">"id"</span> : <span class="hljs-string">"2a7bfe2ed1f140558121b1ccb47cb470"</span>,
+                  <span class="hljs-attr">"resolution"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"resolution_type"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"satisfied"</span> : <span class="hljs-literal">false</span>,
+                  <span class="hljs-attr">"status"</span> : <span class="hljs-number">4</span>,
+                  <span class="hljs-attr">"status_text"</span> : <span class="hljs-string">"скасована"</span>,
+                  <span class="hljs-attr">"tenderer_action"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"title"</span> : <span class="hljs-string">"adsfasdfa"</span>,
+                  <span class="hljs-attr">"tuid"</span> : <span class="hljs-string">"UA-2018-01-30-000075-a.a1"</span>,
+                  <span class="hljs-attr">"type_title"</span> : <span class="hljs-string">"Оскарження умов тендеру"</span>,
+                  <span class="hljs-attr">"visible_name"</span> : <span class="hljs-string">"Вимога"</span>
+               },
+               {
+                  <span class="hljs-attr">"author"</span> : {},
+                  <span class="hljs-attr">"cancellation_reason"</span> : <span class="hljs-string">"cancel"</span>,
+                  <span class="hljs-attr">"date_accepted"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"date_answered"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"date_decision"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"date_escalated"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"date_submitted"</span> : <span class="hljs-string">"2018-01-31T14:02:34"</span>,
+                  <span class="hljs-attr">"description"</span> : <span class="hljs-string">"test lot claim api"</span>,
+                  <span class="hljs-attr">"files"</span> : {
+                     <span class="hljs-attr">"complaintOwnerFiles"</span> : [
+                        {
+                           <span class="hljs-attr">"confidentiality"</span> : <span class="hljs-string">"public"</span>,
+                           <span class="hljs-attr">"dateModified"</span> : <span class="hljs-string">"2018-01-31T14:02:32"</span>,
+                           <span class="hljs-attr">"datePublished"</span> : <span class="hljs-string">"2018-01-31T14:02:32"</span>,
+                           <span class="hljs-attr">"history"</span> : [],
+                           <span class="hljs-attr">"id"</span> : <span class="hljs-string">"69ecd42f78554756a2ba11d6791bf065"</span>,
+                           <span class="hljs-attr">"mimetype"</span> : <span class="hljs-string">"application/json"</span>,
+                           <span class="hljs-attr">"title"</span> : <span class="hljs-string">"test.json"</span>,
+                           <span class="hljs-attr">"url"</span> : <span class="hljs-string">"http://my.example.com:5001/media/files/1244083_test.json"</span>
+                        },
+                        {
+                           <span class="hljs-attr">"confidentiality"</span> : <span class="hljs-string">"public"</span>,
+                           <span class="hljs-attr">"dateModified"</span> : <span class="hljs-string">"2018-01-31T14:02:33"</span>,
+                           <span class="hljs-attr">"datePublished"</span> : <span class="hljs-string">"2018-01-31T14:02:33"</span>,
+                           <span class="hljs-attr">"history"</span> : [],
+                           <span class="hljs-attr">"id"</span> : <span class="hljs-string">"49f867e1bb3549cca9663bdcf1a8ae1a"</span>,
+                           <span class="hljs-attr">"mimetype"</span> : <span class="hljs-string">"text/plain"</span>,
+                           <span class="hljs-attr">"title"</span> : <span class="hljs-string">"test.txt"</span>,
+                           <span class="hljs-attr">"url"</span> : <span class="hljs-string">"http://my.example.com:5001/media/files/1244084_test.txt"</span>
+                        },
+                        {
+                           <span class="hljs-attr">"confidentiality"</span> : <span class="hljs-string">"public"</span>,
+                           <span class="hljs-attr">"dateModified"</span> : <span class="hljs-string">"2018-01-31T14:02:31"</span>,
+                           <span class="hljs-attr">"datePublished"</span> : <span class="hljs-string">"2018-01-31T14:02:31"</span>,
+                           <span class="hljs-attr">"history"</span> : [],
+                           <span class="hljs-attr">"id"</span> : <span class="hljs-string">"c199d22c49fb4033922c89fc18911604"</span>,
+                           <span class="hljs-attr">"mimetype"</span> : <span class="hljs-string">"image/png"</span>,
+                           <span class="hljs-attr">"title"</span> : <span class="hljs-string">"test_img.png"</span>,
+                           <span class="hljs-attr">"url"</span> : <span class="hljs-string">"http://my.example.com:5001/media/files/1244081_test_img.png"</span>
+                        },
+                        {
+                           <span class="hljs-attr">"confidentiality"</span> : <span class="hljs-string">"public"</span>,
+                           <span class="hljs-attr">"dateModified"</span> : <span class="hljs-string">"2018-01-31T14:02:32"</span>,
+                           <span class="hljs-attr">"datePublished"</span> : <span class="hljs-string">"2018-01-31T14:02:32"</span>,
+                           <span class="hljs-attr">"history"</span> : [],
+                           <span class="hljs-attr">"id"</span> : <span class="hljs-string">"658e8093ef0e487d966667bfed90cc0e"</span>,
+                           <span class="hljs-attr">"mimetype"</span> : <span class="hljs-string">"text/html"</span>,
+                           <span class="hljs-attr">"title"</span> : <span class="hljs-string">"test.html"</span>,
+                           <span class="hljs-attr">"url"</span> : <span class="hljs-string">"http://my.example.com:5001/media/files/1244082_test.html"</span>
+                        },
+                        {
+                           <span class="hljs-attr">"confidentiality"</span> : <span class="hljs-string">"public"</span>,
+                           <span class="hljs-attr">"dateModified"</span> : <span class="hljs-string">"2018-01-31T14:02:33"</span>,
+                           <span class="hljs-attr">"datePublished"</span> : <span class="hljs-string">"2018-01-31T14:02:33"</span>,
+                           <span class="hljs-attr">"history"</span> : [],
+                           <span class="hljs-attr">"id"</span> : <span class="hljs-string">"06d8cc3ed37d48caacfaa84e307c1318"</span>,
+                           <span class="hljs-attr">"mimetype"</span> : <span class="hljs-string">"text/plain"</span>,
+                           <span class="hljs-attr">"title"</span> : <span class="hljs-string">"test1.txt"</span>,
+                           <span class="hljs-attr">"url"</span> : <span class="hljs-string">"http://my.example.com:5001/media/files/1244085_test1.txt"</span>
+                        }
+                     ],
+                     <span class="hljs-attr">"purchaseOwnerFiles"</span> : [],
+                     <span class="hljs-attr">"reviewerAboveOwnerFiles"</span> : [],
+                     <span class="hljs-attr">"reviewerOwnerFiles"</span> : []
+                  },
+                  <span class="hljs-attr">"id"</span> : <span class="hljs-string">"47f027a2a9ae4b1889098b155d9b1c2d"</span>,
+                  <span class="hljs-attr">"resolution"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"resolution_type"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"satisfied"</span> : <span class="hljs-literal">false</span>,
+                  <span class="hljs-attr">"status"</span> : <span class="hljs-number">4</span>,
+                  <span class="hljs-attr">"status_text"</span> : <span class="hljs-string">"скасована"</span>,
+                  <span class="hljs-attr">"tenderer_action"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"title"</span> : <span class="hljs-string">"test lot claim api"</span>,
+                  <span class="hljs-attr">"tuid"</span> : <span class="hljs-string">"UA-2018-01-30-000075-a.a3"</span>,
+                  <span class="hljs-attr">"type_title"</span> : <span class="hljs-string">"Оскарження умов тендеру"</span>,
+                  <span class="hljs-attr">"visible_name"</span> : <span class="hljs-string">"Вимога"</span>
+               },
+               {
+                  <span class="hljs-attr">"author"</span> : {},
+                  <span class="hljs-attr">"cancellation_reason"</span> : <span class="hljs-string">"cancel"</span>,
+                  <span class="hljs-attr">"date_accepted"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"date_answered"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"date_decision"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"date_escalated"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"date_submitted"</span> : <span class="hljs-string">"2018-01-31T14:05:18"</span>,
+                  <span class="hljs-attr">"description"</span> : <span class="hljs-string">"test claims api lot"</span>,
+                  <span class="hljs-attr">"files"</span> : {
+                     <span class="hljs-attr">"complaintOwnerFiles"</span> : [
+                        {
+                           <span class="hljs-attr">"confidentiality"</span> : <span class="hljs-string">"public"</span>,
+                           <span class="hljs-attr">"dateModified"</span> : <span class="hljs-string">"2018-01-31T14:05:16"</span>,
+                           <span class="hljs-attr">"datePublished"</span> : <span class="hljs-string">"2018-01-31T14:05:16"</span>,
+                           <span class="hljs-attr">"history"</span> : [],
+                           <span class="hljs-attr">"id"</span> : <span class="hljs-string">"72e812ec1e4640868945cf29bd7a31f9"</span>,
+                           <span class="hljs-attr">"mimetype"</span> : <span class="hljs-string">"text/html"</span>,
+                           <span class="hljs-attr">"title"</span> : <span class="hljs-string">"test.html"</span>,
+                           <span class="hljs-attr">"url"</span> : <span class="hljs-string">"http://my.example.com:5001/media/files/1244086_test.html"</span>
+                        }
+                     ],
+                     <span class="hljs-attr">"purchaseOwnerFiles"</span> : [],
+                     <span class="hljs-attr">"reviewerAboveOwnerFiles"</span> : [],
+                     <span class="hljs-attr">"reviewerOwnerFiles"</span> : []
+                  },
+                  <span class="hljs-attr">"id"</span> : <span class="hljs-string">"72c07fcd8b944c588ce5ed76f186e91e"</span>,
+                  <span class="hljs-attr">"resolution"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"resolution_type"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"satisfied"</span> : <span class="hljs-literal">false</span>,
+                  <span class="hljs-attr">"status"</span> : <span class="hljs-number">4</span>,
+                  <span class="hljs-attr">"status_text"</span> : <span class="hljs-string">"скасована"</span>,
+                  <span class="hljs-attr">"tenderer_action"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"title"</span> : <span class="hljs-string">"test claims api lot"</span>,
+                  <span class="hljs-attr">"tuid"</span> : <span class="hljs-string">"UA-2018-01-30-000075-a.a4"</span>,
+                  <span class="hljs-attr">"type_title"</span> : <span class="hljs-string">"Оскарження умов тендеру"</span>,
+                  <span class="hljs-attr">"visible_name"</span> : <span class="hljs-string">"Вимога"</span>
+               },
+               {
+                  <span class="hljs-attr">"author"</span> : {},
+                  <span class="hljs-attr">"cancellation_reason"</span> : <span class="hljs-string">"jhk"</span>,
+                  <span class="hljs-attr">"date_accepted"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"date_answered"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"date_decision"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"date_escalated"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"date_submitted"</span> : <span class="hljs-string">"2018-01-31T18:11:46"</span>,
+                  <span class="hljs-attr">"description"</span> : <span class="hljs-string">"cancel"</span>,
+                  <span class="hljs-attr">"files"</span> : {
+                     <span class="hljs-attr">"complaintOwnerFiles"</span> : [],
+                     <span class="hljs-attr">"purchaseOwnerFiles"</span> : [],
+                     <span class="hljs-attr">"reviewerAboveOwnerFiles"</span> : [],
+                     <span class="hljs-attr">"reviewerOwnerFiles"</span> : []
+                  },
+                  <span class="hljs-attr">"id"</span> : <span class="hljs-string">"93038c0de91d42e0acdfbd4ddef1f944"</span>,
+                  <span class="hljs-attr">"resolution"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"resolution_type"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"satisfied"</span> : <span class="hljs-literal">false</span>,
+                  <span class="hljs-attr">"status"</span> : <span class="hljs-number">4</span>,
+                  <span class="hljs-attr">"status_text"</span> : <span class="hljs-string">"скасована"</span>,
+                  <span class="hljs-attr">"tenderer_action"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"title"</span> : <span class="hljs-string">"cancel"</span>,
+                  <span class="hljs-attr">"tuid"</span> : <span class="hljs-string">"UA-2018-01-30-000075-a.a6"</span>,
+                  <span class="hljs-attr">"type_title"</span> : <span class="hljs-string">"Оскарження умов тендеру"</span>,
+                  <span class="hljs-attr">"visible_name"</span> : <span class="hljs-string">"Вимога"</span>
+               },
+               {
+                  <span class="hljs-attr">"author"</span> : {},
+                  <span class="hljs-attr">"cancellation_reason"</span> : <span class="hljs-string">"asdfsdf"</span>,
+                  <span class="hljs-attr">"date_accepted"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"date_answered"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"date_decision"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"date_escalated"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"date_submitted"</span> : <span class="hljs-string">"2018-01-31T18:16:42"</span>,
+                  <span class="hljs-attr">"description"</span> : <span class="hljs-string">"cancel"</span>,
+                  <span class="hljs-attr">"files"</span> : {
+                     <span class="hljs-attr">"complaintOwnerFiles"</span> : [],
+                     <span class="hljs-attr">"purchaseOwnerFiles"</span> : [],
+                     <span class="hljs-attr">"reviewerAboveOwnerFiles"</span> : [],
+                     <span class="hljs-attr">"reviewerOwnerFiles"</span> : []
+                  },
+                  <span class="hljs-attr">"id"</span> : <span class="hljs-string">"5e51a2dbdf93412bb0ec6bae35314d62"</span>,
+                  <span class="hljs-attr">"resolution"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"resolution_type"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"satisfied"</span> : <span class="hljs-literal">false</span>,
+                  <span class="hljs-attr">"status"</span> : <span class="hljs-number">4</span>,
+                  <span class="hljs-attr">"status_text"</span> : <span class="hljs-string">"скасована"</span>,
+                  <span class="hljs-attr">"tenderer_action"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"title"</span> : <span class="hljs-string">"cancel"</span>,
+                  <span class="hljs-attr">"tuid"</span> : <span class="hljs-string">"UA-2018-01-30-000075-a.a7"</span>,
+                  <span class="hljs-attr">"type_title"</span> : <span class="hljs-string">"Оскарження умов тендеру"</span>,
+                  <span class="hljs-attr">"visible_name"</span> : <span class="hljs-string">"Вимога"</span>
+               },
+               {
+                  <span class="hljs-attr">"author"</span> : {},
+                  <span class="hljs-attr">"cancellation_reason"</span> : <span class="hljs-string">"sdgadfasdf"</span>,
+                  <span class="hljs-attr">"date_accepted"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"date_answered"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"date_decision"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"date_escalated"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"date_submitted"</span> : <span class="hljs-string">"2018-01-31T18:19:24"</span>,
+                  <span class="hljs-attr">"description"</span> : <span class="hljs-string">"affordasdf"</span>,
+                  <span class="hljs-attr">"files"</span> : {
+                     <span class="hljs-attr">"complaintOwnerFiles"</span> : [],
+                     <span class="hljs-attr">"purchaseOwnerFiles"</span> : [],
+                     <span class="hljs-attr">"reviewerAboveOwnerFiles"</span> : [],
+                     <span class="hljs-attr">"reviewerOwnerFiles"</span> : []
+                  },
+                  <span class="hljs-attr">"id"</span> : <span class="hljs-string">"5464736852e94ed7ad32f43857288759"</span>,
+                  <span class="hljs-attr">"resolution"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"resolution_type"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"satisfied"</span> : <span class="hljs-literal">false</span>,
+                  <span class="hljs-attr">"status"</span> : <span class="hljs-number">4</span>,
+                  <span class="hljs-attr">"status_text"</span> : <span class="hljs-string">"скасована"</span>,
+                  <span class="hljs-attr">"tenderer_action"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"title"</span> : <span class="hljs-string">"agdsg"</span>,
+                  <span class="hljs-attr">"tuid"</span> : <span class="hljs-string">"UA-2018-01-30-000075-a.a8"</span>,
+                  <span class="hljs-attr">"type_title"</span> : <span class="hljs-string">"Оскарження умов тендеру"</span>,
+                  <span class="hljs-attr">"visible_name"</span> : <span class="hljs-string">"Вимога"</span>
+               },
+               {
+                  <span class="hljs-attr">"author"</span> : {},
+                  <span class="hljs-attr">"cancellation_reason"</span> : <span class="hljs-string">"azdgadsfasdf"</span>,
+                  <span class="hljs-attr">"date_accepted"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"date_answered"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"date_decision"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"date_escalated"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"date_submitted"</span> : <span class="hljs-string">"2018-01-31T18:23:16"</span>,
+                  <span class="hljs-attr">"description"</span> : <span class="hljs-string">"asdfasdf"</span>,
+                  <span class="hljs-attr">"files"</span> : {
+                     <span class="hljs-attr">"complaintOwnerFiles"</span> : [],
+                     <span class="hljs-attr">"purchaseOwnerFiles"</span> : [],
+                     <span class="hljs-attr">"reviewerAboveOwnerFiles"</span> : [],
+                     <span class="hljs-attr">"reviewerOwnerFiles"</span> : []
+                  },
+                  <span class="hljs-attr">"id"</span> : <span class="hljs-string">"7f78de505cee4e3d837c52818100e8d9"</span>,
+                  <span class="hljs-attr">"resolution"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"resolution_type"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"satisfied"</span> : <span class="hljs-literal">false</span>,
+                  <span class="hljs-attr">"status"</span> : <span class="hljs-number">4</span>,
+                  <span class="hljs-attr">"status_text"</span> : <span class="hljs-string">"скасована"</span>,
+                  <span class="hljs-attr">"tenderer_action"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"title"</span> : <span class="hljs-string">"gasdfa"</span>,
+                  <span class="hljs-attr">"tuid"</span> : <span class="hljs-string">"UA-2018-01-30-000075-a.a9"</span>,
+                  <span class="hljs-attr">"type_title"</span> : <span class="hljs-string">"Оскарження умов тендеру"</span>,
+                  <span class="hljs-attr">"visible_name"</span> : <span class="hljs-string">"Вимога"</span>
+               },
+               {
+                  <span class="hljs-attr">"author"</span> : {},
+                  <span class="hljs-attr">"cancellation_reason"</span> : <span class="hljs-string">"adsfasdfa"</span>,
+                  <span class="hljs-attr">"date_accepted"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"date_answered"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"date_decision"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"date_escalated"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"date_submitted"</span> : <span class="hljs-string">"2018-01-31T18:32:32"</span>,
+                  <span class="hljs-attr">"description"</span> : <span class="hljs-string">"asdfasdf"</span>,
+                  <span class="hljs-attr">"files"</span> : {
+                     <span class="hljs-attr">"complaintOwnerFiles"</span> : [],
+                     <span class="hljs-attr">"purchaseOwnerFiles"</span> : [],
+                     <span class="hljs-attr">"reviewerAboveOwnerFiles"</span> : [],
+                     <span class="hljs-attr">"reviewerOwnerFiles"</span> : []
+                  },
+                  <span class="hljs-attr">"id"</span> : <span class="hljs-string">"890a3bf3d3744765a247f338d0cb5268"</span>,
+                  <span class="hljs-attr">"resolution"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"resolution_type"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"satisfied"</span> : <span class="hljs-literal">false</span>,
+                  <span class="hljs-attr">"status"</span> : <span class="hljs-number">4</span>,
+                  <span class="hljs-attr">"status_text"</span> : <span class="hljs-string">"скасована"</span>,
+                  <span class="hljs-attr">"tenderer_action"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"title"</span> : <span class="hljs-string">"ahhadfadsf"</span>,
+                  <span class="hljs-attr">"tuid"</span> : <span class="hljs-string">"UA-2018-01-30-000075-a.a10"</span>,
+                  <span class="hljs-attr">"type_title"</span> : <span class="hljs-string">"Оскарження умов тендеру"</span>,
+                  <span class="hljs-attr">"visible_name"</span> : <span class="hljs-string">"Вимога"</span>
+               },
+               {
+                  <span class="hljs-attr">"author"</span> : {},
+                  <span class="hljs-attr">"cancellation_reason"</span> : <span class="hljs-string">"gasdfasdgadsf"</span>,
+                  <span class="hljs-attr">"date_accepted"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"date_answered"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"date_decision"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"date_escalated"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"date_submitted"</span> : <span class="hljs-string">"2018-01-31T18:34:26"</span>,
+                  <span class="hljs-attr">"description"</span> : <span class="hljs-string">"asdfasdf"</span>,
+                  <span class="hljs-attr">"files"</span> : {
+                     <span class="hljs-attr">"complaintOwnerFiles"</span> : [],
+                     <span class="hljs-attr">"purchaseOwnerFiles"</span> : [],
+                     <span class="hljs-attr">"reviewerAboveOwnerFiles"</span> : [],
+                     <span class="hljs-attr">"reviewerOwnerFiles"</span> : []
+                  },
+                  <span class="hljs-attr">"id"</span> : <span class="hljs-string">"1ecf67e0d7404da5ac0889a949e869eb"</span>,
+                  <span class="hljs-attr">"resolution"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"resolution_type"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"satisfied"</span> : <span class="hljs-literal">false</span>,
+                  <span class="hljs-attr">"status"</span> : <span class="hljs-number">4</span>,
+                  <span class="hljs-attr">"status_text"</span> : <span class="hljs-string">"скасована"</span>,
+                  <span class="hljs-attr">"tenderer_action"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"title"</span> : <span class="hljs-string">"agrdfds"</span>,
+                  <span class="hljs-attr">"tuid"</span> : <span class="hljs-string">"UA-2018-01-30-000075-a.a11"</span>,
+                  <span class="hljs-attr">"type_title"</span> : <span class="hljs-string">"Оскарження умов тендеру"</span>,
+                  <span class="hljs-attr">"visible_name"</span> : <span class="hljs-string">"Вимога"</span>
+               },
+               {
+                  <span class="hljs-attr">"author"</span> : {},
+                  <span class="hljs-attr">"cancellation_reason"</span> : <span class="hljs-string">"agdsfasdf"</span>,
+                  <span class="hljs-attr">"date_accepted"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"date_answered"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"date_decision"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"date_escalated"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"date_submitted"</span> : <span class="hljs-string">"2018-01-31T18:35:41"</span>,
+                  <span class="hljs-attr">"description"</span> : <span class="hljs-string">"rsadfasdf"</span>,
+                  <span class="hljs-attr">"files"</span> : {
+                     <span class="hljs-attr">"complaintOwnerFiles"</span> : [],
+                     <span class="hljs-attr">"purchaseOwnerFiles"</span> : [],
+                     <span class="hljs-attr">"reviewerAboveOwnerFiles"</span> : [],
+                     <span class="hljs-attr">"reviewerOwnerFiles"</span> : []
+                  },
+                  <span class="hljs-attr">"id"</span> : <span class="hljs-string">"f18763c222544873bb15d2a3170d045f"</span>,
+                  <span class="hljs-attr">"resolution"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"resolution_type"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"satisfied"</span> : <span class="hljs-literal">false</span>,
+                  <span class="hljs-attr">"status"</span> : <span class="hljs-number">4</span>,
+                  <span class="hljs-attr">"status_text"</span> : <span class="hljs-string">"скасована"</span>,
+                  <span class="hljs-attr">"tenderer_action"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"title"</span> : <span class="hljs-string">"agdasdf"</span>,
+                  <span class="hljs-attr">"tuid"</span> : <span class="hljs-string">"UA-2018-01-30-000075-a.a12"</span>,
+                  <span class="hljs-attr">"type_title"</span> : <span class="hljs-string">"Оскарження умов тендеру"</span>,
+                  <span class="hljs-attr">"visible_name"</span> : <span class="hljs-string">"Вимога"</span>
+               },
+               {
+                  <span class="hljs-attr">"author"</span> : {},
+                  <span class="hljs-attr">"cancellation_reason"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"date_accepted"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"date_answered"</span> : <span class="hljs-string">"2018-02-01T09:08:40"</span>,
+                  <span class="hljs-attr">"date_decision"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"date_escalated"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"date_submitted"</span> : <span class="hljs-string">"2018-01-31T18:40:02"</span>,
+                  <span class="hljs-attr">"description"</span> : <span class="hljs-string">"pur"</span>,
+                  <span class="hljs-attr">"files"</span> : {
+                     <span class="hljs-attr">"complaintOwnerFiles"</span> : [],
+                     <span class="hljs-attr">"purchaseOwnerFiles"</span> : [
+                        {
+                           <span class="hljs-attr">"confidentiality"</span> : <span class="hljs-string">"public"</span>,
+                           <span class="hljs-attr">"dateModified"</span> : <span class="hljs-string">"2018-02-01T09:08:39"</span>,
+                           <span class="hljs-attr">"datePublished"</span> : <span class="hljs-string">"2018-02-01T09:08:39"</span>,
+                           <span class="hljs-attr">"history"</span> : [],
+                           <span class="hljs-attr">"id"</span> : <span class="hljs-string">"61eabbd799c24012a72fdcf9cd0adde4"</span>,
+                           <span class="hljs-attr">"mimetype"</span> : <span class="hljs-string">"text/plain"</span>,
+                           <span class="hljs-attr">"title"</span> : <span class="hljs-string">"test.txt"</span>,
+                           <span class="hljs-attr">"url"</span> : <span class="hljs-string">"http://my.example.com:5001/media/files/1244089_test.txt"</span>
+                        },
+                        {
+                           <span class="hljs-attr">"confidentiality"</span> : <span class="hljs-string">"public"</span>,
+                           <span class="hljs-attr">"dateModified"</span> : <span class="hljs-string">"2018-02-01T09:08:39"</span>,
+                           <span class="hljs-attr">"datePublished"</span> : <span class="hljs-string">"2018-02-01T09:08:39"</span>,
+                           <span class="hljs-attr">"history"</span> : [],
+                           <span class="hljs-attr">"id"</span> : <span class="hljs-string">"2184e60060a5496da285b0ba3106681e"</span>,
+                           <span class="hljs-attr">"mimetype"</span> : <span class="hljs-string">"text/plain"</span>,
+                           <span class="hljs-attr">"title"</span> : <span class="hljs-string">"test1.txt"</span>,
+                           <span class="hljs-attr">"url"</span> : <span class="hljs-string">"http://my.example.com:5001/media/files/1244090_test1.txt"</span>
+                        },
+                        {
+                           <span class="hljs-attr">"confidentiality"</span> : <span class="hljs-string">"public"</span>,
+                           <span class="hljs-attr">"dateModified"</span> : <span class="hljs-string">"2018-02-01T09:08:38"</span>,
+                           <span class="hljs-attr">"datePublished"</span> : <span class="hljs-string">"2018-02-01T09:08:38"</span>,
+                           <span class="hljs-attr">"history"</span> : [],
+                           <span class="hljs-attr">"id"</span> : <span class="hljs-string">"348b9413f47a4a8fbdc03b8cd8b2742b"</span>,
+                           <span class="hljs-attr">"mimetype"</span> : <span class="hljs-string">"application/json"</span>,
+                           <span class="hljs-attr">"title"</span> : <span class="hljs-string">"test.json"</span>,
+                           <span class="hljs-attr">"url"</span> : <span class="hljs-string">"http://my.example.com:5001/media/files/1244088_test.json"</span>
+                        },
+                        {
+                           <span class="hljs-attr">"confidentiality"</span> : <span class="hljs-string">"public"</span>,
+                           <span class="hljs-attr">"dateModified"</span> : <span class="hljs-string">"2018-02-01T09:08:38"</span>,
+                           <span class="hljs-attr">"datePublished"</span> : <span class="hljs-string">"2018-02-01T09:08:38"</span>,
+                           <span class="hljs-attr">"history"</span> : [],
+                           <span class="hljs-attr">"id"</span> : <span class="hljs-string">"d6b71179867d40f4be9d537dea00fdea"</span>,
+                           <span class="hljs-attr">"mimetype"</span> : <span class="hljs-string">"text/html"</span>,
+                           <span class="hljs-attr">"title"</span> : <span class="hljs-string">"test.html"</span>,
+                           <span class="hljs-attr">"url"</span> : <span class="hljs-string">"http://my.example.com:5001/media/files/1244087_test.html"</span>
+                        }
+                     ],
+                     <span class="hljs-attr">"reviewerAboveOwnerFiles"</span> : [],
+                     <span class="hljs-attr">"reviewerOwnerFiles"</span> : []
+                  },
+                  <span class="hljs-attr">"id"</span> : <span class="hljs-string">"175a9c4919a6492e9e44a511f2a5adaa"</span>,
+                  <span class="hljs-attr">"resolution"</span> : <span class="hljs-string">"satdasf asdfasd fads asdfasd fasd fasf asdf asd"</span>,
+                  <span class="hljs-attr">"resolution_type"</span> : <span class="hljs-string">"задовільнена"</span>,
+                  <span class="hljs-attr">"satisfied"</span> : <span class="hljs-literal">true</span>,
+                  <span class="hljs-attr">"status"</span> : <span class="hljs-number">3</span>,
+                  <span class="hljs-attr">"status_text"</span> : <span class="hljs-string">"розглянута"</span>,
+                  <span class="hljs-attr">"tenderer_action"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"title"</span> : <span class="hljs-string">"pur"</span>,
+                  <span class="hljs-attr">"tuid"</span> : <span class="hljs-string">"UA-2018-01-30-000075-a.a13"</span>,
+                  <span class="hljs-attr">"type_title"</span> : <span class="hljs-string">"Оскарження умов тендеру"</span>,
+                  <span class="hljs-attr">"visible_name"</span> : <span class="hljs-string">"Вимога"</span>
+               }
+            ],
+            <span class="hljs-attr">"uid"</span> : <span class="hljs-string">"63bf13bd1b064dd6acb19da16b85fd8e"</span>,
+            <span class="hljs-attr">"url"</span> : <span class="hljs-string">"http://zakupki.example.com:5001/gov/tenders/UA-2018-01-30-000075-a/lot-63bf13bd1b064dd6acb19da16b85fd8e/complaints"</span>
+         },
+         {
+            <span class="hljs-attr">"complaints"</span> : [
+               {
+                  <span class="hljs-attr">"author"</span> : {},
+                  <span class="hljs-attr">"cancellation_reason"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"date_accepted"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"date_answered"</span> : <span class="hljs-string">"2018-02-01T15:54:35"</span>,
+                  <span class="hljs-attr">"date_decision"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"date_escalated"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"date_submitted"</span> : <span class="hljs-string">"2018-02-01T15:39:09"</span>,
+                  <span class="hljs-attr">"description"</span> : <span class="hljs-string">"on award in lot 1"</span>,
+                  <span class="hljs-attr">"files"</span> : {
+                     <span class="hljs-attr">"complaintOwnerFiles"</span> : [
+                        {
+                           <span class="hljs-attr">"confidentiality"</span> : <span class="hljs-string">"public"</span>,
+                           <span class="hljs-attr">"dateModified"</span> : <span class="hljs-string">"2018-02-01T15:39:03"</span>,
+                           <span class="hljs-attr">"datePublished"</span> : <span class="hljs-string">"2018-02-01T15:39:03"</span>,
+                           <span class="hljs-attr">"history"</span> : [],
+                           <span class="hljs-attr">"id"</span> : <span class="hljs-string">"0fa233df7d474377b4e27a28a9e59daa"</span>,
+                           <span class="hljs-attr">"mimetype"</span> : <span class="hljs-string">"image/png"</span>,
+                           <span class="hljs-attr">"title"</span> : <span class="hljs-string">"test_img.png"</span>,
+                           <span class="hljs-attr">"url"</span> : <span class="hljs-string">"http://my.example.com:5001/media/files/1244091_test_img.png"</span>
+                        },
+                        {
+                           <span class="hljs-attr">"confidentiality"</span> : <span class="hljs-string">"public"</span>,
+                           <span class="hljs-attr">"dateModified"</span> : <span class="hljs-string">"2018-02-01T15:39:08"</span>,
+                           <span class="hljs-attr">"datePublished"</span> : <span class="hljs-string">"2018-02-01T15:39:08"</span>,
+                           <span class="hljs-attr">"history"</span> : [],
+                           <span class="hljs-attr">"id"</span> : <span class="hljs-string">"330cd8f4c990451786daa008352e4756"</span>,
+                           <span class="hljs-attr">"mimetype"</span> : <span class="hljs-string">"text/plain"</span>,
+                           <span class="hljs-attr">"title"</span> : <span class="hljs-string">"test1.txt"</span>,
+                           <span class="hljs-attr">"url"</span> : <span class="hljs-string">"http://my.example.com:5001/media/files/1244095_test1.txt"</span>
+                        },
+                        {
+                           <span class="hljs-attr">"confidentiality"</span> : <span class="hljs-string">"public"</span>,
+                           <span class="hljs-attr">"dateModified"</span> : <span class="hljs-string">"2018-02-01T15:39:07"</span>,
+                           <span class="hljs-attr">"datePublished"</span> : <span class="hljs-string">"2018-02-01T15:39:07"</span>,
+                           <span class="hljs-attr">"history"</span> : [],
+                           <span class="hljs-attr">"id"</span> : <span class="hljs-string">"d5ba6e6fe965482cafac53755127e34e"</span>,
+                           <span class="hljs-attr">"mimetype"</span> : <span class="hljs-string">"application/json"</span>,
+                           <span class="hljs-attr">"title"</span> : <span class="hljs-string">"test.json"</span>,
+                           <span class="hljs-attr">"url"</span> : <span class="hljs-string">"http://my.example.com:5001/media/files/1244093_test.json"</span>
+                        },
+                        {
+                           <span class="hljs-attr">"confidentiality"</span> : <span class="hljs-string">"public"</span>,
+                           <span class="hljs-attr">"dateModified"</span> : <span class="hljs-string">"2018-02-01T15:39:08"</span>,
+                           <span class="hljs-attr">"datePublished"</span> : <span class="hljs-string">"2018-02-01T15:39:08"</span>,
+                           <span class="hljs-attr">"history"</span> : [],
+                           <span class="hljs-attr">"id"</span> : <span class="hljs-string">"63aeb70a5acc40de844cf5f3e94b5a02"</span>,
+                           <span class="hljs-attr">"mimetype"</span> : <span class="hljs-string">"text/plain"</span>,
+                           <span class="hljs-attr">"title"</span> : <span class="hljs-string">"test.txt"</span>,
+                           <span class="hljs-attr">"url"</span> : <span class="hljs-string">"http://my.example.com:5001/media/files/1244094_test.txt"</span>
+                        },
+                        {
+                           <span class="hljs-attr">"confidentiality"</span> : <span class="hljs-string">"public"</span>,
+                           <span class="hljs-attr">"dateModified"</span> : <span class="hljs-string">"2018-02-01T15:39:06"</span>,
+                           <span class="hljs-attr">"datePublished"</span> : <span class="hljs-string">"2018-02-01T15:39:06"</span>,
+                           <span class="hljs-attr">"history"</span> : [],
+                           <span class="hljs-attr">"id"</span> : <span class="hljs-string">"200fb5a550904147afa80c63ccc8a193"</span>,
+                           <span class="hljs-attr">"mimetype"</span> : <span class="hljs-string">"text/html"</span>,
+                           <span class="hljs-attr">"title"</span> : <span class="hljs-string">"test.html"</span>,
+                           <span class="hljs-attr">"url"</span> : <span class="hljs-string">"http://my.example.com:5001/media/files/1244092_test.html"</span>
+                        }
+                     ],
+                     <span class="hljs-attr">"purchaseOwnerFiles"</span> : [
+                        {
+                           <span class="hljs-attr">"confidentiality"</span> : <span class="hljs-string">"public"</span>,
+                           <span class="hljs-attr">"dateModified"</span> : <span class="hljs-string">"2018-02-01T15:54:31"</span>,
+                           <span class="hljs-attr">"datePublished"</span> : <span class="hljs-string">"2018-02-01T15:54:31"</span>,
+                           <span class="hljs-attr">"history"</span> : [],
+                           <span class="hljs-attr">"id"</span> : <span class="hljs-string">"f6aa728ceaca4e969e60b6526d2ab30a"</span>,
+                           <span class="hljs-attr">"mimetype"</span> : <span class="hljs-string">"text/plain"</span>,
+                           <span class="hljs-attr">"title"</span> : <span class="hljs-string">"test1.txt"</span>,
+                           <span class="hljs-attr">"url"</span> : <span class="hljs-string">"http://my.example.com:5001/media/files/1244100_test1.txt"</span>
+                        },
+                        {
+                           <span class="hljs-attr">"confidentiality"</span> : <span class="hljs-string">"public"</span>,
+                           <span class="hljs-attr">"dateModified"</span> : <span class="hljs-string">"2018-02-01T15:54:30"</span>,
+                           <span class="hljs-attr">"datePublished"</span> : <span class="hljs-string">"2018-02-01T15:54:30"</span>,
+                           <span class="hljs-attr">"history"</span> : [],
+                           <span class="hljs-attr">"id"</span> : <span class="hljs-string">"fdba1b39e3f447a0ab953af8e18a2821"</span>,
+                           <span class="hljs-attr">"mimetype"</span> : <span class="hljs-string">"text/plain"</span>,
+                           <span class="hljs-attr">"title"</span> : <span class="hljs-string">"test.txt"</span>,
+                           <span class="hljs-attr">"url"</span> : <span class="hljs-string">"http://my.example.com:5001/media/files/1244099_test.txt"</span>
+                        },
+                        {
+                           <span class="hljs-attr">"confidentiality"</span> : <span class="hljs-string">"public"</span>,
+                           <span class="hljs-attr">"dateModified"</span> : <span class="hljs-string">"2018-02-01T15:54:34"</span>,
+                           <span class="hljs-attr">"datePublished"</span> : <span class="hljs-string">"2018-02-01T15:54:34"</span>,
+                           <span class="hljs-attr">"history"</span> : [],
+                           <span class="hljs-attr">"id"</span> : <span class="hljs-string">"d3c6c6f783cc4c778c61c787bd474f0c"</span>,
+                           <span class="hljs-attr">"mimetype"</span> : <span class="hljs-string">"application/json"</span>,
+                           <span class="hljs-attr">"title"</span> : <span class="hljs-string">"test.json"</span>,
+                           <span class="hljs-attr">"url"</span> : <span class="hljs-string">"http://my.example.com:5001/media/files/1244098_test.json"</span>
+                        },
+                        {
+                           <span class="hljs-attr">"confidentiality"</span> : <span class="hljs-string">"public"</span>,
+                           <span class="hljs-attr">"dateModified"</span> : <span class="hljs-string">"2018-02-01T15:54:31"</span>,
+                           <span class="hljs-attr">"datePublished"</span> : <span class="hljs-string">"2018-02-01T15:54:31"</span>,
+                           <span class="hljs-attr">"history"</span> : [],
+                           <span class="hljs-attr">"id"</span> : <span class="hljs-string">"511ed2fefbae4f0a90262a05194a6e2d"</span>,
+                           <span class="hljs-attr">"mimetype"</span> : <span class="hljs-string">"text/html"</span>,
+                           <span class="hljs-attr">"title"</span> : <span class="hljs-string">"test.html"</span>,
+                           <span class="hljs-attr">"url"</span> : <span class="hljs-string">"http://my.example.com:5001/media/files/1244097_test.html"</span>
+                        },
+                        {
+                           <span class="hljs-attr">"confidentiality"</span> : <span class="hljs-string">"public"</span>,
+                           <span class="hljs-attr">"dateModified"</span> : <span class="hljs-string">"2018-02-01T15:54:34"</span>,
+                           <span class="hljs-attr">"datePublished"</span> : <span class="hljs-string">"2018-02-01T15:54:34"</span>,
+                           <span class="hljs-attr">"history"</span> : [],
+                           <span class="hljs-attr">"id"</span> : <span class="hljs-string">"9a83681a14644ce0bdc0bec03855d695"</span>,
+                           <span class="hljs-attr">"mimetype"</span> : <span class="hljs-string">"image/png"</span>,
+                           <span class="hljs-attr">"title"</span> : <span class="hljs-string">"test_img.png"</span>,
+                           <span class="hljs-attr">"url"</span> : <span class="hljs-string">"http://my.example.com:5001/media/files/1244096_test_img.png"</span>
+                        }
+                     ],
+                     <span class="hljs-attr">"reviewerAboveOwnerFiles"</span> : [],
+                     <span class="hljs-attr">"reviewerOwnerFiles"</span> : []
+                  },
+                  <span class="hljs-attr">"id"</span> : <span class="hljs-string">"9c665ca8d0ee434183b585a8aeb78409"</span>,
+                  <span class="hljs-attr">"resolution"</span> : <span class="hljs-string">"get lost get lost get lost get lost"</span>,
+                  <span class="hljs-attr">"resolution_type"</span> : <span class="hljs-string">"недійсна"</span>,
+                  <span class="hljs-attr">"satisfied"</span> : <span class="hljs-literal">false</span>,
+                  <span class="hljs-attr">"status"</span> : <span class="hljs-number">7</span>,
+                  <span class="hljs-attr">"status_text"</span> : <span class="hljs-string">"розглянута замовником"</span>,
+                  <span class="hljs-attr">"tenderer_action"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"title"</span> : <span class="hljs-string">"on award in lot 1"</span>,
+                  <span class="hljs-attr">"tuid"</span> : <span class="hljs-string">"UA-2018-01-30-000075-a.a15"</span>,
+                  <span class="hljs-attr">"type_title"</span> : <span class="hljs-string">"Оскарження визначення переможця"</span>,
+                  <span class="hljs-attr">"visible_name"</span> : <span class="hljs-string">"Вимога"</span>,
+                  <span class="hljs-attr">"winner"</span> : <span class="hljs-string">"ТОВ \"some79\""</span>
+               },
+               {
+                  <span class="hljs-attr">"author"</span> : {},
+                  <span class="hljs-attr">"cancellation_reason"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"date_accepted"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"date_answered"</span> : <span class="hljs-string">"2018-02-01T16:01:48"</span>,
+                  <span class="hljs-attr">"date_decision"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"date_escalated"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"date_submitted"</span> : <span class="hljs-string">"2018-02-01T16:00:16"</span>,
+                  <span class="hljs-attr">"description"</span> : <span class="hljs-string">"ololo illegal ololo illegal ololo illegal ololo illegal ololo illegal "</span>,
+                  <span class="hljs-attr">"files"</span> : {
+                     <span class="hljs-attr">"complaintOwnerFiles"</span> : [
+                        {
+                           <span class="hljs-attr">"confidentiality"</span> : <span class="hljs-string">"public"</span>,
+                           <span class="hljs-attr">"dateModified"</span> : <span class="hljs-string">"2018-02-01T16:00:15"</span>,
+                           <span class="hljs-attr">"datePublished"</span> : <span class="hljs-string">"2018-02-01T16:00:15"</span>,
+                           <span class="hljs-attr">"history"</span> : [],
+                           <span class="hljs-attr">"id"</span> : <span class="hljs-string">"fe1ac16c7284425f8c265e9230deced0"</span>,
+                           <span class="hljs-attr">"mimetype"</span> : <span class="hljs-string">"text/plain"</span>,
+                           <span class="hljs-attr">"title"</span> : <span class="hljs-string">"test1.txt"</span>,
+                           <span class="hljs-attr">"url"</span> : <span class="hljs-string">"http://my.example.com:5001/media/files/1244107_test1.txt"</span>
+                        },
+                        {
+                           <span class="hljs-attr">"confidentiality"</span> : <span class="hljs-string">"public"</span>,
+                           <span class="hljs-attr">"dateModified"</span> : <span class="hljs-string">"2018-02-01T16:00:11"</span>,
+                           <span class="hljs-attr">"datePublished"</span> : <span class="hljs-string">"2018-02-01T16:00:11"</span>,
+                           <span class="hljs-attr">"history"</span> : [],
+                           <span class="hljs-attr">"id"</span> : <span class="hljs-string">"699cf50b224649b09440b1ff69d07b9b"</span>,
+                           <span class="hljs-attr">"mimetype"</span> : <span class="hljs-string">"text/html"</span>,
+                           <span class="hljs-attr">"title"</span> : <span class="hljs-string">"test.html"</span>,
+                           <span class="hljs-attr">"url"</span> : <span class="hljs-string">"http://my.example.com:5001/media/files/1244104_test.html"</span>
+                        },
+                        {
+                           <span class="hljs-attr">"confidentiality"</span> : <span class="hljs-string">"public"</span>,
+                           <span class="hljs-attr">"dateModified"</span> : <span class="hljs-string">"2018-02-01T16:00:06"</span>,
+                           <span class="hljs-attr">"datePublished"</span> : <span class="hljs-string">"2018-02-01T16:00:06"</span>,
+                           <span class="hljs-attr">"history"</span> : [],
+                           <span class="hljs-attr">"id"</span> : <span class="hljs-string">"a3920b25371646ba88a52559e19917e5"</span>,
+                           <span class="hljs-attr">"mimetype"</span> : <span class="hljs-string">"application/json"</span>,
+                           <span class="hljs-attr">"title"</span> : <span class="hljs-string">"test.json"</span>,
+                           <span class="hljs-attr">"url"</span> : <span class="hljs-string">"http://my.example.com:5001/media/files/1244105_test.json"</span>
+                        },
+                        {
+                           <span class="hljs-attr">"confidentiality"</span> : <span class="hljs-string">"public"</span>,
+                           <span class="hljs-attr">"dateModified"</span> : <span class="hljs-string">"2018-02-01T16:00:13"</span>,
+                           <span class="hljs-attr">"datePublished"</span> : <span class="hljs-string">"2018-02-01T16:00:13"</span>,
+                           <span class="hljs-attr">"history"</span> : [],
+                           <span class="hljs-attr">"id"</span> : <span class="hljs-string">"ab7bfcf24f6e4de5be6db419faa4002b"</span>,
+                           <span class="hljs-attr">"mimetype"</span> : <span class="hljs-string">"image/png"</span>,
+                           <span class="hljs-attr">"title"</span> : <span class="hljs-string">"test_img.png"</span>,
+                           <span class="hljs-attr">"url"</span> : <span class="hljs-string">"http://my.example.com:5001/media/files/1244103_test_img.png"</span>
+                        },
+                        {
+                           <span class="hljs-attr">"confidentiality"</span> : <span class="hljs-string">"public"</span>,
+                           <span class="hljs-attr">"dateModified"</span> : <span class="hljs-string">"2018-02-01T16:00:09"</span>,
+                           <span class="hljs-attr">"datePublished"</span> : <span class="hljs-string">"2018-02-01T16:00:09"</span>,
+                           <span class="hljs-attr">"history"</span> : [],
+                           <span class="hljs-attr">"id"</span> : <span class="hljs-string">"fdf5b311ff514505a9cf53d2575ba4bd"</span>,
+                           <span class="hljs-attr">"mimetype"</span> : <span class="hljs-string">"text/plain"</span>,
+                           <span class="hljs-attr">"title"</span> : <span class="hljs-string">"test.txt"</span>,
+                           <span class="hljs-attr">"url"</span> : <span class="hljs-string">"http://my.example.com:5001/media/files/1244106_test.txt"</span>
+                        }
+                     ],
+                     <span class="hljs-attr">"purchaseOwnerFiles"</span> : [
+                        {
+                           <span class="hljs-attr">"confidentiality"</span> : <span class="hljs-string">"public"</span>,
+                           <span class="hljs-attr">"dateModified"</span> : <span class="hljs-string">"2018-02-01T16:01:46"</span>,
+                           <span class="hljs-attr">"datePublished"</span> : <span class="hljs-string">"2018-02-01T16:01:46"</span>,
+                           <span class="hljs-attr">"history"</span> : [],
+                           <span class="hljs-attr">"id"</span> : <span class="hljs-string">"6d9cccda61ae468bbbb1120a3d15094b"</span>,
+                           <span class="hljs-attr">"mimetype"</span> : <span class="hljs-string">"text/html"</span>,
+                           <span class="hljs-attr">"title"</span> : <span class="hljs-string">"test.html"</span>,
+                           <span class="hljs-attr">"url"</span> : <span class="hljs-string">"http://my.example.com:5001/media/files/1244108_test.html"</span>
+                        },
+                        {
+                           <span class="hljs-attr">"confidentiality"</span> : <span class="hljs-string">"public"</span>,
+                           <span class="hljs-attr">"dateModified"</span> : <span class="hljs-string">"2018-02-01T16:01:47"</span>,
+                           <span class="hljs-attr">"datePublished"</span> : <span class="hljs-string">"2018-02-01T16:01:47"</span>,
+                           <span class="hljs-attr">"history"</span> : [],
+                           <span class="hljs-attr">"id"</span> : <span class="hljs-string">"0a1486c0a3b449e38cdef235b827559e"</span>,
+                           <span class="hljs-attr">"mimetype"</span> : <span class="hljs-string">"text/plain"</span>,
+                           <span class="hljs-attr">"title"</span> : <span class="hljs-string">"test.txt"</span>,
+                           <span class="hljs-attr">"url"</span> : <span class="hljs-string">"http://my.example.com:5001/media/files/1244110_test.txt"</span>
+                        },
+                        {
+                           <span class="hljs-attr">"confidentiality"</span> : <span class="hljs-string">"public"</span>,
+                           <span class="hljs-attr">"dateModified"</span> : <span class="hljs-string">"2018-02-01T16:01:45"</span>,
+                           <span class="hljs-attr">"datePublished"</span> : <span class="hljs-string">"2018-02-01T16:01:45"</span>,
+                           <span class="hljs-attr">"history"</span> : [],
+                           <span class="hljs-attr">"id"</span> : <span class="hljs-string">"c653874720f9411bb62ac8c4c58a40a1"</span>,
+                           <span class="hljs-attr">"mimetype"</span> : <span class="hljs-string">"application/json"</span>,
+                           <span class="hljs-attr">"title"</span> : <span class="hljs-string">"test.json"</span>,
+                           <span class="hljs-attr">"url"</span> : <span class="hljs-string">"http://my.example.com:5001/media/files/1244109_test.json"</span>
+                        }
+                     ],
+                     <span class="hljs-attr">"reviewerAboveOwnerFiles"</span> : [],
+                     <span class="hljs-attr">"reviewerOwnerFiles"</span> : []
+                  },
+                  <span class="hljs-attr">"id"</span> : <span class="hljs-string">"13852279c10544819d9966d7a0550bb2"</span>,
+                  <span class="hljs-attr">"resolution"</span> : <span class="hljs-string">"ololo illegal ololo illegal ololo illegal ololo illegal "</span>,
+                  <span class="hljs-attr">"resolution_type"</span> : <span class="hljs-string">"задовільнена"</span>,
+                  <span class="hljs-attr">"satisfied"</span> : <span class="hljs-literal">false</span>,
+                  <span class="hljs-attr">"status"</span> : <span class="hljs-number">7</span>,
+                  <span class="hljs-attr">"status_text"</span> : <span class="hljs-string">"розглянута замовником"</span>,
+                  <span class="hljs-attr">"tenderer_action"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"title"</span> : <span class="hljs-string">"ololo illegal"</span>,
+                  <span class="hljs-attr">"tuid"</span> : <span class="hljs-string">"UA-2018-01-30-000075-a.a16"</span>,
+                  <span class="hljs-attr">"type_title"</span> : <span class="hljs-string">"Оскарження визначення переможця"</span>,
+                  <span class="hljs-attr">"visible_name"</span> : <span class="hljs-string">"Вимога"</span>,
+                  <span class="hljs-attr">"winner"</span> : <span class="hljs-string">"ТОВ \"some79\""</span>
+               }
+            ],
+            <span class="hljs-attr">"uid"</span> : <span class="hljs-string">"4d3fe0a5c76d4539a157df60b59ef6a5"</span>,
+            <span class="hljs-attr">"url"</span> : <span class="hljs-string">"http://zakupki.example.com:5001/gov/tenders/UA-2018-01-30-000075-a/lot-4d3fe0a5c76d4539a157df60b59ef6a5/complaints"</span>
+         }
+      ],
+      <span class="hljs-attr">"permissions"</span> : {
+         <span class="hljs-attr">"award_choices"</span> : [],
+         <span class="hljs-attr">"can_create"</span> : <span class="hljs-literal">false</span>,
+         <span class="hljs-attr">"create_scope"</span> : <span class="hljs-number">1</span>,
+         <span class="hljs-attr">"create_title"</span> : <span class="hljs-string">"Оскарження результатів закупівлі"</span>,
+         <span class="hljs-attr">"create_until"</span> : <span class="hljs-literal">null</span>,
+         <span class="hljs-attr">"id"</span> : <span class="hljs-string">"ae54ad50899147e88fa5675917288e78"</span>,
+         <span class="hljs-attr">"lots"</span> : [
+            {
+               <span class="hljs-attr">"award_choices"</span> : [],
+               <span class="hljs-attr">"can_create"</span> : <span class="hljs-literal">false</span>,
+               <span class="hljs-attr">"create_until"</span> : <span class="hljs-literal">null</span>,
+               <span class="hljs-attr">"id"</span> : <span class="hljs-string">"63bf13bd1b064dd6acb19da16b85fd8e"</span>,
+               <span class="hljs-attr">"qualification_choices"</span> : []
+            },
+            {
+               <span class="hljs-attr">"award_choices"</span> : [
+                  {
+                     <span class="hljs-attr">"id"</span> : <span class="hljs-string">"caa155893ffe436784a1a9fc4dcb658f"</span>,
+                     <span class="hljs-attr">"name"</span> : <span class="hljs-string">"ТОВ \"some76\""</span>
+                  }
+               ],
+               <span class="hljs-attr">"can_create"</span> : <span class="hljs-literal">false</span>,
+               <span class="hljs-attr">"create_until"</span> : <span class="hljs-literal">null</span>,
+               <span class="hljs-attr">"id"</span> : <span class="hljs-string">"4d3fe0a5c76d4539a157df60b59ef6a5"</span>,
+               <span class="hljs-attr">"qualification_choices"</span> : []
+            }
+         ],
+         <span class="hljs-attr">"qualification_choices"</span> : []
+      },
+      <span class="hljs-attr">"uid"</span> : <span class="hljs-string">"ae54ad50899147e88fa5675917288e78"</span>,
+      <span class="hljs-attr">"url"</span> : <span class="hljs-string">"http://zakupki.example.com:5001/gov/tenders/UA-2018-01-30-000075-a/complaints"</span>
+   },
+   <span class="hljs-attr">"errors"</span> : [],
+   <span class="hljs-attr">"status"</span> : <span class="hljs-string">"ok"</span>,
+   <span class="hljs-attr">"system"</span> : <span class="hljs-string">""</span>
+}</code></pre>    </article>
+  </body>
+</html>

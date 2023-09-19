@@ -1,0 +1,56 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimal-ui">
+    <title>Получить ссылку на тендер по его tuid (UA-XXXX-XX-XX-XXXXX-x)</title>
+    <link type="text/css" rel="stylesheet" href="assets/css/github-markdown.css">
+    <link type="text/css" rel="stylesheet" href="assets/css/pilcrow.css">
+    <link type="text/css" rel="stylesheet" href="assets/css/hljs-github.min.css"/>
+  </head>
+  <body>
+    <article class="markdown-body"><h1 id="получить-ссылку-на-тендер-по-его-tuid-(ua-xxxx-xx-xx-xxxxx-x)"><a class="header-link" href="#получить-ссылку-на-тендер-по-его-tuid-(ua-xxxx-xx-xx-xxxxx-x)"></a>Получить ссылку на тендер по его tuid (UA-XXXX-XX-XX-XXXXX-x)</h1>
+<p><strong>GET remote/api/v1/view_by_tuid/{tuid}{tail}</strong></p>
+<blockquote>
+<p>tuid - tuid закупки из <a href="./entity_list.html">списка закупок</a></p>
+<p>tail - может содержать любую валидную url строку</p>
+</blockquote>
+<p>request headers:</p>
+<ul class="list">
+<li><em>Api-Agent</em> - type: string, reuqired</li>
+<li><em>Acc-Token</em> - type: string, required</li>
+</ul>
+<p>possible response fields:</p>
+<ul class="list">
+<li><em>status</em> - type: str, values: ok/error</li>
+<li><em>errors</em> - type: array of objects, validation errors</li>
+<li><em>data</em> - type: object</li>
+<li><em>system</em> - type: str, system error messages</li>
+</ul>
+<p>possible data fields:</p>
+<ul class="list">
+<li><em>url</em> - type: str</li>
+</ul>
+<p>request:</p>
+<pre class="hljs"><code>curl --header <span class="hljs-string">"Acc-Token: eyJlbXBsb3llZSI6NjEyNjEsIm1lcmNoYW50Ijo1NTEzOH0.C8di6Q.JPtyyp32oH7KaM7WqyjQPE0SoXA"</span> -X GET <span class="hljs-string">"http://my.example.com:5001/remote/api/v1/view_by_tuid/UA-8340-63-45-811473-1"</span></code></pre><p>success response (no lots):</p>
+<pre class="hljs"><code>{
+  <span class="hljs-attr">"status"</span>: <span class="hljs-string">"ok"</span>,
+  <span class="hljs-attr">"errors"</span>: [
+  ],
+  <span class="hljs-attr">"data"</span>: {
+    <span class="hljs-attr">"url"</span>: <span class="hljs-string">"remote/api/v1/entity/262485"</span>
+  },
+  <span class="hljs-attr">"system"</span>: <span class="hljs-string">""</span>
+}</code></pre><p>request:</p>
+<pre class="hljs"><code>curl --header <span class="hljs-string">"Acc-Token: eyJlbXBsb3llZSI6NjEyNjEsIm1lcmNoYW50Ijo1NTEzOH0.C8di6Q.JPtyyp32oH7KaM7WqyjQPE0SoXA"</span> -X GET <span class="hljs-string">"http://my.example.com:5001/remote/api/v1/view_by_tuid/UA-2017-12-22-002653-b/lot-287f596ea916d6faa81b0313f986e019/complaints/0bb5661c13214d9693f25e21cc0e54e3"</span></code></pre><p>success response (no lots):</p>
+<pre class="hljs"><code>{
+  <span class="hljs-attr">"status"</span>: <span class="hljs-string">"ok"</span>,
+  <span class="hljs-attr">"errors"</span>: [
+  ],
+  <span class="hljs-attr">"data"</span>: {
+    <span class="hljs-attr">"url"</span>: <span class="hljs-string">"remote/api/v1/entity/262485/lot/54143"</span>
+  },
+  <span class="hljs-attr">"system"</span>: <span class="hljs-string">""</span>
+}</code></pre>    </article>
+  </body>
+</html>

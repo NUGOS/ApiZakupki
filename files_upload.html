@@ -1,0 +1,67 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimal-ui">
+    <title>Files upload api</title>
+    <link type="text/css" rel="stylesheet" href="assets/css/github-markdown.css">
+    <link type="text/css" rel="stylesheet" href="assets/css/pilcrow.css">
+    <link type="text/css" rel="stylesheet" href="assets/css/hljs-github.min.css"/>
+  </head>
+  <body>
+    <article class="markdown-body"><h1 id="files-upload-api"><a class="header-link" href="#files-upload-api"></a>Files upload api</h1>
+<h2 id="upload-files-to-service"><a class="header-link" href="#upload-files-to-service"></a>upload files to service</h2>
+<blockquote>
+<p><strong>LIMITATIONS</strong></p>
+<p>upload files api allows uploading files only by one per request</p>
+<p>if you want to upload more than one file, you should make N requests
+for each file</p>
+</blockquote>
+<blockquote>
+<p><strong>IMPORTANT</strong>
+Do not use <strong>delete_url</strong> for deleting files
+use <a href="./v3/delete_file.html">v3 delte file</a> instead</p>
+</blockquote>
+<p><strong>POST /remote/files/upload</strong></p>
+<p>request headers:</p>
+<ul class="list">
+<li><em>Api-Agent</em> - type: string, reuqired</li>
+</ul>
+<p>curl --header &#39;X-Requested-With: XMLHttpRequest&#39; -F &#39;files[]=@/Users/fashust/evodoc_test/test_file_1.txt&#39; -F &#39;iles[]=@/Users/fashust/evodoc_test/test_file_2.txt&#39; <a href="http://my.example.com:5001/remote/files/upload">http://my.example.com:5001/remote/files/upload</a></p>
+<p>request headers:</p>
+<ul class="list">
+<li><em>X-Requested-With: XMLHttpRequest</em> - required</li>
+</ul>
+<p>response:
+array of <strong>file</strong> object instances</p>
+<p>file object fields:</p>
+<ul class="list">
+<li><em>name</em> - type: string, uploaded file name</li>
+<li><em>url</em> - type: string, file download url</li>
+<li><em>id</em> - type: int, uploaded file id</li>
+<li><em>delete_type</em> - type: string, delete uploaded file request method, <code>POST</code> by default</li>
+<li><em>date</em> - type: datetime string, format <strong>dd-mm-yyyy HH:MM</strong></li>
+<li><em>delete_url</em> - type: string, delete file url</li>
+<li><em>size</em> - type: int, uploaded file size</li>
+<li><em>uid</em> - type: str</li>
+<li><em>preview_url</em> - type: str or null</li>
+</ul>
+<p>#Eaxamples</p>
+<h2 id="upload-file"><a class="header-link" href="#upload-file"></a>upload file</h2>
+<p>request:</p>
+<pre class="hljs"><code>curl --header <span class="hljs-string">'X-Requested-With: XMLHttpRequest'</span> -F <span class="hljs-string">'files[]=@/Users/fashust/evodoc_test/test_file_1.txt'</span> http://my.example.com:5001/remote/files/upload</code></pre><p>response:</p>
+<pre class="hljs"><code>[
+   {
+      <span class="hljs-attr">"date"</span> : <span class="hljs-string">"19-08-2019 09:44"</span>,
+      <span class="hljs-attr">"delete_type"</span> : <span class="hljs-string">"POST"</span>,
+      <span class="hljs-attr">"delete_url"</span> : <span class="hljs-string">"http://my.example.com:5001/remote/upload/delete_file/1246138"</span>,
+      <span class="hljs-attr">"id"</span> : <span class="hljs-number">1246138</span>,
+      <span class="hljs-attr">"name"</span> : <span class="hljs-string">"test.txt"</span>,
+      <span class="hljs-attr">"preview_url"</span> : <span class="hljs-string">"http://my.example.com:5001/media/files/1246138_test.txt"</span>,
+      <span class="hljs-attr">"size"</span> : <span class="hljs-literal">null</span>,
+      <span class="hljs-attr">"uid"</span> : <span class="hljs-string">"deb377de76de49688ac9b96edd27dd28"</span>,
+      <span class="hljs-attr">"url"</span> : <span class="hljs-string">"http://my.example.com:5001/media/files/1246138_test.txt"</span>
+   }
+]</code></pre>    </article>
+  </body>
+</html>

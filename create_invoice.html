@@ -1,0 +1,102 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimal-ui">
+    <title>Создание счета</title>
+    <link type="text/css" rel="stylesheet" href="assets/css/github-markdown.css">
+    <link type="text/css" rel="stylesheet" href="assets/css/pilcrow.css">
+    <link type="text/css" rel="stylesheet" href="assets/css/hljs-github.min.css"/>
+  </head>
+  <body>
+    <article class="markdown-body"><h1 id="создание-счета"><a class="header-link" href="#создание-счета"></a>Создание счета</h1>
+<p><strong>POST remote/api/v2/create_invoice</strong></p>
+<p>request headers:</p>
+<ul class="list">
+<li><em>Api-Agent</em> - type: string, required</li>
+<li><em>Acc-Token</em> - type: string, required</li>
+</ul>
+<p>possible request fields:</p>
+<ul class="list">
+<li><em>amount</em> - type: float, optional, default value = 510</li>
+<li><em>srn</em> - type: str, required, max length - 32</li>
+<li><em>name</em> - type: str, required, max length - 255</li>
+<li><em>juridical_address</em> - type: str, required, max length - 255</li>
+<li><em>vat_num</em> - type: str, optional, max length - 12 </li>
+</ul>
+<blockquote>
+<p>создаине инвойса</p>
+</blockquote>
+<p>possible response fields:</p>
+<ul class="list">
+<li><em>status</em> - type: str, values: ok/error</li>
+<li><em>errors</em> - type: array of objects, validation errors</li>
+<li><em>data</em> - type: object</li>
+<li><em>system</em> - type: str, system error messages</li>
+</ul>
+<p>possible response data fields:</p>
+<ul class="list">
+<li><em>date_created</em> - type: datetime string, format <strong>yyyy-mm-ddTHH:MM:SS.fZ</strong>,</li>
+<li><em>id</em> - type: int</li>
+<li><em>title</em> - type: string</li>
+<li><em>is_fully_paid</em> - type: bool</li>
+<li><em>is_partial_paid</em> - type: bool</li>
+<li><em>is_over_paid</em> - type: bool</li>
+</ul>
+<p>##Examples</p>
+<p>request data:</p>
+<pre class="hljs"><code>{}</code></pre><p>request:</p>
+<pre class="hljs"><code>curl -H <span class="hljs-string">"Acc-Token: 863480b03d0c55cd2ca5617c3ad2db5baf54d968"</span> -H <span class="hljs-string">"Api-Agent: zk_android"</span> -H <span class="hljs-string">"Content-Type: application/json"</span> <span class="hljs-_">-d</span>@json_data -X POST <span class="hljs-string">"http://my.example.com:5001/remote/api/v2/create_invoice"</span> </code></pre><p>response:</p>
+<pre class="hljs"><code>{
+    <span class="hljs-attr">"status"</span>: <span class="hljs-string">"error"</span>,
+    <span class="hljs-attr">"errors"</span>: [],
+    <span class="hljs-attr">"system"</span>: <span class="hljs-string">"invalid request"</span>
+}</code></pre><p>request data:</p>
+<pre class="hljs"><code>{<span class="hljs-attr">"json"</span>: <span class="hljs-string">"data"</span>}</code></pre><p>request:</p>
+<pre class="hljs"><code>curl -H <span class="hljs-string">"Acc-Token: 863480b03d0c55cd2ca5617c3ad2db5baf54d968"</span> -H <span class="hljs-string">"Api-Agent: zk_android"</span> -H <span class="hljs-string">"Content-Type: application/json"</span> <span class="hljs-_">-d</span>@json_data -X POST <span class="hljs-string">"http://my.example.com:5001/remote/api/v2/create_invoice"</span> </code></pre><p>response:</p>
+<pre class="hljs"><code>{
+    <span class="hljs-attr">"status"</span>: <span class="hljs-string">"error"</span>,
+    <span class="hljs-attr">"errors"</span>: [
+        {
+            <span class="hljs-attr">"field"</span>: <span class="hljs-string">"srn"</span>,
+            <span class="hljs-attr">"messages"</span>: [
+                <span class="hljs-string">"Це поле обов'язкове"</span>
+            ]
+        },
+        {
+            <span class="hljs-attr">"field"</span>: <span class="hljs-string">"name"</span>,
+            <span class="hljs-attr">"messages"</span>: [
+                <span class="hljs-string">"Це поле обов'язкове"</span>
+            ]
+        },
+        {
+            <span class="hljs-attr">"field"</span>: <span class="hljs-string">"juridical_address"</span>,
+            <span class="hljs-attr">"messages"</span>: [
+                <span class="hljs-string">"Це поле обов'язкове"</span>
+            ]
+        }
+    ],
+    <span class="hljs-attr">"system"</span>: <span class="hljs-string">""</span>
+}</code></pre><p>request data:</p>
+<pre class="hljs"><code>{
+    <span class="hljs-attr">"amount"</span>: <span class="hljs-number">100500</span>,
+    <span class="hljs-attr">"srn"</span>: <span class="hljs-string">"100500"</span>,
+    <span class="hljs-attr">"name"</span>: <span class="hljs-string">"namename"</span>,
+    <span class="hljs-attr">"juridical_address"</span>: <span class="hljs-string">"juridical_address"</span>
+}</code></pre><p>request:</p>
+<pre class="hljs"><code>curl -H <span class="hljs-string">"Acc-Token: 863480b03d0c55cd2ca5617c3ad2db5baf54d968"</span> -H <span class="hljs-string">"Api-Agent: zk_android"</span> -H <span class="hljs-string">"Content-Type: application/json"</span> <span class="hljs-_">-d</span>@json_data -X POST <span class="hljs-string">"http://my.example.com:5001/remote/api/v2/create_invoice"</span> </code></pre><p>response:</p>
+<pre class="hljs"><code>{
+    <span class="hljs-attr">"status"</span>: <span class="hljs-string">"ok"</span>,
+    <span class="hljs-attr">"errors"</span>: [],
+    <span class="hljs-attr">"data"</span>: {
+        <span class="hljs-attr">"is_over_paid"</span>: <span class="hljs-literal">false</span>,
+        <span class="hljs-attr">"title"</span>: <span class="hljs-string">"Рахунок ZK-0021478"</span>,
+        <span class="hljs-attr">"is_partial_paid"</span>: <span class="hljs-literal">false</span>,
+        <span class="hljs-attr">"is_fully_paid"</span>: <span class="hljs-literal">false</span>,
+        <span class="hljs-attr">"date_created"</span>: <span class="hljs-string">"2018-10-29T20:46:27"</span>,
+        <span class="hljs-attr">"id"</span>: <span class="hljs-number">21478</span>
+    },
+    <span class="hljs-attr">"system"</span>: <span class="hljs-string">""</span>
+}</code></pre>    </article>
+  </body>
+</html>

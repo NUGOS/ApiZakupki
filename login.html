@@ -1,0 +1,231 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimal-ui">
+    <title>Авторизация</title>
+    <link type="text/css" rel="stylesheet" href="assets/css/github-markdown.css">
+    <link type="text/css" rel="stylesheet" href="assets/css/pilcrow.css">
+    <link type="text/css" rel="stylesheet" href="assets/css/hljs-github.min.css"/>
+  </head>
+  <body>
+    <article class="markdown-body"><h1 id="авторизация"><a class="header-link" href="#авторизация"></a>Авторизация</h1>
+<p><strong>POST /remote/api/v1/login</strong></p>
+<p>request headers:</p>
+<ul class="list">
+<li><em>Api-Agent</em> - type: string, reuqired</li>
+</ul>
+<p><strong>UPDATE 2018-05-09</strong></p>
+<blockquote>
+<p>We add <strong>TWO FACTOR AUTHORISATION</strong> for some users. Please check <a href="./tfa.html">documentation</a></p>
+</blockquote>
+<p><strong>UPDATE 2018-05-10</strong></p>
+<blockquote>
+<p>Add new field to response data <strong>api_role</strong> </p>
+</blockquote>
+<p>possible request fields:</p>
+<ul class="list">
+<li><em>phone_email</em> - type: str, only emails, <strong>required</strong></li>
+<li><em>password</em> - type: str, user password, <strong>required</strong></li>
+</ul>
+<p>possible response fields:</p>
+<ul class="list">
+<li><em>status</em> - type: str, values: ok/error</li>
+<li><em>acc_token</em> - type: str</li>
+<li><em>errors</em> - type: array of objects, validation errors</li>
+<li><em>data</em> - type: object</li>
+<li><em>system</em> - type: str, system error messages</li>
+</ul>
+<p>possible response errors data:</p>
+<ul class="list">
+<li>list of objects - type: object, pairs of request field and array of string messages or empty list, examples showed below</li>
+</ul>
+<p>possible response system data:</p>
+<ul class="list">
+<li>list of string messages - type: array, system errors notifications or empty list, , examples showed below</li>
+</ul>
+<p>possible response data fields:</p>
+<ul class="list">
+<li><em>saved_filters</em> - type: array of objects or empty array, example <code>[{&quot;id&quot;: -1, &quot;name&quot;: &quot;filter name&quot;}]</code></li>
+<li><em>employee_first_name</em> - type: str</li>
+<li><em>merchant_type</em> - type: str, one of <code>[&quot;purchasing_agent&quot;,  &quot;supplier&quot;, &quot;auction_organizer&quot;, &quot;auction_participant&quot;, &quot;auction2_organizer&quot;]</code></li>
+<li><em>employee_last_name</em> - type: str</li>
+<li><em>is_state</em> - type: boolean</li>
+<li><em>is_verified</em> - type: boolean</li>
+<li><em>email</em> - type: str</li>
+<li><em>merchant_name</em> - type: str</li>
+<li><em>merchants</em> - type: array of <strong>merchant</strong> objects or empty, described below</li>
+<li><em>win_count</em> - type: int</li>
+<li><em>manager</em> - type: <strong>manager</strong> object, described below</li>
+<li><em>balance</em> - type: float</li>
+<li><em>tfa</em> - type: string, contains string required to complete <a href="./tfa.html">two factor auth</a></li>
+<li><em>api_role</em> - type: string, possible values one of <code>[&quot;guest&quot;, &quot;general&quot;]</code></li>
+<li><em>assignment_data</em> - type: <strong>assignment data</strong> object, described below</li>
+<li><em>registration_from_app</em> - type: bool</li>
+<li><em>balance_info</em> - type: <strong>balance_info</strong> object, described below</li>
+<li><em>subscription_on</em> - type: bool</li>
+</ul>
+<p>assignment data fields:</p>
+<ul class="list">
+<li><em>assignment_allowed</em> - type: bool</li>
+<li><em>available_users</em> - type: array of <strong>available user</strong> objects or empty, described below</li>
+<li><em>current_user</em> - type: <strong>available user</strong> object, described below</li>
+</ul>
+<p>available user fields:</p>
+<ul class="list">
+<li><em>id</em> - type: int</li>
+<li><em>name</em> - type: string</li>
+<li><em>departments</em> - type: array of <strong>departments</strong> objects or empty, currently unused, ignore them</li>
+</ul>
+<p>possible merchant fields:</p>
+<ul class="list">
+<li><em>id</em> - type: int</li>
+<li><em>name</em> - type: str</li>
+</ul>
+<p>manager fields:</p>
+<ul class="list">
+<li><em>name_ru</em> - type: str</li>
+<li><em>name_en</em> - type: str</li>
+<li><em>name_uk</em> - type: str</li>
+<li><em>phone</em> - type: str</li>
+<li><em>email</em> - type: str</li>
+<li><em>image</em> - type: url</li>
+<li><em>phone</em> - type: array of str</li>
+</ul>
+<p>balance_info object fields:</p>
+<ul class="list">
+<li><em>recommended_amount</em> - type: float</li>
+<li><em>juridical_address</em> - type: str</li>
+<li><em>srn</em> - type: str</li>
+<li><em>name</em> - type: str</li>
+<li><em>vat_num</em> - type: str</li>
+<li><em>balance</em> - type: float</li>
+</ul>
+<p><strong>WARNING</strong></p>
+<p><em>phones</em> field type in <strong>manager</strong> object depends on <strong>ALL_PHONES_FOR_MOBILE_API</strong> flag value 
+in zk cabinet, ask some one from QA to check this flag value</p>
+<p>request:</p>
+<pre class="hljs"><code>{
+  <span class="hljs-attr">"phone_email"</span>: <span class="hljs-string">"cool@email.com"</span>,
+  <span class="hljs-attr">"password"</span>: <span class="hljs-string">"super_password"</span>
+}</code></pre><p>success response without tfa enabled:</p>
+<pre class="hljs"><code>{
+  <span class="hljs-attr">"status"</span>: <span class="hljs-string">"ok"</span>,
+  <span class="hljs-attr">"data"</span>: {
+    <span class="hljs-attr">"saved_filters"</span>: [
+      {
+        <span class="hljs-attr">"id"</span>: <span class="hljs-number">-1</span>,
+        <span class="hljs-attr">"name"</span>: <span class="hljs-string">"Підписка по категоріям"</span>
+      },
+      {
+        <span class="hljs-attr">"id"</span>: <span class="hljs-number">-2</span>,
+        <span class="hljs-attr">"name"</span>: <span class="hljs-string">"Підписка на замовника"</span>
+      },
+      {
+        <span class="hljs-attr">"id"</span>: <span class="hljs-number">1</span>,
+        <span class="hljs-attr">"name"</span>: <span class="hljs-string">"save"</span>
+      },
+      {
+        <span class="hljs-attr">"id"</span>: <span class="hljs-number">2</span>,
+        <span class="hljs-attr">"name"</span>: <span class="hljs-string">"12341234"</span>
+      }
+    ],
+    <span class="hljs-attr">"employee_first_name"</span>: <span class="hljs-string">"фыафыв"</span>,
+    <span class="hljs-attr">"merchant_type"</span>: <span class="hljs-string">"supplier"</span>,
+    <span class="hljs-attr">"employee_last_name"</span>: <span class="hljs-string">"фвыаыфва"</span>,
+    <span class="hljs-attr">"api_role"</span>: <span class="hljs-string">"guest"</span>,
+    <span class="hljs-attr">"is_state"</span>: <span class="hljs-literal">false</span>,
+    <span class="hljs-attr">"is_verified"</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">"email"</span>: <span class="hljs-string">"some76@mailinator.com"</span>,
+    <span class="hljs-attr">"merchant_name"</span>: <span class="hljs-string">"ТОВ \"some76\""</span>,
+    <span class="hljs-attr">"merchants"</span>: [
+        {
+            <span class="hljs-attr">"id"</span>: <span class="hljs-number">123</span>,
+            <span class="hljs-attr">"name"</span>: <span class="hljs-string">"another merchant"</span>
+        }
+    ],
+    <span class="hljs-attr">"win_count"</span>: <span class="hljs-number">0</span>,
+    <span class="hljs-attr">"manager"</span>: {
+        <span class="hljs-attr">"name_ru"</span>: <span class="hljs-string">"Отдел заботы"</span>,
+        <span class="hljs-attr">"image"</span>: <span class="hljs-string">"http://example.com:5001/image/monkey.png?r=$REVISION"</span>,
+        <span class="hljs-attr">"name_uk"</span>: <span class="hljs-string">"Відділ турботи"</span>,
+        <span class="hljs-attr">"phone"</span>: <span class="hljs-string">"0800500016"</span>,
+        <span class="hljs-attr">"name_en"</span>: <span class="hljs-string">"Department of care"</span>,
+        <span class="hljs-attr">"email"</span>: <span class="hljs-string">"support.zakupki@example.com"</span>
+    },
+    <span class="hljs-attr">"assignment_data"</span>: {
+        <span class="hljs-attr">"assignment_allowed"</span>: <span class="hljs-literal">true</span>,
+        <span class="hljs-attr">"available_users"</span>: [
+            {
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">61471</span>,
+                <span class="hljs-attr">"departments"</span>: [],
+                <span class="hljs-attr">"name"</span>: <span class="hljs-string">"Коля Иванов"</span>
+            },
+            {
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">61484</span>,
+                <span class="hljs-attr">"departments"</span>: [],
+                <span class="hljs-attr">"name"</span>: <span class="hljs-string">"asdfasdf sdafasdfasdf"</span>
+            }
+        ],
+        <span class="hljs-attr">"current_user"</span>: {
+            <span class="hljs-attr">"id"</span>: <span class="hljs-number">61261</span>,
+            <span class="hljs-attr">"departments"</span>: [],
+            <span class="hljs-attr">"name"</span>: <span class="hljs-string">"фыафыв adsfasdf фвыаыфва"</span>
+        }
+    },
+    <span class="hljs-attr">"balance_info"</span>: {
+        <span class="hljs-attr">"recommended_amount"</span>: <span class="hljs-number">0</span>,
+        <span class="hljs-attr">"juridical_address"</span>: <span class="hljs-string">"Украина"</span>,
+        <span class="hljs-attr">"srn"</span>: <span class="hljs-string">""</span>,
+        <span class="hljs-attr">"name"</span>: <span class="hljs-string">"Назва моєї компанії"</span>,
+        <span class="hljs-attr">"vat_num"</span>: <span class="hljs-string">""</span>
+    }
+  },
+  <span class="hljs-attr">"acc_token"</span>: <span class="hljs-string">"eyJlbXBsb3llZSI6NjEyNjEsIm1lcmNoYW50Ijo1NTEzOH0.C8eyMg.ZKU3AQBbWK0XCmw5cXD_6mfEFdk"</span>
+}</code></pre><p>failed response (validation):</p>
+<pre class="hljs"><code>{
+  <span class="hljs-attr">"status"</span>: <span class="hljs-string">"error"</span>,
+  <span class="hljs-attr">"errors"</span>: [
+    {
+      <span class="hljs-attr">"field"</span>: <span class="hljs-string">"phone_email"</span>,
+      <span class="hljs-attr">"messages"</span>: [
+        <span class="hljs-string">"Это обязательное поле"</span>
+      ]
+    },
+    {
+      <span class="hljs-attr">"field"</span>: <span class="hljs-string">"password"</span>,
+      <span class="hljs-attr">"messages"</span>: [
+        <span class="hljs-string">"Это обязательное поле"</span>
+      ]
+    }
+  ],
+  <span class="hljs-attr">"system"</span>: []
+}</code></pre><p>failed response (system):</p>
+<pre class="hljs"><code>{
+  <span class="hljs-attr">"status"</span>: <span class="hljs-string">"error"</span>,
+  <span class="hljs-attr">"errors"</span>: [],
+  <span class="hljs-attr">"system"</span>: [
+    <span class="hljs-string">"invalid request"</span>
+  ]
+}
+</code></pre><pre class="hljs"><code>{
+  <span class="hljs-attr">"status"</span>: <span class="hljs-string">"error"</span>,
+  <span class="hljs-attr">"errors"</span>: [],
+  <span class="hljs-attr">"system"</span>: [
+    <span class="hljs-string">"валидация о том что им надо быть поставщиком"</span>
+  ]
+}</code></pre><p>request:</p>
+<pre class="hljs"><code>{
+  <span class="hljs-attr">"phone_email"</span>: <span class="hljs-string">"cool@email.com"</span>,
+  <span class="hljs-attr">"password"</span>: <span class="hljs-string">"super_password"</span>
+}</code></pre><p>success response with tfa enabled:</p>
+<pre class="hljs"><code>{
+    <span class="hljs-attr">"status"</span>: <span class="hljs-string">"ok"</span>,
+    <span class="hljs-attr">"errors"</span>: [],
+    <span class="hljs-attr">"data"</span>: {
+        <span class="hljs-attr">"tfa"</span>: <span class="hljs-string">"743e9fedb303f50538e074801f55c7fe10e76fc8"</span>
+    },
+    <span class="hljs-attr">"system"</span>: <span class="hljs-string">""</span>
+}</code></pre>    </article>
+  </body>
+</html>

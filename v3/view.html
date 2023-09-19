@@ -1,0 +1,1245 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimal-ui">
+    <title>Purchase view</title>
+    <link type="text/css" rel="stylesheet" href="../assets/css/github-markdown.css">
+    <link type="text/css" rel="stylesheet" href="../assets/css/pilcrow.css">
+    <link type="text/css" rel="stylesheet" href="../assets/css/hljs-github.min.css"/>
+  </head>
+  <body>
+    <article class="markdown-body"><h1 id="purchase-view"><a class="header-link" href="#purchase-view"></a>Purchase view</h1>
+<p><strong>GET remote/api/v3/view/{uid}</strong></p>
+<blockquote>
+<p>uid - purchase <strong>uid</strong> from <a href="./search.html">search result item</a></p>
+</blockquote>
+<p>request headers:</p>
+<ul class="list">
+<li><em>Api-Agent</em> - type: string, required</li>
+<li><em>Acc-Token</em> - type: string, required</li>
+</ul>
+<p>possible response fields:</p>
+<ul class="list">
+<li><em>status</em> - type: str, values: ok/error</li>
+<li><em>errors</em> - type: array of objects, validation errors</li>
+<li><em>data</em> - type: object</li>
+<li><em>system</em> - type: str, system error messages</li>
+</ul>
+<p>possible response data fields:</p>
+<ul class="list">
+<li><strong>amount</strong> - type: <strong>amount object</strong>, described below</li>
+<li><strong>assignee_supplier_employee</strong> - type: <strong>assignee supplier</strong> object or null, described below</li>
+<li><strong>auction_period</strong> - type: object, <strong>state period object</strong>, described below</li>
+<li><strong>auction_url</strong> - type: str or null</li>
+<li><strong>cancellations</strong> - type: <strong>cancellation object</strong>s list, described below</li>
+<li><strong>claims_count</strong> - type: int</li>
+<li><strong>complaints_count</strong> - type: int</li>
+<li><strong>date</strong> - type: str or null, format: <strong>yyyy-mm-ddTHH:MM:SS</strong></li>
+<li><strong>desc</strong> - type: str</li>
+<li><strong>desc_en</strong> - type: str</li>
+<li><strong>documents</strong> - type: <strong>documents object</strong>, described bewlow</li>
+<li><strong>enquiry_period</strong> - type: object, <strong>state period object</strong>, described below</li>
+<li><strong>entity_type</strong> - type: int, values - one of <code>[0, 2]</code>, <a href="./static.html">details</a></li>
+<li><strong>features</strong> - type: <strong>feature object</strong>s list, describe below</li>
+<li><strong>guarantee</strong> - type: <strong>guarantee object</strong>, describe bewlow</li>
+<li><strong>has_lots</strong> - type: bool</li>
+<li><strong>id</strong> - type: str</li>
+<li><strong>is_blocked</strong> - type: bool</li>
+<li><strong>is_favorite</strong> - type: bool</li>
+<li><strong>is_participate</strong> - type: bool</li>
+<li><strong>items</strong> - type: <strong>item object</strong>s list, described below</li>
+<li><strong>lots</strong> - type: <strong>lot object</strong>s list, described below</li>
+<li><strong>method_type</strong> - type: int, one of <code>[0, 1, 2, 7, 3, 4, 5, 8, 9, 14, 16]</code>, <a href="./static.html">details</a></li>
+<li><strong>method_type_text</strong> - type: str</li>
+<li><strong>offers</strong> - type: <strong>offer object</strong>s list, described below</li>
+<li><strong>plan_to_participate</strong> - type: bool</li>
+<li><strong>pre_qualification</strong> - type: <strong>pre_qualification object</strong>s list, described below</li>
+<li><strong>procuring_entity</strong> - type: <strong>procuring_entity object</strong>, described below</li>
+<li><strong>public_link_tender</strong> - type: str</li>
+<li><strong>qualification</strong> - type: <strong>qualification</strong> objects list or empty, described below</li>
+<li><strong>questions</strong> - type: <strong>questions</strong> object, described below</li>
+<li><strong>questions_count</strong> - type: int</li>
+<li><strong>stage1_id</strong> - type: str or null</li>
+<li><strong>stage2_id</strong> - type: str or null</li>
+<li><strong>status</strong> - type: int, one of <code>[0, 1, 2, 10, 3, 4, 5, 6, 7, 12]</code>, <a href="./static.html">details</a> </li>
+<li><strong>status_text</strong> - type: str</li>
+<li><strong>step</strong> - type: <strong>amount object</strong> or null, described below</li>
+<li><strong>tendering_period</strong> - type: object, <strong>state period object</strong>, described below</li>
+<li><strong>title</strong> - type: str</li>
+<li><strong>title_en</strong> - type: str</li>
+<li><strong>tuid</strong> - type: str</li>
+<li><strong>uid</strong> - type: str</li>
+<li><strong>user_offer</strong> - type: <strong>offer</strong> object or null, described below</li>
+<li><strong>cabinet_url</strong> - type: str</li>
+<li><strong>main_procurement_category</strong> - type: <strong>main_procurement_category object</strong> or null, described below</li>
+<li><strong>milestones</strong> - type: array of <strong>milestones</strong> objects, described below</li>
+<li><strong>is_free</strong> - type: bool</li>
+<li><strong>max_awards_count</strong> - type: int or null</li>
+<li><strong>clarifications_until</strong> - type: str or null, format: <strong>yyyy-mm-ddTHH:MM:SS</strong></li>
+<li><strong>complaint_period</strong> - type: object, <strong>state period object</strong>, described below</li>
+<li><strong>invalidation_date</strong> - type: str or null, format: <strong>yyyy-mm-ddTHH:MM:SS</strong></li>
+<li><strong>agreement_duration</strong> - type: srt or null</li>
+</ul>
+<p>amount object fields:</p>
+<ul class="list">
+<li><strong>amount</strong> - type: float or null</li>
+<li><strong>currency</strong> - type: str, one of <code>[&quot;UAH&quot;, &quot;USD&quot;, &quot;EUR&quot;, &quot;RUB&quot;, &quot;GBP&quot;]</code></li>
+<li><strong>value_added_tax_included</strong> - type: bool</li>
+</ul>
+<p>assignee supplier object fields:</p>
+<ul class="list">
+<li><strong>id</strong> - type: int</li>
+<li><strong>name</strong> - type: str</li>
+<li><strong>is_iam</strong> - type: bool</li>
+</ul>
+<p>state period object fields:</p>
+<ul class="list">
+<li><strong>start</strong> - type: str or null, format: <strong>yyyy-mm-ddTHH:MM:SS</strong></li>
+<li><strong>end</strong> - type: str or null, format: <strong>yyyy-mm-ddTHH:MM:SS</strong></li>
+</ul>
+<p>cancellation object fields:</p>
+<ul class="list">
+<li><strong>date</strong> - type: str or null, format: <strong>yyyy-mm-ddTHH:MM:SS</strong>  </li>
+<li><strong>documents</strong> - type: <strong>documents object</strong>, described bewlow</li>
+<li><strong>id</strong> - type: str </li>
+<li><strong>reason</strong> - type: str </li>
+<li><strong>status</strong> - type: int, one of <code>[&#39;draft&#39;, &#39;pending&#39;, &#39;active&#39;, &#39;unsuccessful&#39;, &#39;deleted&#39;]</code></li>
+<li><strong>status_text</strong> - type: str</li>
+</ul>
+<p>documents object fields:</p>
+<ul class="list">
+<li><strong>tender</strong> - type: <strong>document</strong> objects list or empty, described below </li>
+<li><strong>pre_qualification</strong> - type: <strong>document</strong> objects list or empty, described below</li>
+<li><strong>offer</strong> - type: <strong>document</strong> objects list or empty, described below</li>
+<li><strong>offer_lot</strong> - type: <strong>document</strong> objects list or empty, described below</li>
+<li><strong>cancellation</strong> - type: <strong>document</strong> objects list or empty, described below</li>
+<li><strong>qualification</strong> - type: <strong>document</strong> objects list or empty, described below</li>
+<li><strong>contract</strong> - type: <strong>document</strong> objects list or empty, described below</li>
+<li><strong>lot</strong> - type: <strong>document</strong> objects list or empty, described below</li>
+</ul>
+<p>document object fields:</p>
+<ul class="list">
+<li><strong>date_modified</strong> - type: str, format: <strong>yyyy-mm-ddTHH:MM:SS</strong></li>
+<li><strong>date_published</strong> - type: str, format: <strong>yyyy-mm-ddTHH:MM:SS</strong></li>
+<li><strong>history</strong> - type: <strong>document</strong> objects list or empty, described below</li>
+<li><strong>id</strong> - type: str </li>
+<li><strong>mimetype</strong> - type: str </li>
+<li><strong>title</strong> - type: str </li>
+<li><strong>url</strong> - type: str</li>
+</ul>
+<p>feature object fields:</p>
+<ul class="list">
+<li><strong>code</strong> - type: str </li>
+<li><strong>descr</strong> - type: str </li>
+<li><strong>descr_en</strong> - type: str </li>
+<li><strong>options</strong> - type: <strong>option</strong> objects list, described below </li>
+<li><strong>title</strong> - type: str </li>
+<li><strong>title_en</strong> - type: str</li>
+</ul>
+<p>option object fields:</p>
+<ul class="list">
+<li><strong>coefficient</strong> - type: float </li>
+<li><strong>title</strong> - type: str </li>
+<li><strong>title_en</strong> - type: str or null </li>
+<li><strong>weight</strong> - type: int</li>
+</ul>
+<p>guarantee object fields:</p>
+<ul class="list">
+<li><strong>amount</strong> - type: float </li>
+<li><strong>currency</strong> - type: str </li>
+<li><strong>value_added_tax_included</strong> - type: bool</li>
+</ul>
+<p>item object fields:</p>
+<ul class="list">
+<li><strong>classifiers</strong> - type: <strong>classifier</strong> objects list or empty, described below</li>
+<li><strong>delivery_address</strong> - type: <strong>address</strong> object, described below </li>
+<li><strong>delivery_period</strong> - type: object, <strong>state period object</strong>, described below</li>
+<li><strong>descr</strong> - type: str </li>
+<li><strong>descr_en</strong> - type: str on null </li>
+<li><strong>features</strong> - type: <strong>feature object</strong>s list, describe below</li>
+<li><strong>id</strong> - type: str </li>
+<li><strong>primary_classifier</strong> - type: <strong>classifier</strong> objects, described below</li>
+<li><strong>quantity</strong> - type: float </li>
+<li><strong>status</strong> - type: int, one of <code>[0, 1]</code>, <a href="./static.html">details</a></li>
+<li><strong>uid</strong> - type: str </li>
+<li><strong>unit</strong> - type: <strong>unit</strong> object, described below</li>
+</ul>
+<p>classifier object fields:</p>
+<ul class="list">
+<li><strong>code</strong> - type: str </li>
+<li><strong>id</strong> - type: str </li>
+<li><strong>name_with_code</strong> - type: str </li>
+<li><strong>type</strong> - type: str</li>
+</ul>
+<p>address object fields:</p>
+<ul class="list">
+<li><strong>country_name</strong> - type: str </li>
+<li><strong>is_all_ukraine</strong> - type: bool </li>
+<li><strong>locality</strong> - type: str on null </li>
+<li><strong>postal_code</strong> - type: str or null </li>
+<li><strong>region</strong> - type: str or null </li>
+<li><strong>street_address</strong> - type: str or null</li>
+</ul>
+<p>unit object fields:</p>
+<ul class="list">
+<li><strong>code</strong> - type: str</li>
+<li><strong>name</strong> - type: str</li>
+</ul>
+<p>lot object fields:</p>
+<ul class="list">
+<li><strong>amount</strong> - type: <strong>amount object</strong>, described below </li>
+<li><strong>claims_count</strong> - type: int </li>
+<li><strong>complaints_count</strong> - type: int</li>
+<li><strong>descr</strong> - type: str </li>
+<li><strong>descr_en</strong> - type: str or null </li>
+<li><strong>lot_participate_status</strong> - type: int, one of <code>[0, 1, 2]</code>, <a href="./static.html">details</a></li>
+<li><strong>questions_count</strong> - type: int</li>
+<li><strong>title</strong> - type: str </li>
+<li><strong>title_en</strong> - type: str or null </li>
+<li><strong>uid</strong> - type: str</li>
+</ul>
+<p>offer object fields:</p>
+<ul class="list">
+<li><strong>amount_weight</strong> - type: float or null </li>
+<li><strong>auction_url</strong> - type: str or null </li>
+<li><strong>auto_active</strong> - type: bool </li>
+<li><strong>coefficient_of_features</strong> - type: float or null </li>
+<li><strong>documents</strong> - type: <strong>documents object</strong>, described bewlow</li>
+<li><strong>features</strong> - type: <strong>feature</strong> objects array or null </li>
+<li><strong>merchant</strong> - type: <strong>merchant</strong> object </li>
+<li><strong>net_present_amount</strong> - type: float or null </li>
+<li><strong>status</strong> - type: int, one of <code>[0, 1, 2, 3, 4, 5, 6]</code>, <a href="./static.html">details</a></li>
+<li><strong>status_text</strong> - type: str </li>
+<li><strong>subcontracting_details</strong> - type: str or null </li>
+<li><strong>uid</strong> - type: str </li>
+<li><strong>value</strong> - type: <strong>amount object</strong>, described below</li>
+</ul>
+<p>merchant object fields:</p>
+<ul class="list">
+<li><strong>address</strong> - type: <strong>address</strong> object, described below </li>
+<li><strong>contact_point</strong> - type: <strong>contact_point</strong> object, described below</li>
+<li><strong>identifier</strong> - type: <strong>identifier</strong> object, described below </li>
+<li><strong>name</strong> - type: str</li>
+</ul>
+<p>contact_point object fields:</p>
+<ul class="list">
+<li><strong>available_language</strong> - optional, type: str</li>
+<li><strong>email</strong> - type: str </li>
+<li><strong>fax_number</strong> - type: str</li>
+<li><strong>name</strong> - type: str </li>
+<li><strong>name_en</strong> - type: str</li>
+<li><strong>name_ru</strong> - type: str</li>
+<li><strong>telephone</strong> - type: str</li>
+</ul>
+<p>identifier object fields: </p>
+<ul class="list">
+<li><strong>id</strong> - type: str </li>
+<li><strong>legal_name</strong> - type: str</li>
+<li><strong>legal_name_en</strong> - type: str or null </li>
+<li><strong>scheme</strong> - type: str</li>
+<li><strong>uri</strong> - type: str or null</li>
+</ul>
+<p>pre_qualification object fields:</p>
+<ul class="list">
+<li><strong>desc</strong> - type: str or null</li>
+<li><strong>documents</strong> - type: <strong>documents object</strong>, described below</li>
+<li><strong>id</strong> - type: str </li>
+<li><strong>self_eligible</strong> - type: bool </li>
+<li><strong>self_qualified</strong> - type: bool </li>
+<li><strong>status</strong> - type: int, one of <code>[0, 1, 2, 3]</code>, <a href="./static.html">details</a></li>
+<li><strong>status_text</strong> - type: str </li>
+<li><strong>tenderer</strong> - type: <strong>merchant</strong> object, described below </li>
+<li><strong>uid</strong> - type: str </li>
+</ul>
+<p>procuring_entity object fields:</p>
+<ul class="list">
+<li><strong>additional_contact_points</strong> - type: <strong>contact point</strong> objects list or empty, described below</li>
+<li><strong>address</strong> - type: <strong>address</strong> object, described below</li>
+<li><strong>contact_point</strong> - type: type: <strong>contact point</strong> object or null, described below</li>
+<li><strong>identifier</strong> - type: <strong>identifier</strong> object, described below</li>
+<li><strong>kind</strong> - type: str or null </li>
+<li><strong>name</strong> - type: str </li>
+<li><strong>name_en</strong> - type: str or null</li>
+</ul>
+<p>questions object fields: </p>
+<ul class="list">
+<li><strong>count</strong> - type: int </li>
+<li><strong>lots</strong> - type: <strong>lot</strong> questions preview objects list or empty, described below</li>
+<li><strong>questions_data</strong> - type: <strong>question_data</strong> objects list or empty, described below </li>
+<li><strong>url</strong> - type: str</li>
+</ul>
+<p>lot object fields:</p>
+<ul class="list">
+<li><strong>count</strong> - type: int </li>
+<li><strong>id</strong> - type: str </li>
+<li><strong>url</strong> - type: str</li>
+</ul>
+<p>question_data object fields:</p>
+<ul class="list">
+<li><strong>answer</strong> - type: str or null </li>
+<li><strong>description</strong> - type: str </li>
+<li><strong>has_answer</strong> - type: str </li>
+<li><strong>id</strong> - type: str </li>
+<li><strong>title</strong> - type: str</li>
+</ul>
+<p>qualification object fields:</p>
+<ul class="list">
+<li><strong>amount_weight</strong> - type: float or null </li>
+<li><strong>coefficient_of_features</strong> - type: float or null</li>
+<li><strong>contract</strong> - type: <strong>contract</strong> object or empty, described below </li>
+<li><strong>documents</strong> - type: <strong>documents object</strong>, described below</li>
+<li><strong>features</strong> - type: <strong>feature</strong> objects list or null, described below </li>
+<li><strong>id</strong> - type: str </li>
+<li><strong>merchant</strong> - type: <strong>merchant</strong> object, described below</li>
+<li><strong>net_present_amount</strong> - type: float or null </li>
+<li><strong>status</strong> - type: int, one of <code>[0, 1, 2, 3]</code>, <a href="./static.html">details</a></li>
+<li><strong>status_text</strong> - type: str </li>
+<li><strong>value</strong> - type: <strong>amount</strong> object, described below</li>
+<li><strong>milestones</strong> - type: array of <strong>award milestone</strong> objects, described below</li>
+</ul>
+<p>contract object fields:</p>
+<ul class="list">
+<li><strong>award_id</strong> - type: str </li>
+<li><strong>contract_id</strong> - type: str </li>
+<li><strong>contract_number</strong> - type: str </li>
+<li><strong>date</strong> - type: str or null, format: <strong>yyyy-mm-ddTHH:MM:SS</strong></li>
+<li><strong>date_signed</strong> - type: str or null, format: <strong>yyyy-mm-ddTHH:MM:SS</strong></li>
+<li><strong>documents</strong> - type: <strong>documents object</strong>, described below</li>
+<li><strong>id</strong> - type: str</li>
+<li><strong>period</strong> - type: object, <strong>state period object</strong>, described below </li>
+<li><strong>status</strong> - type: int, one of <code>[0, 1, 2, 3, 4]</code>, <a href="./static.html">details</a></li>
+<li><strong>status_text</strong> - type: str </li>
+<li><strong>value</strong> - type: <strong>amount object</strong>, described below</li>
+</ul>
+<p>main_procurement_category fields:</p>
+<ul class="list">
+<li><strong>value</strong> - type: str</li>
+<li><strong>label</strong> - type: str</li>
+</ul>
+<p>milestones fields:</p>
+<ul class="list">
+<li><strong>value</strong> - type: str</li>
+<li><strong>label</strong> - type: str</li>
+<li><strong>description</strong> - type: str</li>
+<li><strong>duration</strong> - type: <strong>duration object</strong>, described below</li>
+<li><strong>id</strong> - type: str</li>
+<li><strong>percentage</strong> - type: float</li>
+<li><strong>relatedLot</strong> - type: str or null</li>
+<li><strong>sequenceNumber</strong> - type: int</li>
+<li><strong>title</strong> - type: str</li>
+<li><strong>type</strong> - type: str</li>
+</ul>
+<p>duration fields:</p>
+<ul class="list">
+<li><strong>days</strong> - type: int</li>
+<li><strong>type</strong> - type: str</li>
+</ul>
+<p>state period object fields:</p>
+<ul class="list">
+<li><em>start</em> - type: str or null, format: <strong>yyyy-mm-ddTHH:MM:SS.fZ</strong></li>
+<li><em>end</em> - type: str or null, format: <strong>yyyy-mm-ddTHH:MM:SS.fZ</strong></li>
+</ul>
+<p>award milestone object fields:</p>
+<ul class="list">
+<li><strong>id</strong> - type: str</li>
+<li><strong>code</strong> - type: str, one of <code>[&quot;alp&quot;, &quot;24h&quot;]</code> </li>
+<li><strong>date</strong> - type: str or null, format: <strong>yyyy-mm-ddTHH:MM:SS.fZ</strong></li>
+<li><strong>due_date</strong> - type: str or null, format: <strong>yyyy-mm-ddTHH:MM:SS.fZ</strong></li>
+<li><strong>description</strong> - type: str</li>
+<li><strong>title</strong> - type: str  </li>
+</ul>
+<p>Examples:</p>
+<p>request:</p>
+<pre class="hljs"><code>curl -X GET <span class="hljs-string">"http://my.example.com:5001/remote/api/v3/view/bdcaab7d73a44ab4b73f038271e08866"</span> --header <span class="hljs-string">"Acc-Token: 4debe281d09d463f08e4c7354c9751359ed8fe87"</span></code></pre><p>response</p>
+<pre class="hljs"><code>{
+   <span class="hljs-attr">"data"</span> : {
+      <span class="hljs-attr">"amount"</span> : {
+         <span class="hljs-attr">"amount"</span> : <span class="hljs-number">12312</span>,
+         <span class="hljs-attr">"currency"</span> : <span class="hljs-string">"UAH"</span>,
+         <span class="hljs-attr">"value_added_tax_included"</span> : <span class="hljs-literal">false</span>
+      },
+      <span class="hljs-attr">"cabinet_url"</span>: <span class="hljs-string">"https://my.zakupki.prom.ua/cabinet/purchases/state_purchase/view/123456789"</span>,
+      <span class="hljs-attr">"assignee_supplier_employee"</span> : <span class="hljs-literal">null</span>,
+      <span class="hljs-attr">"auction_period"</span> : {
+         <span class="hljs-attr">"end"</span> : <span class="hljs-string">"2019-02-08T11:24:39"</span>,
+         <span class="hljs-attr">"start"</span> : <span class="hljs-string">"2019-02-08T11:24:39"</span>
+      },
+      <span class="hljs-attr">"auction_url"</span> : <span class="hljs-string">"https://auction-sandbox.prozorro.gov.ua/tenders/bdcaab7d73a44ab4b73f038271e08866/login?bidder_id=4d4afddd9f5b4842a9358759f260563a&amp;hash=42f8840d761680af8b21af80485aa5618c77c872"</span>,
+      <span class="hljs-attr">"cancellations"</span> : [],
+      <span class="hljs-attr">"claims_count"</span> : <span class="hljs-number">0</span>,
+      <span class="hljs-attr">"complaints_count"</span> : <span class="hljs-number">0</span>,
+      <span class="hljs-attr">"date"</span> : <span class="hljs-string">"2019-04-05T15:08:15"</span>,
+      <span class="hljs-attr">"desc"</span> : <span class="hljs-string">"adsfadp"</span>,
+      <span class="hljs-attr">"desc_en"</span> : <span class="hljs-string">""</span>,
+      <span class="hljs-attr">"documents"</span> : {
+         <span class="hljs-attr">"tender"</span> : []
+      },
+      <span class="hljs-attr">"enquiry_period"</span> : {
+         <span class="hljs-attr">"end"</span> : <span class="hljs-string">"2019-02-08T11:13:00"</span>,
+         <span class="hljs-attr">"start"</span> : <span class="hljs-string">"2019-02-08T11:05:34"</span>
+      },
+      <span class="hljs-attr">"entity_type"</span> : <span class="hljs-number">0</span>,
+      <span class="hljs-attr">"features"</span> : [],
+      <span class="hljs-attr">"guarantee"</span> : {
+         <span class="hljs-attr">"amount"</span> : <span class="hljs-number">0</span>,
+         <span class="hljs-attr">"currency"</span> : <span class="hljs-string">"UAH"</span>,
+         <span class="hljs-attr">"value_added_tax_included"</span> : <span class="hljs-literal">false</span>
+      },
+      <span class="hljs-attr">"has_lots"</span> : <span class="hljs-literal">false</span>,
+      <span class="hljs-attr">"id"</span> : <span class="hljs-string">"bdcaab7d73a44ab4b73f038271e08866"</span>,
+      <span class="hljs-attr">"is_blocked"</span> : <span class="hljs-literal">false</span>,
+      <span class="hljs-attr">"is_favorite"</span> : <span class="hljs-literal">false</span>,
+      <span class="hljs-attr">"is_participate"</span> : <span class="hljs-literal">true</span>,
+      <span class="hljs-attr">"items"</span> : [
+         {
+            <span class="hljs-attr">"classifiers"</span> : [],
+            <span class="hljs-attr">"delivery_address"</span> : {
+               <span class="hljs-attr">"country_name"</span> : <span class="hljs-string">"Україна"</span>,
+               <span class="hljs-attr">"is_all_ukraine"</span> : <span class="hljs-literal">true</span>,
+               <span class="hljs-attr">"locality"</span> : <span class="hljs-literal">null</span>,
+               <span class="hljs-attr">"postal_code"</span> : <span class="hljs-literal">null</span>,
+               <span class="hljs-attr">"region"</span> : <span class="hljs-string">"Відповідно до документації"</span>,
+               <span class="hljs-attr">"street_address"</span> : <span class="hljs-literal">null</span>
+            },
+            <span class="hljs-attr">"delivery_period"</span> : {
+               <span class="hljs-attr">"end"</span> : <span class="hljs-string">"2019-02-10T00:00:00"</span>,
+               <span class="hljs-attr">"start"</span> : <span class="hljs-literal">null</span>
+            },
+            <span class="hljs-attr">"descr"</span> : <span class="hljs-string">"asdfsadf"</span>,
+            <span class="hljs-attr">"descr_en"</span> : <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"features"</span> : [],
+            <span class="hljs-attr">"id"</span> : <span class="hljs-string">"67217b0036b94f71aafbf85279b568a7"</span>,
+            <span class="hljs-attr">"primary_classifier"</span> : {
+               <span class="hljs-attr">"code"</span> : <span class="hljs-string">"03000000-1"</span>,
+               <span class="hljs-attr">"id"</span> : <span class="hljs-string">"03000000-1"</span>,
+               <span class="hljs-attr">"name_with_code"</span> : <span class="hljs-string">"03000000-1 Сільськогосподарська, фермерська продукція, продукція рибальства, лісівництва та супутня продукція"</span>,
+               <span class="hljs-attr">"type"</span> : <span class="hljs-string">"ДК 021"</span>
+            },
+            <span class="hljs-attr">"quantity"</span> : <span class="hljs-number">123213</span>,
+            <span class="hljs-attr">"status"</span> : <span class="hljs-number">0</span>,
+            <span class="hljs-attr">"uid"</span> : <span class="hljs-string">"67217b0036b94f71aafbf85279b568a7"</span>,
+            <span class="hljs-attr">"unit"</span> : {
+               <span class="hljs-attr">"code"</span> : <span class="hljs-string">"K3"</span>,
+               <span class="hljs-attr">"name"</span> : <span class="hljs-string">"кіловар-година"</span>
+            }
+         }
+      ],
+      <span class="hljs-attr">"lots"</span> : [],
+      <span class="hljs-attr">"main_procurement_category"</span> : {
+          <span class="hljs-attr">"label"</span> : <span class="hljs-string">"товари"</span>,
+          <span class="hljs-attr">"value"</span> : <span class="hljs-string">"goods"</span>
+      },
+      <span class="hljs-attr">"milestones"</span> : [
+          {
+              <span class="hljs-attr">"code"</span> : <span class="hljs-string">"postpayment"</span>,
+              <span class="hljs-attr">"description"</span> : <span class="hljs-string">""</span>,
+              <span class="hljs-attr">"duration"</span> : {
+                  <span class="hljs-attr">"days"</span> : <span class="hljs-number">11</span>,
+                  <span class="hljs-attr">"type"</span> : <span class="hljs-string">"banking"</span>
+              },
+              <span class="hljs-attr">"id"</span> : <span class="hljs-string">"65ed3f2aec55436db8961d83c959a25f"</span>,
+              <span class="hljs-attr">"percentage"</span> : <span class="hljs-number">100.0</span>,
+              <span class="hljs-attr">"relatedLot"</span> : <span class="hljs-string">"085b6869a27545c2a0281e79563863b3"</span>,
+              <span class="hljs-attr">"sequenceNumber"</span> : <span class="hljs-number">0</span>,
+              <span class="hljs-attr">"title"</span> : <span class="hljs-string">"executionOfWorks"</span>,
+              <span class="hljs-attr">"type"</span> : <span class="hljs-string">"financing"</span>
+          }
+      ],
+      <span class="hljs-attr">"method_type"</span> : <span class="hljs-number">1</span>,
+      <span class="hljs-attr">"method_type_text"</span> : <span class="hljs-string">"Відкриті торги"</span>,
+      <span class="hljs-attr">"offers"</span> : [
+         {
+            <span class="hljs-attr">"amount_weight"</span> : <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"auction_url"</span> : <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"auto_active"</span> : <span class="hljs-literal">false</span>,
+            <span class="hljs-attr">"coefficient_of_features"</span> : <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"documents"</span> : {
+               <span class="hljs-attr">"offer"</span> : [],
+               <span class="hljs-attr">"qualification"</span> : [
+                  {
+                     <span class="hljs-attr">"date_modified"</span> : <span class="hljs-string">"2019-02-08T11:24:50"</span>,
+                     <span class="hljs-attr">"date_published"</span> : <span class="hljs-string">"2019-02-08T11:24:50"</span>,
+                     <span class="hljs-attr">"document_type"</span> : <span class="hljs-string">"registerExtract"</span>,
+                     <span class="hljs-attr">"history"</span> : [],
+                     <span class="hljs-attr">"id"</span> : <span class="hljs-string">"c49a24f5ca644aba83023f53daf1cd8e"</span>,
+                     <span class="hljs-attr">"mimetype"</span> : <span class="hljs-literal">null</span>,
+                     <span class="hljs-attr">"title"</span> : <span class="hljs-string">"edr_identification.yaml"</span>,
+                     <span class="hljs-attr">"url"</span> : <span class="hljs-string">"https://public-docs-sandbox.prozorro.gov.ua/get/ccd8ebb8699c4328bfd7d017e32c6ff6?KeyID=1331dc52&amp;Signature=RMUJS9R17NCPjl0SpmyqSfdLCbq6Mu%252BxXGTNAuZuSZyw5A%252Be1KpCyETIeW1QcTGWUSe2vE0sy2w6idvgZMVtCA%253D%253D"</span>
+                  },
+                  {
+                     <span class="hljs-attr">"date_modified"</span> : <span class="hljs-string">"2019-02-08T11:48:01"</span>,
+                     <span class="hljs-attr">"date_published"</span> : <span class="hljs-string">"2019-02-08T11:48:01"</span>,
+                     <span class="hljs-attr">"history"</span> : [],
+                     <span class="hljs-attr">"id"</span> : <span class="hljs-string">"4ce58e38d72d4036bb121f85d3dbcb83"</span>,
+                     <span class="hljs-attr">"mimetype"</span> : <span class="hljs-literal">null</span>,
+                     <span class="hljs-attr">"title"</span> : <span class="hljs-string">"file6"</span>,
+                     <span class="hljs-attr">"url"</span> : <span class="hljs-string">"https://public-docs-sandbox.prozorro.gov.ua/get/aa6b016f600341a59f562a9de8489dc5?KeyID=1331dc52&amp;Signature=xi7HdSmXWmV3Hiifwv9hBV4hAMqJB2SV1H1l%252BCBQLD9fmPdsKaqgCdMSHPfJXfOmaWfrV0GNjrZisgsE3t8RAA%253D%253D"</span>
+                  },
+                  {
+                     <span class="hljs-attr">"date_modified"</span> : <span class="hljs-string">"2019-02-08T12:08:20"</span>,
+                     <span class="hljs-attr">"date_published"</span> : <span class="hljs-string">"2019-02-08T12:08:20"</span>,
+                     <span class="hljs-attr">"history"</span> : [],
+                     <span class="hljs-attr">"id"</span> : <span class="hljs-string">"0e85edb2e5de4b2a96097c5b6695248e"</span>,
+                     <span class="hljs-attr">"mimetype"</span> : <span class="hljs-string">"application/pkcs7-signature"</span>,
+                     <span class="hljs-attr">"title"</span> : <span class="hljs-string">"sign.p7s"</span>,
+                     <span class="hljs-attr">"url"</span> : <span class="hljs-string">"https://public-docs-sandbox.prozorro.gov.ua/get/4e2964cd920d49ef8d34d3722696eb9b?KeyID=1331dc52&amp;Signature=n1AaZqStl1cYTOQP1rNSWo6xNEtRhDT7PYBSN5fnlIfns5SRXyLbKgcspMMvHMBmMzK38kYFwkgItfOhP%252B8WAQ%253D%253D"</span>
+                  }
+               ]
+            },
+            <span class="hljs-attr">"features"</span> : <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"merchant"</span> : {
+               <span class="hljs-attr">"address"</span> : {
+                  <span class="hljs-attr">"country_name"</span> : <span class="hljs-string">"Україна"</span>,
+                  <span class="hljs-attr">"locality"</span> : <span class="hljs-string">"sdfdasdfa"</span>,
+                  <span class="hljs-attr">"postal_code"</span> : <span class="hljs-string">"12332"</span>,
+                  <span class="hljs-attr">"region"</span> : <span class="hljs-string">"Донецька область"</span>,
+                  <span class="hljs-attr">"street_address"</span> : <span class="hljs-string">"asdfasdfasdf"</span>
+               },
+               <span class="hljs-attr">"contact_point"</span> : {
+                  <span class="hljs-attr">"email"</span> : <span class="hljs-string">"some78@mailinator.com"</span>,
+                  <span class="hljs-attr">"name"</span> : <span class="hljs-string">"some dasfasdf some"</span>,
+                  <span class="hljs-attr">"telephone"</span> : <span class="hljs-string">"+38042"</span>
+               },
+               <span class="hljs-attr">"identifier"</span> : {
+                  <span class="hljs-attr">"id"</span> : <span class="hljs-string">"23412343241"</span>,
+                  <span class="hljs-attr">"legal_name"</span> : <span class="hljs-string">"Название моей компании"</span>,
+                  <span class="hljs-attr">"scheme"</span> : <span class="hljs-string">"UA-EDR"</span>
+               },
+               <span class="hljs-attr">"name"</span> : <span class="hljs-string">"Название моей компании"</span>
+            },
+            <span class="hljs-attr">"net_present_amount"</span> : <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"status"</span> : <span class="hljs-number">0</span>,
+            <span class="hljs-attr">"status_text"</span> : <span class="hljs-string">"активно"</span>,
+            <span class="hljs-attr">"subcontracting_details"</span> : <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"uid"</span> : <span class="hljs-string">"4d4afddd9f5b4842a9358759f260563a"</span>,
+            <span class="hljs-attr">"value"</span> : {
+               <span class="hljs-attr">"amount"</span> : <span class="hljs-number">12312</span>,
+               <span class="hljs-attr">"currency"</span> : <span class="hljs-string">"UAH"</span>,
+               <span class="hljs-attr">"value_added_tax_included"</span> : <span class="hljs-literal">false</span>
+            }
+         },
+         {
+            <span class="hljs-attr">"amount_weight"</span> : <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"auction_url"</span> : <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"auto_active"</span> : <span class="hljs-literal">false</span>,
+            <span class="hljs-attr">"coefficient_of_features"</span> : <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"documents"</span> : {
+               <span class="hljs-attr">"contract"</span> : [
+                  {
+                     <span class="hljs-attr">"date_modified"</span> : <span class="hljs-string">"2019-04-05T18:07:59"</span>,
+                     <span class="hljs-attr">"date_published"</span> : <span class="hljs-string">"2019-04-05T18:07:59"</span>,
+                     <span class="hljs-attr">"history"</span> : [],
+                     <span class="hljs-attr">"id"</span> : <span class="hljs-string">"d98fa0dd03b64fa088818d40d7972785"</span>,
+                     <span class="hljs-attr">"mimetype"</span> : <span class="hljs-string">"application/pkcs7-signature"</span>,
+                     <span class="hljs-attr">"title"</span> : <span class="hljs-string">"sign.p7s"</span>,
+                     <span class="hljs-attr">"url"</span> : <span class="hljs-string">"https://public-docs-sandbox.prozorro.gov.ua/get/d50c404f1a6a441c933b12308edf40ea?KeyID=1331dc52&amp;Signature=I3wUXZZiJ%2F9uZxhdDNBfBaovej7XLXTXXzHcfTSqxwENQnm%2FDKPBmf%252BBV5kXgfmYHhdReWRGWaPL3lcrbCvKBg%253D%253D"</span>
+                  },
+                  {
+                     <span class="hljs-attr">"date_modified"</span> : <span class="hljs-string">"2019-04-05T18:07:17"</span>,
+                     <span class="hljs-attr">"date_published"</span> : <span class="hljs-string">"2019-04-05T18:06:39"</span>,
+                     <span class="hljs-attr">"document_type"</span> : <span class="hljs-string">"contractSigned"</span>,
+                     <span class="hljs-attr">"history"</span> : [
+                        {
+                           <span class="hljs-attr">"date_modified"</span> : <span class="hljs-string">"2019-04-05T18:06:39"</span>,
+                           <span class="hljs-attr">"date_published"</span> : <span class="hljs-string">"2019-04-05T18:06:39"</span>,
+                           <span class="hljs-attr">"document_type"</span> : <span class="hljs-string">"contractSigned"</span>,
+                           <span class="hljs-attr">"id"</span> : <span class="hljs-string">"dcdff04d79ad46528b8ef284d9a18cbd"</span>,
+                           <span class="hljs-attr">"mimetype"</span> : <span class="hljs-string">"text/plain"</span>,
+                           <span class="hljs-attr">"title"</span> : <span class="hljs-string">"test_file_1.txt"</span>,
+                           <span class="hljs-attr">"url"</span> : <span class="hljs-string">"https://public-docs-sandbox.prozorro.gov.ua/get/8b8589ae29ab4b22bfca3f68321f31d2?KeyID=1331dc52&amp;Signature=47MAD4n9Mf2JwSdgz6vdGwGZutT35GnUhC1z0ozLOb3lqnYhGOvL%252BMal3ljgWLSBNfm7k2plww4eExe2uXUYDg%253D%253D"</span>
+                        }
+                     ],
+                     <span class="hljs-attr">"id"</span> : <span class="hljs-string">"dcdff04d79ad46528b8ef284d9a18cbd"</span>,
+                     <span class="hljs-attr">"mimetype"</span> : <span class="hljs-string">"text/plain"</span>,
+                     <span class="hljs-attr">"title"</span> : <span class="hljs-string">"test_file_3.txt"</span>,
+                     <span class="hljs-attr">"url"</span> : <span class="hljs-string">"https://public-docs-sandbox.prozorro.gov.ua/get/b5b2ebcda3924ce3817987ccbe010b45?KeyID=1331dc52&amp;Signature=A%2FX3pn5YZnXzn6pkrIRD6aww7ULWhcZeZw%252By5CsEUxxUviqWEnkx0XiLePuur7AKQmYTEIjzJizOPSwOld1DCg%253D%253D"</span>
+                  }
+               ],
+               <span class="hljs-attr">"offer"</span> : [],
+               <span class="hljs-attr">"qualification"</span> : [
+                  {
+                     <span class="hljs-attr">"date_modified"</span> : <span class="hljs-string">"2019-02-08T12:47:32"</span>,
+                     <span class="hljs-attr">"date_published"</span> : <span class="hljs-string">"2019-02-08T12:47:32"</span>,
+                     <span class="hljs-attr">"history"</span> : [],
+                     <span class="hljs-attr">"id"</span> : <span class="hljs-string">"82cd52999ebc46129e25b7d9831b7e5d"</span>,
+                     <span class="hljs-attr">"mimetype"</span> : <span class="hljs-string">"text/plain"</span>,
+                     <span class="hljs-attr">"title"</span> : <span class="hljs-string">"test.txt"</span>,
+                     <span class="hljs-attr">"url"</span> : <span class="hljs-string">"https://public-docs-sandbox.prozorro.gov.ua/get/9dcd03a9b50a4cdd986b940b5445d841?KeyID=1331dc52&amp;Signature=VDAvQO32GkPLb4LlA47d32btRSJqUidFPggR5tXMOUaBGFeD5jhvJD4Gn9vl6SwLhVIe4PF6JP5FnUcKTZZiDg%253D%253D"</span>
+                  },
+                  {
+                     <span class="hljs-attr">"date_modified"</span> : <span class="hljs-string">"2019-02-08T12:48:11"</span>,
+                     <span class="hljs-attr">"date_published"</span> : <span class="hljs-string">"2019-02-08T12:48:11"</span>,
+                     <span class="hljs-attr">"history"</span> : [],
+                     <span class="hljs-attr">"id"</span> : <span class="hljs-string">"952739b3f79749b09b969785ce7be173"</span>,
+                     <span class="hljs-attr">"mimetype"</span> : <span class="hljs-string">"application/pkcs7-signature"</span>,
+                     <span class="hljs-attr">"title"</span> : <span class="hljs-string">"sign.p7s"</span>,
+                     <span class="hljs-attr">"url"</span> : <span class="hljs-string">"https://public-docs-sandbox.prozorro.gov.ua/get/75238b029396486cb07702b012779c69?KeyID=1331dc52&amp;Signature=UKZVgVJ2EORoRRPHzCXUC4igAE%252BNoaPJ5Ppo7uBf3xpnydqtJU1zkR9n7sZ%252B8f1d7fhnSGo0n2BPdfvZ54ncBA%253D%253D"</span>
+                  }
+               ]
+            },
+            <span class="hljs-attr">"features"</span> : <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"merchant"</span> : {
+               <span class="hljs-attr">"address"</span> : {
+                  <span class="hljs-attr">"country_name"</span> : <span class="hljs-string">"Австралія"</span>,
+                  <span class="hljs-attr">"locality"</span> : <span class="hljs-string">"dfasdfsdaf"</span>,
+                  <span class="hljs-attr">"postal_code"</span> : <span class="hljs-string">"asdasdgafagfdasfasdf"</span>,
+                  <span class="hljs-attr">"region"</span> : <span class="hljs-string">"Волинська область"</span>,
+                  <span class="hljs-attr">"street_address"</span> : <span class="hljs-string">"adfasdf"</span>
+               },
+               <span class="hljs-attr">"contact_point"</span> : {
+                  <span class="hljs-attr">"email"</span> : <span class="hljs-string">"d.buliy5544@smartweb.com.ua"</span>,
+                  <span class="hljs-attr">"name"</span> : <span class="hljs-string">"Коля Иванов"</span>,
+                  <span class="hljs-attr">"telephone"</span> : <span class="hljs-string">"+380636822677"</span>
+               },
+               <span class="hljs-attr">"identifier"</span> : {
+                  <span class="hljs-attr">"id"</span> : <span class="hljs-string">"123123123123123"</span>,
+                  <span class="hljs-attr">"legal_name"</span> : <span class="hljs-string">"ТОВ \"some76\""</span>,
+                  <span class="hljs-attr">"scheme"</span> : <span class="hljs-string">"AU-ABN"</span>
+               },
+               <span class="hljs-attr">"name"</span> : <span class="hljs-string">"ТОВ \"some76\""</span>
+            },
+            <span class="hljs-attr">"net_present_amount"</span> : <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"status"</span> : <span class="hljs-number">0</span>,
+            <span class="hljs-attr">"status_text"</span> : <span class="hljs-string">"активно"</span>,
+            <span class="hljs-attr">"subcontracting_details"</span> : <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"uid"</span> : <span class="hljs-string">"cc186d602e024e55a9f7a72c0b3ef9b4"</span>,
+            <span class="hljs-attr">"value"</span> : {
+               <span class="hljs-attr">"amount"</span> : <span class="hljs-number">12312</span>,
+               <span class="hljs-attr">"currency"</span> : <span class="hljs-string">"UAH"</span>,
+               <span class="hljs-attr">"value_added_tax_included"</span> : <span class="hljs-literal">false</span>
+            }
+         }
+      ],
+      <span class="hljs-attr">"plan_to_participate"</span> : <span class="hljs-literal">false</span>,
+      <span class="hljs-attr">"pre_qualification"</span> : [],
+      <span class="hljs-attr">"procuring_entity"</span> : {
+         <span class="hljs-attr">"address"</span> : {
+            <span class="hljs-attr">"country_name"</span> : <span class="hljs-string">"Україна"</span>,
+            <span class="hljs-attr">"locality"</span> : <span class="hljs-string">"mariupol"</span>,
+            <span class="hljs-attr">"postal_code"</span> : <span class="hljs-string">"87553"</span>,
+            <span class="hljs-attr">"region"</span> : <span class="hljs-string">"Донецька область"</span>,
+            <span class="hljs-attr">"street_address"</span> : <span class="hljs-string">"hell"</span>
+         },
+         <span class="hljs-attr">"contact_point"</span> : {
+            <span class="hljs-attr">"email"</span> : <span class="hljs-string">"some1@mailinator.com"</span>,
+            <span class="hljs-attr">"name"</span> : <span class="hljs-string">"some some"</span>,
+            <span class="hljs-attr">"telephone"</span> : <span class="hljs-string">"123123123,+380234234234,+380345345345,+380456456456,+380567567567"</span>,
+            <span class="hljs-attr">"url"</span> : <span class="hljs-string">"http://localhost"</span>
+         },
+         <span class="hljs-attr">"identifier"</span> : {
+            <span class="hljs-attr">"id"</span> : <span class="hljs-string">"123123"</span>,
+            <span class="hljs-attr">"legal_name"</span> : <span class="hljs-string">"some1@mailinator.com"</span>,
+            <span class="hljs-attr">"scheme"</span> : <span class="hljs-string">"UA-EDR"</span>,
+            <span class="hljs-attr">"uri"</span> : <span class="hljs-string">"http://localhost"</span>
+         },
+         <span class="hljs-attr">"kind"</span> : <span class="hljs-string">"defense"</span>,
+         <span class="hljs-attr">"name"</span> : <span class="hljs-string">"some1@mailinator.com"</span>
+      },
+      <span class="hljs-attr">"public_link_tender"</span> : <span class="hljs-string">"http://zakupki.example.com:5001/gov/tenders/UA-2019-02-08-000049-c"</span>,
+      <span class="hljs-attr">"qualification"</span> : [
+         {
+            <span class="hljs-attr">"amount_weight"</span> : <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"coefficient_of_features"</span> : <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"contract"</span> : {},
+            <span class="hljs-attr">"documents"</span> : {
+               <span class="hljs-attr">"offer"</span> : [],
+               <span class="hljs-attr">"qualification"</span> : [
+                  {
+                     <span class="hljs-attr">"date_modified"</span> : <span class="hljs-string">"2019-02-08T11:24:50"</span>,
+                     <span class="hljs-attr">"date_published"</span> : <span class="hljs-string">"2019-02-08T11:24:50"</span>,
+                     <span class="hljs-attr">"document_type"</span> : <span class="hljs-string">"registerExtract"</span>,
+                     <span class="hljs-attr">"history"</span> : [],
+                     <span class="hljs-attr">"id"</span> : <span class="hljs-string">"c49a24f5ca644aba83023f53daf1cd8e"</span>,
+                     <span class="hljs-attr">"mimetype"</span> : <span class="hljs-literal">null</span>,
+                     <span class="hljs-attr">"title"</span> : <span class="hljs-string">"edr_identification.yaml"</span>,
+                     <span class="hljs-attr">"url"</span> : <span class="hljs-string">"https://public-docs-sandbox.prozorro.gov.ua/get/ccd8ebb8699c4328bfd7d017e32c6ff6?KeyID=1331dc52&amp;Signature=RMUJS9R17NCPjl0SpmyqSfdLCbq6Mu%252BxXGTNAuZuSZyw5A%252Be1KpCyETIeW1QcTGWUSe2vE0sy2w6idvgZMVtCA%253D%253D"</span>
+                  },
+                  {
+                     <span class="hljs-attr">"date_modified"</span> : <span class="hljs-string">"2019-02-08T11:48:01"</span>,
+                     <span class="hljs-attr">"date_published"</span> : <span class="hljs-string">"2019-02-08T11:48:01"</span>,
+                     <span class="hljs-attr">"history"</span> : [],
+                     <span class="hljs-attr">"id"</span> : <span class="hljs-string">"4ce58e38d72d4036bb121f85d3dbcb83"</span>,
+                     <span class="hljs-attr">"mimetype"</span> : <span class="hljs-literal">null</span>,
+                     <span class="hljs-attr">"title"</span> : <span class="hljs-string">"file6"</span>,
+                     <span class="hljs-attr">"url"</span> : <span class="hljs-string">"https://public-docs-sandbox.prozorro.gov.ua/get/aa6b016f600341a59f562a9de8489dc5?KeyID=1331dc52&amp;Signature=xi7HdSmXWmV3Hiifwv9hBV4hAMqJB2SV1H1l%252BCBQLD9fmPdsKaqgCdMSHPfJXfOmaWfrV0GNjrZisgsE3t8RAA%253D%253D"</span>
+                  },
+                  {
+                     <span class="hljs-attr">"date_modified"</span> : <span class="hljs-string">"2019-02-08T12:08:20"</span>,
+                     <span class="hljs-attr">"date_published"</span> : <span class="hljs-string">"2019-02-08T12:08:20"</span>,
+                     <span class="hljs-attr">"history"</span> : [],
+                     <span class="hljs-attr">"id"</span> : <span class="hljs-string">"0e85edb2e5de4b2a96097c5b6695248e"</span>,
+                     <span class="hljs-attr">"mimetype"</span> : <span class="hljs-string">"application/pkcs7-signature"</span>,
+                     <span class="hljs-attr">"title"</span> : <span class="hljs-string">"sign.p7s"</span>,
+                     <span class="hljs-attr">"url"</span> : <span class="hljs-string">"https://public-docs-sandbox.prozorro.gov.ua/get/4e2964cd920d49ef8d34d3722696eb9b?KeyID=1331dc52&amp;Signature=n1AaZqStl1cYTOQP1rNSWo6xNEtRhDT7PYBSN5fnlIfns5SRXyLbKgcspMMvHMBmMzK38kYFwkgItfOhP%252B8WAQ%253D%253D"</span>
+                  }
+               ]
+            },
+            <span class="hljs-attr">"features"</span> : <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"id"</span> : <span class="hljs-string">"386c8cfc361e42e6a6baf4c8341433e5"</span>,
+            <span class="hljs-attr">"merchant"</span> : {
+               <span class="hljs-attr">"address"</span> : {
+                  <span class="hljs-attr">"country_name"</span> : <span class="hljs-string">"Україна"</span>,
+                  <span class="hljs-attr">"locality"</span> : <span class="hljs-string">"sdfdasdfa"</span>,
+                  <span class="hljs-attr">"postal_code"</span> : <span class="hljs-string">"12332"</span>,
+                  <span class="hljs-attr">"region"</span> : <span class="hljs-string">"Донецька область"</span>,
+                  <span class="hljs-attr">"street_address"</span> : <span class="hljs-string">"asdfasdfasdf"</span>
+               },
+               <span class="hljs-attr">"contact_point"</span> : {
+                  <span class="hljs-attr">"email"</span> : <span class="hljs-string">"some78@mailinator.com"</span>,
+                  <span class="hljs-attr">"name"</span> : <span class="hljs-string">"some dasfasdf some"</span>,
+                  <span class="hljs-attr">"telephone"</span> : <span class="hljs-string">"+38042"</span>
+               },
+               <span class="hljs-attr">"identifier"</span> : {
+                  <span class="hljs-attr">"id"</span> : <span class="hljs-string">"23412343241"</span>,
+                  <span class="hljs-attr">"legal_name"</span> : <span class="hljs-string">"Название моей компании"</span>,
+                  <span class="hljs-attr">"scheme"</span> : <span class="hljs-string">"UA-EDR"</span>
+               },
+               <span class="hljs-attr">"name"</span> : <span class="hljs-string">"Название моей компании"</span>
+            },
+            <span class="hljs-attr">"net_present_amount"</span> : <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"status"</span> : <span class="hljs-number">1</span>,
+            <span class="hljs-attr">"status_text"</span> : <span class="hljs-string">"дискваліфіковано"</span>,
+            <span class="hljs-attr">"value"</span> : {
+               <span class="hljs-attr">"amount"</span> : <span class="hljs-number">12312</span>,
+               <span class="hljs-attr">"currency"</span> : <span class="hljs-string">"UAH"</span>,
+               <span class="hljs-attr">"value_added_tax_included"</span> : <span class="hljs-literal">false</span>
+            }
+         },
+         {
+            <span class="hljs-attr">"amount_weight"</span> : <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"coefficient_of_features"</span> : <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"contract"</span> : {
+               <span class="hljs-attr">"award_id"</span> : <span class="hljs-string">"1bff50ee376943a2b90756571504517c"</span>,
+               <span class="hljs-attr">"contract_id"</span> : <span class="hljs-string">"UA-2019-02-08-000049-c-c1"</span>,
+               <span class="hljs-attr">"date"</span> : <span class="hljs-string">"2019-02-08T12:22:35"</span>,
+               <span class="hljs-attr">"date_signed"</span> : <span class="hljs-literal">null</span>,
+               <span class="hljs-attr">"documents"</span> : {
+                  <span class="hljs-attr">"contract"</span> : []
+               },
+               <span class="hljs-attr">"id"</span> : <span class="hljs-string">"3f0163e8e6994087a918b5bd71c7d845"</span>,
+               <span class="hljs-attr">"period"</span> : {
+                  <span class="hljs-attr">"end_date"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"start_date"</span> : <span class="hljs-literal">null</span>
+               },
+               <span class="hljs-attr">"status"</span> : <span class="hljs-number">2</span>,
+               <span class="hljs-attr">"status_text"</span> : <span class="hljs-string">"відмінений"</span>,
+               <span class="hljs-attr">"value"</span> : {
+                  <span class="hljs-attr">"amount"</span> : <span class="hljs-number">12312</span>,
+                  <span class="hljs-attr">"currency"</span> : <span class="hljs-string">"UAH"</span>,
+                  <span class="hljs-attr">"value_added_tax_included"</span> : <span class="hljs-literal">false</span>
+               }
+            },
+            <span class="hljs-attr">"documents"</span> : {
+               <span class="hljs-attr">"contract"</span> : [
+                  {
+                     <span class="hljs-attr">"date_modified"</span> : <span class="hljs-string">"2019-04-05T18:07:59"</span>,
+                     <span class="hljs-attr">"date_published"</span> : <span class="hljs-string">"2019-04-05T18:07:59"</span>,
+                     <span class="hljs-attr">"history"</span> : [],
+                     <span class="hljs-attr">"id"</span> : <span class="hljs-string">"d98fa0dd03b64fa088818d40d7972785"</span>,
+                     <span class="hljs-attr">"mimetype"</span> : <span class="hljs-string">"application/pkcs7-signature"</span>,
+                     <span class="hljs-attr">"title"</span> : <span class="hljs-string">"sign.p7s"</span>,
+                     <span class="hljs-attr">"url"</span> : <span class="hljs-string">"https://public-docs-sandbox.prozorro.gov.ua/get/d50c404f1a6a441c933b12308edf40ea?KeyID=1331dc52&amp;Signature=I3wUXZZiJ%2F9uZxhdDNBfBaovej7XLXTXXzHcfTSqxwENQnm%2FDKPBmf%252BBV5kXgfmYHhdReWRGWaPL3lcrbCvKBg%253D%253D"</span>
+                  },
+                  {
+                     <span class="hljs-attr">"date_modified"</span> : <span class="hljs-string">"2019-04-05T18:07:17"</span>,
+                     <span class="hljs-attr">"date_published"</span> : <span class="hljs-string">"2019-04-05T18:06:39"</span>,
+                     <span class="hljs-attr">"document_type"</span> : <span class="hljs-string">"contractSigned"</span>,
+                     <span class="hljs-attr">"history"</span> : [
+                        {
+                           <span class="hljs-attr">"date_modified"</span> : <span class="hljs-string">"2019-04-05T18:06:39"</span>,
+                           <span class="hljs-attr">"date_published"</span> : <span class="hljs-string">"2019-04-05T18:06:39"</span>,
+                           <span class="hljs-attr">"document_type"</span> : <span class="hljs-string">"contractSigned"</span>,
+                           <span class="hljs-attr">"id"</span> : <span class="hljs-string">"dcdff04d79ad46528b8ef284d9a18cbd"</span>,
+                           <span class="hljs-attr">"mimetype"</span> : <span class="hljs-string">"text/plain"</span>,
+                           <span class="hljs-attr">"title"</span> : <span class="hljs-string">"test_file_1.txt"</span>,
+                           <span class="hljs-attr">"url"</span> : <span class="hljs-string">"https://public-docs-sandbox.prozorro.gov.ua/get/8b8589ae29ab4b22bfca3f68321f31d2?KeyID=1331dc52&amp;Signature=47MAD4n9Mf2JwSdgz6vdGwGZutT35GnUhC1z0ozLOb3lqnYhGOvL%252BMal3ljgWLSBNfm7k2plww4eExe2uXUYDg%253D%253D"</span>
+                        }
+                     ],
+                     <span class="hljs-attr">"id"</span> : <span class="hljs-string">"dcdff04d79ad46528b8ef284d9a18cbd"</span>,
+                     <span class="hljs-attr">"mimetype"</span> : <span class="hljs-string">"text/plain"</span>,
+                     <span class="hljs-attr">"title"</span> : <span class="hljs-string">"test_file_3.txt"</span>,
+                     <span class="hljs-attr">"url"</span> : <span class="hljs-string">"https://public-docs-sandbox.prozorro.gov.ua/get/b5b2ebcda3924ce3817987ccbe010b45?KeyID=1331dc52&amp;Signature=A%2FX3pn5YZnXzn6pkrIRD6aww7ULWhcZeZw%252By5CsEUxxUviqWEnkx0XiLePuur7AKQmYTEIjzJizOPSwOld1DCg%253D%253D"</span>
+                  }
+               ],
+               <span class="hljs-attr">"offer"</span> : [],
+               <span class="hljs-attr">"qualification"</span> : [
+                  {
+                     <span class="hljs-attr">"date_modified"</span> : <span class="hljs-string">"2019-02-08T12:47:32"</span>,
+                     <span class="hljs-attr">"date_published"</span> : <span class="hljs-string">"2019-02-08T12:47:32"</span>,
+                     <span class="hljs-attr">"history"</span> : [],
+                     <span class="hljs-attr">"id"</span> : <span class="hljs-string">"82cd52999ebc46129e25b7d9831b7e5d"</span>,
+                     <span class="hljs-attr">"mimetype"</span> : <span class="hljs-string">"text/plain"</span>,
+                     <span class="hljs-attr">"title"</span> : <span class="hljs-string">"test.txt"</span>,
+                     <span class="hljs-attr">"url"</span> : <span class="hljs-string">"https://public-docs-sandbox.prozorro.gov.ua/get/9dcd03a9b50a4cdd986b940b5445d841?KeyID=1331dc52&amp;Signature=VDAvQO32GkPLb4LlA47d32btRSJqUidFPggR5tXMOUaBGFeD5jhvJD4Gn9vl6SwLhVIe4PF6JP5FnUcKTZZiDg%253D%253D"</span>
+                  },
+                  {
+                     <span class="hljs-attr">"date_modified"</span> : <span class="hljs-string">"2019-02-08T12:48:11"</span>,
+                     <span class="hljs-attr">"date_published"</span> : <span class="hljs-string">"2019-02-08T12:48:11"</span>,
+                     <span class="hljs-attr">"history"</span> : [],
+                     <span class="hljs-attr">"id"</span> : <span class="hljs-string">"952739b3f79749b09b969785ce7be173"</span>,
+                     <span class="hljs-attr">"mimetype"</span> : <span class="hljs-string">"application/pkcs7-signature"</span>,
+                     <span class="hljs-attr">"title"</span> : <span class="hljs-string">"sign.p7s"</span>,
+                     <span class="hljs-attr">"url"</span> : <span class="hljs-string">"https://public-docs-sandbox.prozorro.gov.ua/get/75238b029396486cb07702b012779c69?KeyID=1331dc52&amp;Signature=UKZVgVJ2EORoRRPHzCXUC4igAE%252BNoaPJ5Ppo7uBf3xpnydqtJU1zkR9n7sZ%252B8f1d7fhnSGo0n2BPdfvZ54ncBA%253D%253D"</span>
+                  }
+               ]
+            },
+            <span class="hljs-attr">"features"</span> : <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"id"</span> : <span class="hljs-string">"1bff50ee376943a2b90756571504517c"</span>,
+            <span class="hljs-attr">"merchant"</span> : {
+               <span class="hljs-attr">"address"</span> : {
+                  <span class="hljs-attr">"country_name"</span> : <span class="hljs-string">"Австралія"</span>,
+                  <span class="hljs-attr">"locality"</span> : <span class="hljs-string">"dfasdfsdaf"</span>,
+                  <span class="hljs-attr">"postal_code"</span> : <span class="hljs-string">"asdasdgafagfdasfasdf"</span>,
+                  <span class="hljs-attr">"region"</span> : <span class="hljs-string">"Волинська область"</span>,
+                  <span class="hljs-attr">"street_address"</span> : <span class="hljs-string">"adfasdf"</span>
+               },
+               <span class="hljs-attr">"contact_point"</span> : {
+                  <span class="hljs-attr">"email"</span> : <span class="hljs-string">"d.buliy5544@smartweb.com.ua"</span>,
+                  <span class="hljs-attr">"name"</span> : <span class="hljs-string">"Коля Иванов"</span>,
+                  <span class="hljs-attr">"telephone"</span> : <span class="hljs-string">"+380636822677"</span>
+               },
+               <span class="hljs-attr">"identifier"</span> : {
+                  <span class="hljs-attr">"id"</span> : <span class="hljs-string">"123123123123123"</span>,
+                  <span class="hljs-attr">"legal_name"</span> : <span class="hljs-string">"ТОВ \"some76\""</span>,
+                  <span class="hljs-attr">"scheme"</span> : <span class="hljs-string">"AU-ABN"</span>
+               },
+               <span class="hljs-attr">"name"</span> : <span class="hljs-string">"ТОВ \"some76\""</span>
+            },
+            <span class="hljs-attr">"net_present_amount"</span> : <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"status"</span> : <span class="hljs-number">3</span>,
+            <span class="hljs-attr">"status_text"</span> : <span class="hljs-string">"відмінено"</span>,
+            <span class="hljs-attr">"value"</span> : {
+               <span class="hljs-attr">"amount"</span> : <span class="hljs-number">12312</span>,
+               <span class="hljs-attr">"currency"</span> : <span class="hljs-string">"UAH"</span>,
+               <span class="hljs-attr">"value_added_tax_included"</span> : <span class="hljs-literal">false</span>
+            }
+         },
+         {
+            <span class="hljs-attr">"amount_weight"</span> : <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"coefficient_of_features"</span> : <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"contract"</span> : {
+               <span class="hljs-attr">"award_id"</span> : <span class="hljs-string">"d427fff3a7d24c00a2b44a1126e3a209"</span>,
+               <span class="hljs-attr">"contract_id"</span> : <span class="hljs-string">"UA-2019-02-08-000049-c-c2"</span>,
+               <span class="hljs-attr">"date"</span> : <span class="hljs-string">"2019-02-08T12:32:04"</span>,
+               <span class="hljs-attr">"date_signed"</span> : <span class="hljs-literal">null</span>,
+               <span class="hljs-attr">"documents"</span> : {
+                  <span class="hljs-attr">"contract"</span> : []
+               },
+               <span class="hljs-attr">"id"</span> : <span class="hljs-string">"e6bd4cc321af46d5bf4312d31a06492e"</span>,
+               <span class="hljs-attr">"period"</span> : {
+                  <span class="hljs-attr">"end_date"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"start_date"</span> : <span class="hljs-literal">null</span>
+               },
+               <span class="hljs-attr">"status"</span> : <span class="hljs-number">2</span>,
+               <span class="hljs-attr">"status_text"</span> : <span class="hljs-string">"відмінений"</span>,
+               <span class="hljs-attr">"value"</span> : {
+                  <span class="hljs-attr">"amount"</span> : <span class="hljs-number">12312</span>,
+                  <span class="hljs-attr">"currency"</span> : <span class="hljs-string">"UAH"</span>,
+                  <span class="hljs-attr">"value_added_tax_included"</span> : <span class="hljs-literal">false</span>
+               }
+            },
+            <span class="hljs-attr">"documents"</span> : {
+               <span class="hljs-attr">"contract"</span> : [
+                  {
+                     <span class="hljs-attr">"date_modified"</span> : <span class="hljs-string">"2019-04-05T18:07:59"</span>,
+                     <span class="hljs-attr">"date_published"</span> : <span class="hljs-string">"2019-04-05T18:07:59"</span>,
+                     <span class="hljs-attr">"history"</span> : [],
+                     <span class="hljs-attr">"id"</span> : <span class="hljs-string">"d98fa0dd03b64fa088818d40d7972785"</span>,
+                     <span class="hljs-attr">"mimetype"</span> : <span class="hljs-string">"application/pkcs7-signature"</span>,
+                     <span class="hljs-attr">"title"</span> : <span class="hljs-string">"sign.p7s"</span>,
+                     <span class="hljs-attr">"url"</span> : <span class="hljs-string">"https://public-docs-sandbox.prozorro.gov.ua/get/d50c404f1a6a441c933b12308edf40ea?KeyID=1331dc52&amp;Signature=I3wUXZZiJ%2F9uZxhdDNBfBaovej7XLXTXXzHcfTSqxwENQnm%2FDKPBmf%252BBV5kXgfmYHhdReWRGWaPL3lcrbCvKBg%253D%253D"</span>
+                  },
+                  {
+                     <span class="hljs-attr">"date_modified"</span> : <span class="hljs-string">"2019-04-05T18:07:17"</span>,
+                     <span class="hljs-attr">"date_published"</span> : <span class="hljs-string">"2019-04-05T18:06:39"</span>,
+                     <span class="hljs-attr">"document_type"</span> : <span class="hljs-string">"contractSigned"</span>,
+                     <span class="hljs-attr">"history"</span> : [
+                        {
+                           <span class="hljs-attr">"date_modified"</span> : <span class="hljs-string">"2019-04-05T18:06:39"</span>,
+                           <span class="hljs-attr">"date_published"</span> : <span class="hljs-string">"2019-04-05T18:06:39"</span>,
+                           <span class="hljs-attr">"document_type"</span> : <span class="hljs-string">"contractSigned"</span>,
+                           <span class="hljs-attr">"id"</span> : <span class="hljs-string">"dcdff04d79ad46528b8ef284d9a18cbd"</span>,
+                           <span class="hljs-attr">"mimetype"</span> : <span class="hljs-string">"text/plain"</span>,
+                           <span class="hljs-attr">"title"</span> : <span class="hljs-string">"test_file_1.txt"</span>,
+                           <span class="hljs-attr">"url"</span> : <span class="hljs-string">"https://public-docs-sandbox.prozorro.gov.ua/get/8b8589ae29ab4b22bfca3f68321f31d2?KeyID=1331dc52&amp;Signature=47MAD4n9Mf2JwSdgz6vdGwGZutT35GnUhC1z0ozLOb3lqnYhGOvL%252BMal3ljgWLSBNfm7k2plww4eExe2uXUYDg%253D%253D"</span>
+                        }
+                     ],
+                     <span class="hljs-attr">"id"</span> : <span class="hljs-string">"dcdff04d79ad46528b8ef284d9a18cbd"</span>,
+                     <span class="hljs-attr">"mimetype"</span> : <span class="hljs-string">"text/plain"</span>,
+                     <span class="hljs-attr">"title"</span> : <span class="hljs-string">"test_file_3.txt"</span>,
+                     <span class="hljs-attr">"url"</span> : <span class="hljs-string">"https://public-docs-sandbox.prozorro.gov.ua/get/b5b2ebcda3924ce3817987ccbe010b45?KeyID=1331dc52&amp;Signature=A%2FX3pn5YZnXzn6pkrIRD6aww7ULWhcZeZw%252By5CsEUxxUviqWEnkx0XiLePuur7AKQmYTEIjzJizOPSwOld1DCg%253D%253D"</span>
+                  }
+               ],
+               <span class="hljs-attr">"offer"</span> : [],
+               <span class="hljs-attr">"qualification"</span> : [
+                  {
+                     <span class="hljs-attr">"date_modified"</span> : <span class="hljs-string">"2019-02-08T12:47:32"</span>,
+                     <span class="hljs-attr">"date_published"</span> : <span class="hljs-string">"2019-02-08T12:47:32"</span>,
+                     <span class="hljs-attr">"history"</span> : [],
+                     <span class="hljs-attr">"id"</span> : <span class="hljs-string">"82cd52999ebc46129e25b7d9831b7e5d"</span>,
+                     <span class="hljs-attr">"mimetype"</span> : <span class="hljs-string">"text/plain"</span>,
+                     <span class="hljs-attr">"title"</span> : <span class="hljs-string">"test.txt"</span>,
+                     <span class="hljs-attr">"url"</span> : <span class="hljs-string">"https://public-docs-sandbox.prozorro.gov.ua/get/9dcd03a9b50a4cdd986b940b5445d841?KeyID=1331dc52&amp;Signature=VDAvQO32GkPLb4LlA47d32btRSJqUidFPggR5tXMOUaBGFeD5jhvJD4Gn9vl6SwLhVIe4PF6JP5FnUcKTZZiDg%253D%253D"</span>
+                  },
+                  {
+                     <span class="hljs-attr">"date_modified"</span> : <span class="hljs-string">"2019-02-08T12:48:11"</span>,
+                     <span class="hljs-attr">"date_published"</span> : <span class="hljs-string">"2019-02-08T12:48:11"</span>,
+                     <span class="hljs-attr">"history"</span> : [],
+                     <span class="hljs-attr">"id"</span> : <span class="hljs-string">"952739b3f79749b09b969785ce7be173"</span>,
+                     <span class="hljs-attr">"mimetype"</span> : <span class="hljs-string">"application/pkcs7-signature"</span>,
+                     <span class="hljs-attr">"title"</span> : <span class="hljs-string">"sign.p7s"</span>,
+                     <span class="hljs-attr">"url"</span> : <span class="hljs-string">"https://public-docs-sandbox.prozorro.gov.ua/get/75238b029396486cb07702b012779c69?KeyID=1331dc52&amp;Signature=UKZVgVJ2EORoRRPHzCXUC4igAE%252BNoaPJ5Ppo7uBf3xpnydqtJU1zkR9n7sZ%252B8f1d7fhnSGo0n2BPdfvZ54ncBA%253D%253D"</span>
+                  }
+               ]
+            },
+            <span class="hljs-attr">"features"</span> : <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"id"</span> : <span class="hljs-string">"d427fff3a7d24c00a2b44a1126e3a209"</span>,
+            <span class="hljs-attr">"merchant"</span> : {
+               <span class="hljs-attr">"address"</span> : {
+                  <span class="hljs-attr">"country_name"</span> : <span class="hljs-string">"Австралія"</span>,
+                  <span class="hljs-attr">"locality"</span> : <span class="hljs-string">"dfasdfsdaf"</span>,
+                  <span class="hljs-attr">"postal_code"</span> : <span class="hljs-string">"asdasdgafagfdasfasdf"</span>,
+                  <span class="hljs-attr">"region"</span> : <span class="hljs-string">"Волинська область"</span>,
+                  <span class="hljs-attr">"street_address"</span> : <span class="hljs-string">"adfasdf"</span>
+               },
+               <span class="hljs-attr">"contact_point"</span> : {
+                  <span class="hljs-attr">"email"</span> : <span class="hljs-string">"d.buliy5544@smartweb.com.ua"</span>,
+                  <span class="hljs-attr">"name"</span> : <span class="hljs-string">"Коля Иванов"</span>,
+                  <span class="hljs-attr">"telephone"</span> : <span class="hljs-string">"+380636822677"</span>
+               },
+               <span class="hljs-attr">"identifier"</span> : {
+                  <span class="hljs-attr">"id"</span> : <span class="hljs-string">"123123123123123"</span>,
+                  <span class="hljs-attr">"legal_name"</span> : <span class="hljs-string">"ТОВ \"some76\""</span>,
+                  <span class="hljs-attr">"scheme"</span> : <span class="hljs-string">"AU-ABN"</span>
+               },
+               <span class="hljs-attr">"name"</span> : <span class="hljs-string">"ТОВ \"some76\""</span>
+            },
+            <span class="hljs-attr">"net_present_amount"</span> : <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"status"</span> : <span class="hljs-number">3</span>,
+            <span class="hljs-attr">"status_text"</span> : <span class="hljs-string">"відмінено"</span>,
+            <span class="hljs-attr">"value"</span> : {
+               <span class="hljs-attr">"amount"</span> : <span class="hljs-number">12312</span>,
+               <span class="hljs-attr">"currency"</span> : <span class="hljs-string">"UAH"</span>,
+               <span class="hljs-attr">"value_added_tax_included"</span> : <span class="hljs-literal">false</span>
+            }
+         },
+         {
+            <span class="hljs-attr">"amount_weight"</span> : <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"coefficient_of_features"</span> : <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"contract"</span> : {
+               <span class="hljs-attr">"award_id"</span> : <span class="hljs-string">"e41c78ccbc7a4be88830dc80ec576d4f"</span>,
+               <span class="hljs-attr">"contract_id"</span> : <span class="hljs-string">"UA-2019-02-08-000049-c-c3"</span>,
+               <span class="hljs-attr">"date"</span> : <span class="hljs-string">"2019-02-08T12:45:02"</span>,
+               <span class="hljs-attr">"date_signed"</span> : <span class="hljs-literal">null</span>,
+               <span class="hljs-attr">"documents"</span> : {
+                  <span class="hljs-attr">"contract"</span> : []
+               },
+               <span class="hljs-attr">"id"</span> : <span class="hljs-string">"184e545ae2ca4b3eb4dd5bf8069252ef"</span>,
+               <span class="hljs-attr">"period"</span> : {
+                  <span class="hljs-attr">"end_date"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"start_date"</span> : <span class="hljs-literal">null</span>
+               },
+               <span class="hljs-attr">"status"</span> : <span class="hljs-number">2</span>,
+               <span class="hljs-attr">"status_text"</span> : <span class="hljs-string">"відмінений"</span>,
+               <span class="hljs-attr">"value"</span> : {
+                  <span class="hljs-attr">"amount"</span> : <span class="hljs-number">12312</span>,
+                  <span class="hljs-attr">"currency"</span> : <span class="hljs-string">"UAH"</span>,
+                  <span class="hljs-attr">"value_added_tax_included"</span> : <span class="hljs-literal">false</span>
+               }
+            },
+            <span class="hljs-attr">"documents"</span> : {
+               <span class="hljs-attr">"contract"</span> : [
+                  {
+                     <span class="hljs-attr">"date_modified"</span> : <span class="hljs-string">"2019-04-05T18:07:59"</span>,
+                     <span class="hljs-attr">"date_published"</span> : <span class="hljs-string">"2019-04-05T18:07:59"</span>,
+                     <span class="hljs-attr">"history"</span> : [],
+                     <span class="hljs-attr">"id"</span> : <span class="hljs-string">"d98fa0dd03b64fa088818d40d7972785"</span>,
+                     <span class="hljs-attr">"mimetype"</span> : <span class="hljs-string">"application/pkcs7-signature"</span>,
+                     <span class="hljs-attr">"title"</span> : <span class="hljs-string">"sign.p7s"</span>,
+                     <span class="hljs-attr">"url"</span> : <span class="hljs-string">"https://public-docs-sandbox.prozorro.gov.ua/get/d50c404f1a6a441c933b12308edf40ea?KeyID=1331dc52&amp;Signature=I3wUXZZiJ%2F9uZxhdDNBfBaovej7XLXTXXzHcfTSqxwENQnm%2FDKPBmf%252BBV5kXgfmYHhdReWRGWaPL3lcrbCvKBg%253D%253D"</span>
+                  },
+                  {
+                     <span class="hljs-attr">"date_modified"</span> : <span class="hljs-string">"2019-04-05T18:07:17"</span>,
+                     <span class="hljs-attr">"date_published"</span> : <span class="hljs-string">"2019-04-05T18:06:39"</span>,
+                     <span class="hljs-attr">"document_type"</span> : <span class="hljs-string">"contractSigned"</span>,
+                     <span class="hljs-attr">"history"</span> : [
+                        {
+                           <span class="hljs-attr">"date_modified"</span> : <span class="hljs-string">"2019-04-05T18:06:39"</span>,
+                           <span class="hljs-attr">"date_published"</span> : <span class="hljs-string">"2019-04-05T18:06:39"</span>,
+                           <span class="hljs-attr">"document_type"</span> : <span class="hljs-string">"contractSigned"</span>,
+                           <span class="hljs-attr">"id"</span> : <span class="hljs-string">"dcdff04d79ad46528b8ef284d9a18cbd"</span>,
+                           <span class="hljs-attr">"mimetype"</span> : <span class="hljs-string">"text/plain"</span>,
+                           <span class="hljs-attr">"title"</span> : <span class="hljs-string">"test_file_1.txt"</span>,
+                           <span class="hljs-attr">"url"</span> : <span class="hljs-string">"https://public-docs-sandbox.prozorro.gov.ua/get/8b8589ae29ab4b22bfca3f68321f31d2?KeyID=1331dc52&amp;Signature=47MAD4n9Mf2JwSdgz6vdGwGZutT35GnUhC1z0ozLOb3lqnYhGOvL%252BMal3ljgWLSBNfm7k2plww4eExe2uXUYDg%253D%253D"</span>
+                        }
+                     ],
+                     <span class="hljs-attr">"id"</span> : <span class="hljs-string">"dcdff04d79ad46528b8ef284d9a18cbd"</span>,
+                     <span class="hljs-attr">"mimetype"</span> : <span class="hljs-string">"text/plain"</span>,
+                     <span class="hljs-attr">"title"</span> : <span class="hljs-string">"test_file_3.txt"</span>,
+                     <span class="hljs-attr">"url"</span> : <span class="hljs-string">"https://public-docs-sandbox.prozorro.gov.ua/get/b5b2ebcda3924ce3817987ccbe010b45?KeyID=1331dc52&amp;Signature=A%2FX3pn5YZnXzn6pkrIRD6aww7ULWhcZeZw%252By5CsEUxxUviqWEnkx0XiLePuur7AKQmYTEIjzJizOPSwOld1DCg%253D%253D"</span>
+                  }
+               ],
+               <span class="hljs-attr">"offer"</span> : [],
+               <span class="hljs-attr">"qualification"</span> : [
+                  {
+                     <span class="hljs-attr">"date_modified"</span> : <span class="hljs-string">"2019-02-08T12:47:32"</span>,
+                     <span class="hljs-attr">"date_published"</span> : <span class="hljs-string">"2019-02-08T12:47:32"</span>,
+                     <span class="hljs-attr">"history"</span> : [],
+                     <span class="hljs-attr">"id"</span> : <span class="hljs-string">"82cd52999ebc46129e25b7d9831b7e5d"</span>,
+                     <span class="hljs-attr">"mimetype"</span> : <span class="hljs-string">"text/plain"</span>,
+                     <span class="hljs-attr">"title"</span> : <span class="hljs-string">"test.txt"</span>,
+                     <span class="hljs-attr">"url"</span> : <span class="hljs-string">"https://public-docs-sandbox.prozorro.gov.ua/get/9dcd03a9b50a4cdd986b940b5445d841?KeyID=1331dc52&amp;Signature=VDAvQO32GkPLb4LlA47d32btRSJqUidFPggR5tXMOUaBGFeD5jhvJD4Gn9vl6SwLhVIe4PF6JP5FnUcKTZZiDg%253D%253D"</span>
+                  },
+                  {
+                     <span class="hljs-attr">"date_modified"</span> : <span class="hljs-string">"2019-02-08T12:48:11"</span>,
+                     <span class="hljs-attr">"date_published"</span> : <span class="hljs-string">"2019-02-08T12:48:11"</span>,
+                     <span class="hljs-attr">"history"</span> : [],
+                     <span class="hljs-attr">"id"</span> : <span class="hljs-string">"952739b3f79749b09b969785ce7be173"</span>,
+                     <span class="hljs-attr">"mimetype"</span> : <span class="hljs-string">"application/pkcs7-signature"</span>,
+                     <span class="hljs-attr">"title"</span> : <span class="hljs-string">"sign.p7s"</span>,
+                     <span class="hljs-attr">"url"</span> : <span class="hljs-string">"https://public-docs-sandbox.prozorro.gov.ua/get/75238b029396486cb07702b012779c69?KeyID=1331dc52&amp;Signature=UKZVgVJ2EORoRRPHzCXUC4igAE%252BNoaPJ5Ppo7uBf3xpnydqtJU1zkR9n7sZ%252B8f1d7fhnSGo0n2BPdfvZ54ncBA%253D%253D"</span>
+                  }
+               ]
+            },
+            <span class="hljs-attr">"features"</span> : <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"id"</span> : <span class="hljs-string">"e41c78ccbc7a4be88830dc80ec576d4f"</span>,
+            <span class="hljs-attr">"merchant"</span> : {
+               <span class="hljs-attr">"address"</span> : {
+                  <span class="hljs-attr">"country_name"</span> : <span class="hljs-string">"Австралія"</span>,
+                  <span class="hljs-attr">"locality"</span> : <span class="hljs-string">"dfasdfsdaf"</span>,
+                  <span class="hljs-attr">"postal_code"</span> : <span class="hljs-string">"asdasdgafagfdasfasdf"</span>,
+                  <span class="hljs-attr">"region"</span> : <span class="hljs-string">"Волинська область"</span>,
+                  <span class="hljs-attr">"street_address"</span> : <span class="hljs-string">"adfasdf"</span>
+               },
+               <span class="hljs-attr">"contact_point"</span> : {
+                  <span class="hljs-attr">"email"</span> : <span class="hljs-string">"d.buliy5544@smartweb.com.ua"</span>,
+                  <span class="hljs-attr">"name"</span> : <span class="hljs-string">"Коля Иванов"</span>,
+                  <span class="hljs-attr">"telephone"</span> : <span class="hljs-string">"+380636822677"</span>
+               },
+               <span class="hljs-attr">"identifier"</span> : {
+                  <span class="hljs-attr">"id"</span> : <span class="hljs-string">"123123123123123"</span>,
+                  <span class="hljs-attr">"legal_name"</span> : <span class="hljs-string">"ТОВ \"some76\""</span>,
+                  <span class="hljs-attr">"scheme"</span> : <span class="hljs-string">"AU-ABN"</span>
+               },
+               <span class="hljs-attr">"name"</span> : <span class="hljs-string">"ТОВ \"some76\""</span>
+            },
+            <span class="hljs-attr">"net_present_amount"</span> : <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"status"</span> : <span class="hljs-number">3</span>,
+            <span class="hljs-attr">"status_text"</span> : <span class="hljs-string">"відмінено"</span>,
+            <span class="hljs-attr">"value"</span> : {
+               <span class="hljs-attr">"amount"</span> : <span class="hljs-number">12312</span>,
+               <span class="hljs-attr">"currency"</span> : <span class="hljs-string">"UAH"</span>,
+               <span class="hljs-attr">"value_added_tax_included"</span> : <span class="hljs-literal">false</span>
+            }
+         },
+         {
+            <span class="hljs-attr">"amount_weight"</span> : <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"coefficient_of_features"</span> : <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"contract"</span> : {
+               <span class="hljs-attr">"award_id"</span> : <span class="hljs-string">"0383a37968f34e60a7af2942a4d861a4"</span>,
+               <span class="hljs-attr">"contract_id"</span> : <span class="hljs-string">"UA-2019-02-08-000049-c-c4"</span>,
+               <span class="hljs-attr">"contract_number"</span> : <span class="hljs-string">"13"</span>,
+               <span class="hljs-attr">"date"</span> : <span class="hljs-string">"2019-04-05T15:08:15"</span>,
+               <span class="hljs-attr">"date_signed"</span> : <span class="hljs-string">"2019-04-03T15:06:00+03:00"</span>,
+               <span class="hljs-attr">"documents"</span> : {
+                  <span class="hljs-attr">"contract"</span> : [
+                     {
+                        <span class="hljs-attr">"date_modified"</span> : <span class="hljs-string">"2019-04-05T18:07:59"</span>,
+                        <span class="hljs-attr">"date_published"</span> : <span class="hljs-string">"2019-04-05T18:07:59"</span>,
+                        <span class="hljs-attr">"history"</span> : [],
+                        <span class="hljs-attr">"id"</span> : <span class="hljs-string">"d98fa0dd03b64fa088818d40d7972785"</span>,
+                        <span class="hljs-attr">"mimetype"</span> : <span class="hljs-string">"application/pkcs7-signature"</span>,
+                        <span class="hljs-attr">"title"</span> : <span class="hljs-string">"sign.p7s"</span>,
+                        <span class="hljs-attr">"url"</span> : <span class="hljs-string">"https://public-docs-sandbox.prozorro.gov.ua/get/d50c404f1a6a441c933b12308edf40ea?KeyID=1331dc52&amp;Signature=I3wUXZZiJ%2F9uZxhdDNBfBaovej7XLXTXXzHcfTSqxwENQnm%2FDKPBmf%252BBV5kXgfmYHhdReWRGWaPL3lcrbCvKBg%253D%253D"</span>
+                     },
+                     {
+                        <span class="hljs-attr">"date_modified"</span> : <span class="hljs-string">"2019-04-05T18:07:17"</span>,
+                        <span class="hljs-attr">"date_published"</span> : <span class="hljs-string">"2019-04-05T18:06:39"</span>,
+                        <span class="hljs-attr">"document_type"</span> : <span class="hljs-string">"contractSigned"</span>,
+                        <span class="hljs-attr">"history"</span> : [
+                           {
+                              <span class="hljs-attr">"date_modified"</span> : <span class="hljs-string">"2019-04-05T18:06:39"</span>,
+                              <span class="hljs-attr">"date_published"</span> : <span class="hljs-string">"2019-04-05T18:06:39"</span>,
+                              <span class="hljs-attr">"document_type"</span> : <span class="hljs-string">"contractSigned"</span>,
+                              <span class="hljs-attr">"id"</span> : <span class="hljs-string">"dcdff04d79ad46528b8ef284d9a18cbd"</span>,
+                              <span class="hljs-attr">"mimetype"</span> : <span class="hljs-string">"text/plain"</span>,
+                              <span class="hljs-attr">"title"</span> : <span class="hljs-string">"test_file_1.txt"</span>,
+                              <span class="hljs-attr">"url"</span> : <span class="hljs-string">"https://public-docs-sandbox.prozorro.gov.ua/get/8b8589ae29ab4b22bfca3f68321f31d2?KeyID=1331dc52&amp;Signature=47MAD4n9Mf2JwSdgz6vdGwGZutT35GnUhC1z0ozLOb3lqnYhGOvL%252BMal3ljgWLSBNfm7k2plww4eExe2uXUYDg%253D%253D"</span>
+                           }
+                        ],
+                        <span class="hljs-attr">"id"</span> : <span class="hljs-string">"dcdff04d79ad46528b8ef284d9a18cbd"</span>,
+                        <span class="hljs-attr">"mimetype"</span> : <span class="hljs-string">"text/plain"</span>,
+                        <span class="hljs-attr">"title"</span> : <span class="hljs-string">"test_file_3.txt"</span>,
+                        <span class="hljs-attr">"url"</span> : <span class="hljs-string">"https://public-docs-sandbox.prozorro.gov.ua/get/b5b2ebcda3924ce3817987ccbe010b45?KeyID=1331dc52&amp;Signature=A%2FX3pn5YZnXzn6pkrIRD6aww7ULWhcZeZw%252By5CsEUxxUviqWEnkx0XiLePuur7AKQmYTEIjzJizOPSwOld1DCg%253D%253D"</span>
+                     }
+                  ]
+               },
+               <span class="hljs-attr">"id"</span> : <span class="hljs-string">"234fb6cb532c4635b8fc0fb884694892"</span>,
+               <span class="hljs-attr">"period"</span> : {
+                  <span class="hljs-attr">"end_date"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"start_date"</span> : <span class="hljs-literal">null</span>
+               },
+               <span class="hljs-attr">"status"</span> : <span class="hljs-number">1</span>,
+               <span class="hljs-attr">"status_text"</span> : <span class="hljs-string">"підписано"</span>,
+               <span class="hljs-attr">"value"</span> : {
+                  <span class="hljs-attr">"amount"</span> : <span class="hljs-number">12312</span>,
+                  <span class="hljs-attr">"currency"</span> : <span class="hljs-string">"UAH"</span>,
+                  <span class="hljs-attr">"value_added_tax_included"</span> : <span class="hljs-literal">false</span>
+               }
+            },
+            <span class="hljs-attr">"documents"</span> : {
+               <span class="hljs-attr">"contract"</span> : [
+                  {
+                     <span class="hljs-attr">"date_modified"</span> : <span class="hljs-string">"2019-04-05T18:07:59"</span>,
+                     <span class="hljs-attr">"date_published"</span> : <span class="hljs-string">"2019-04-05T18:07:59"</span>,
+                     <span class="hljs-attr">"history"</span> : [],
+                     <span class="hljs-attr">"id"</span> : <span class="hljs-string">"d98fa0dd03b64fa088818d40d7972785"</span>,
+                     <span class="hljs-attr">"mimetype"</span> : <span class="hljs-string">"application/pkcs7-signature"</span>,
+                     <span class="hljs-attr">"title"</span> : <span class="hljs-string">"sign.p7s"</span>,
+                     <span class="hljs-attr">"url"</span> : <span class="hljs-string">"https://public-docs-sandbox.prozorro.gov.ua/get/d50c404f1a6a441c933b12308edf40ea?KeyID=1331dc52&amp;Signature=I3wUXZZiJ%2F9uZxhdDNBfBaovej7XLXTXXzHcfTSqxwENQnm%2FDKPBmf%252BBV5kXgfmYHhdReWRGWaPL3lcrbCvKBg%253D%253D"</span>
+                  },
+                  {
+                     <span class="hljs-attr">"date_modified"</span> : <span class="hljs-string">"2019-04-05T18:07:17"</span>,
+                     <span class="hljs-attr">"date_published"</span> : <span class="hljs-string">"2019-04-05T18:06:39"</span>,
+                     <span class="hljs-attr">"document_type"</span> : <span class="hljs-string">"contractSigned"</span>,
+                     <span class="hljs-attr">"history"</span> : [
+                        {
+                           <span class="hljs-attr">"date_modified"</span> : <span class="hljs-string">"2019-04-05T18:06:39"</span>,
+                           <span class="hljs-attr">"date_published"</span> : <span class="hljs-string">"2019-04-05T18:06:39"</span>,
+                           <span class="hljs-attr">"document_type"</span> : <span class="hljs-string">"contractSigned"</span>,
+                           <span class="hljs-attr">"id"</span> : <span class="hljs-string">"dcdff04d79ad46528b8ef284d9a18cbd"</span>,
+                           <span class="hljs-attr">"mimetype"</span> : <span class="hljs-string">"text/plain"</span>,
+                           <span class="hljs-attr">"title"</span> : <span class="hljs-string">"test_file_1.txt"</span>,
+                           <span class="hljs-attr">"url"</span> : <span class="hljs-string">"https://public-docs-sandbox.prozorro.gov.ua/get/8b8589ae29ab4b22bfca3f68321f31d2?KeyID=1331dc52&amp;Signature=47MAD4n9Mf2JwSdgz6vdGwGZutT35GnUhC1z0ozLOb3lqnYhGOvL%252BMal3ljgWLSBNfm7k2plww4eExe2uXUYDg%253D%253D"</span>
+                        }
+                     ],
+                     <span class="hljs-attr">"id"</span> : <span class="hljs-string">"dcdff04d79ad46528b8ef284d9a18cbd"</span>,
+                     <span class="hljs-attr">"mimetype"</span> : <span class="hljs-string">"text/plain"</span>,
+                     <span class="hljs-attr">"title"</span> : <span class="hljs-string">"test_file_3.txt"</span>,
+                     <span class="hljs-attr">"url"</span> : <span class="hljs-string">"https://public-docs-sandbox.prozorro.gov.ua/get/b5b2ebcda3924ce3817987ccbe010b45?KeyID=1331dc52&amp;Signature=A%2FX3pn5YZnXzn6pkrIRD6aww7ULWhcZeZw%252By5CsEUxxUviqWEnkx0XiLePuur7AKQmYTEIjzJizOPSwOld1DCg%253D%253D"</span>
+                  }
+               ],
+               <span class="hljs-attr">"offer"</span> : [],
+               <span class="hljs-attr">"qualification"</span> : [
+                  {
+                     <span class="hljs-attr">"date_modified"</span> : <span class="hljs-string">"2019-02-08T12:47:32"</span>,
+                     <span class="hljs-attr">"date_published"</span> : <span class="hljs-string">"2019-02-08T12:47:32"</span>,
+                     <span class="hljs-attr">"history"</span> : [],
+                     <span class="hljs-attr">"id"</span> : <span class="hljs-string">"82cd52999ebc46129e25b7d9831b7e5d"</span>,
+                     <span class="hljs-attr">"mimetype"</span> : <span class="hljs-string">"text/plain"</span>,
+                     <span class="hljs-attr">"title"</span> : <span class="hljs-string">"test.txt"</span>,
+                     <span class="hljs-attr">"url"</span> : <span class="hljs-string">"https://public-docs-sandbox.prozorro.gov.ua/get/9dcd03a9b50a4cdd986b940b5445d841?KeyID=1331dc52&amp;Signature=VDAvQO32GkPLb4LlA47d32btRSJqUidFPggR5tXMOUaBGFeD5jhvJD4Gn9vl6SwLhVIe4PF6JP5FnUcKTZZiDg%253D%253D"</span>
+                  },
+                  {
+                     <span class="hljs-attr">"date_modified"</span> : <span class="hljs-string">"2019-02-08T12:48:11"</span>,
+                     <span class="hljs-attr">"date_published"</span> : <span class="hljs-string">"2019-02-08T12:48:11"</span>,
+                     <span class="hljs-attr">"history"</span> : [],
+                     <span class="hljs-attr">"id"</span> : <span class="hljs-string">"952739b3f79749b09b969785ce7be173"</span>,
+                     <span class="hljs-attr">"mimetype"</span> : <span class="hljs-string">"application/pkcs7-signature"</span>,
+                     <span class="hljs-attr">"title"</span> : <span class="hljs-string">"sign.p7s"</span>,
+                     <span class="hljs-attr">"url"</span> : <span class="hljs-string">"https://public-docs-sandbox.prozorro.gov.ua/get/75238b029396486cb07702b012779c69?KeyID=1331dc52&amp;Signature=UKZVgVJ2EORoRRPHzCXUC4igAE%252BNoaPJ5Ppo7uBf3xpnydqtJU1zkR9n7sZ%252B8f1d7fhnSGo0n2BPdfvZ54ncBA%253D%253D"</span>
+                  }
+               ]
+            },
+            <span class="hljs-attr">"features"</span> : <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"id"</span> : <span class="hljs-string">"0383a37968f34e60a7af2942a4d861a4"</span>,
+            <span class="hljs-attr">"merchant"</span> : {
+               <span class="hljs-attr">"address"</span> : {
+                  <span class="hljs-attr">"country_name"</span> : <span class="hljs-string">"Австралія"</span>,
+                  <span class="hljs-attr">"locality"</span> : <span class="hljs-string">"dfasdfsdaf"</span>,
+                  <span class="hljs-attr">"postal_code"</span> : <span class="hljs-string">"asdasdgafagfdasfasdf"</span>,
+                  <span class="hljs-attr">"region"</span> : <span class="hljs-string">"Волинська область"</span>,
+                  <span class="hljs-attr">"street_address"</span> : <span class="hljs-string">"adfasdf"</span>
+               },
+               <span class="hljs-attr">"contact_point"</span> : {
+                  <span class="hljs-attr">"email"</span> : <span class="hljs-string">"d.buliy5544@smartweb.com.ua"</span>,
+                  <span class="hljs-attr">"name"</span> : <span class="hljs-string">"Коля Иванов"</span>,
+                  <span class="hljs-attr">"telephone"</span> : <span class="hljs-string">"+380636822677"</span>
+               },
+               <span class="hljs-attr">"identifier"</span> : {
+                  <span class="hljs-attr">"id"</span> : <span class="hljs-string">"123123123123123"</span>,
+                  <span class="hljs-attr">"legal_name"</span> : <span class="hljs-string">"ТОВ \"some76\""</span>,
+                  <span class="hljs-attr">"scheme"</span> : <span class="hljs-string">"AU-ABN"</span>
+               },
+               <span class="hljs-attr">"name"</span> : <span class="hljs-string">"ТОВ \"some76\""</span>
+            },
+            <span class="hljs-attr">"net_present_amount"</span> : <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"status"</span> : <span class="hljs-number">2</span>,
+            <span class="hljs-attr">"status_text"</span> : <span class="hljs-string">"визнаний переможцем"</span>,
+            <span class="hljs-attr">"value"</span> : {
+               <span class="hljs-attr">"amount"</span> : <span class="hljs-number">12312</span>,
+               <span class="hljs-attr">"currency"</span> : <span class="hljs-string">"UAH"</span>,
+               <span class="hljs-attr">"value_added_tax_included"</span> : <span class="hljs-literal">false</span>
+            }
+         }
+      ],
+      <span class="hljs-attr">"questions"</span> : {
+         <span class="hljs-attr">"count"</span> : <span class="hljs-number">0</span>,
+         <span class="hljs-attr">"lots"</span> : [],
+         <span class="hljs-attr">"questions_data"</span> : [],
+         <span class="hljs-attr">"url"</span> : <span class="hljs-literal">null</span>
+      },
+      <span class="hljs-attr">"questions_count"</span> : <span class="hljs-number">0</span>,
+      <span class="hljs-attr">"stage1_id"</span> : <span class="hljs-literal">null</span>,
+      <span class="hljs-attr">"stage2_id"</span> : <span class="hljs-literal">null</span>,
+      <span class="hljs-attr">"status"</span> : <span class="hljs-number">6</span>,
+      <span class="hljs-attr">"status_text"</span> : <span class="hljs-string">"завершено"</span>,
+      <span class="hljs-attr">"step"</span> : <span class="hljs-number">5294.16</span>,
+      <span class="hljs-attr">"tendering_period"</span> : {
+         <span class="hljs-attr">"end"</span> : <span class="hljs-string">"2019-02-08T11:23:00"</span>,
+         <span class="hljs-attr">"start"</span> : <span class="hljs-string">"2019-02-08T11:05:34"</span>
+      },
+      <span class="hljs-attr">"title"</span> : <span class="hljs-string">"asdfadsf"</span>,
+      <span class="hljs-attr">"title_en"</span> : <span class="hljs-literal">null</span>,
+      <span class="hljs-attr">"tuid"</span> : <span class="hljs-string">"UA-2019-02-08-000049-c"</span>,
+      <span class="hljs-attr">"uid"</span> : <span class="hljs-string">"bdcaab7d73a44ab4b73f038271e08866"</span>,
+      <span class="hljs-attr">"user_offer"</span> : {
+         <span class="hljs-attr">"amount_weight"</span> : <span class="hljs-literal">null</span>,
+         <span class="hljs-attr">"auction_url"</span> : <span class="hljs-literal">null</span>,
+         <span class="hljs-attr">"auto_active"</span> : <span class="hljs-literal">true</span>,
+         <span class="hljs-attr">"coefficient_of_features"</span> : <span class="hljs-literal">null</span>,
+         <span class="hljs-attr">"documents"</span> : {
+            <span class="hljs-attr">"offer"</span> : []
+         },
+         <span class="hljs-attr">"features"</span> : <span class="hljs-literal">null</span>,
+         <span class="hljs-attr">"merchant"</span> : {
+            <span class="hljs-attr">"address"</span> : {
+               <span class="hljs-attr">"country_name"</span> : <span class="hljs-string">"Україна"</span>,
+               <span class="hljs-attr">"locality"</span> : <span class="hljs-string">"sdfdasdfa"</span>,
+               <span class="hljs-attr">"postal_code"</span> : <span class="hljs-string">"12332"</span>,
+               <span class="hljs-attr">"region"</span> : <span class="hljs-string">"Донецька область"</span>,
+               <span class="hljs-attr">"street_address"</span> : <span class="hljs-string">"asdfasdfasdf"</span>
+            },
+            <span class="hljs-attr">"contact_point"</span> : {
+               <span class="hljs-attr">"email"</span> : <span class="hljs-string">"some78@mailinator.com"</span>,
+               <span class="hljs-attr">"name"</span> : <span class="hljs-string">"some dasfasdf some"</span>,
+               <span class="hljs-attr">"telephone"</span> : <span class="hljs-string">"+38042"</span>
+            },
+            <span class="hljs-attr">"identifier"</span> : {
+               <span class="hljs-attr">"id"</span> : <span class="hljs-string">"23412343241"</span>,
+               <span class="hljs-attr">"legal_name"</span> : <span class="hljs-string">"Название моей компании"</span>,
+               <span class="hljs-attr">"scheme"</span> : <span class="hljs-string">"UA-EDR"</span>,
+               <span class="hljs-attr">"uri"</span> : <span class="hljs-literal">null</span>
+            },
+            <span class="hljs-attr">"name"</span> : <span class="hljs-string">"Название моей компании"</span>,
+            <span class="hljs-attr">"scale"</span> : <span class="hljs-string">"mid"</span>
+         },
+         <span class="hljs-attr">"net_present_amount"</span> : <span class="hljs-literal">null</span>,
+         <span class="hljs-attr">"status"</span> : <span class="hljs-number">0</span>,
+         <span class="hljs-attr">"status_text"</span> : <span class="hljs-string">"активно"</span>,
+         <span class="hljs-attr">"subcontracting_details"</span> : <span class="hljs-literal">null</span>,
+         <span class="hljs-attr">"uid"</span> : <span class="hljs-string">"4d4afddd9f5b4842a9358759f260563a"</span>,
+         <span class="hljs-attr">"value"</span> : {
+            <span class="hljs-attr">"amount"</span> : <span class="hljs-number">12312</span>,
+            <span class="hljs-attr">"currency"</span> : <span class="hljs-string">"UAH"</span>,
+            <span class="hljs-attr">"value_added_tax_included"</span> : <span class="hljs-literal">false</span>
+         }
+      }
+   },
+   <span class="hljs-attr">"errors"</span> : [],
+   <span class="hljs-attr">"status"</span> : <span class="hljs-string">"ok"</span>,
+   <span class="hljs-attr">"system"</span> : <span class="hljs-string">""</span>
+}</code></pre>    </article>
+  </body>
+</html>

@@ -1,0 +1,228 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimal-ui">
+    <title>Список инвойсов</title>
+    <link type="text/css" rel="stylesheet" href="assets/css/github-markdown.css">
+    <link type="text/css" rel="stylesheet" href="assets/css/pilcrow.css">
+    <link type="text/css" rel="stylesheet" href="assets/css/hljs-github.min.css"/>
+  </head>
+  <body>
+    <article class="markdown-body"><h1 id="список-инвойсов"><a class="header-link" href="#список-инвойсов"></a>Список инвойсов</h1>
+<p><strong>GET remote/api/v2/list_invoices?page={int}</strong></p>
+<p>request headers:</p>
+<ul class="list">
+<li><em>Api-Agent</em> - type: string, required</li>
+<li><em>Acc-Token</em> - type: string, required</li>
+</ul>
+<blockquote>
+<p>постранично возвращает список инвойсов (20 на страниц) отсортированых оп дате создания (desc)</p>
+</blockquote>
+<p>possible request arguments:</p>
+<ul class="list">
+<li><em>page</em> - type: int, optional, 1 by default</li>
+</ul>
+<p>possible response fields:</p>
+<ul class="list">
+<li><em>status</em> - type: str, values: ok/error</li>
+<li><em>errors</em> - type: array of objects, validation errors</li>
+<li><em>data</em> - type: object</li>
+<li><em>system</em> - type: str, system error messages</li>
+</ul>
+<p>possible response data fields:</p>
+<ul class="list">
+<li><em>total</em> - type: int</li>
+<li><em>invoices</em> - type: array of <strong>invoice_list_item</strong> objects or empty, described below</li>
+<li><em>current_page</em> - type: int</li>
+<li><em>last_page</em> - type: int</li>
+<li><em>is_last_page</em> - type: bool</li>
+</ul>
+<p>possible invoice_list_item object fields:</p>
+<ul class="list">
+<li><em>date_created</em> - type: datetime string, format <strong>yyyy-mm-ddTHH:MM:SS.fZ</strong>,</li>
+<li><em>id</em> - type: int</li>
+<li><em>title</em> - type: string</li>
+<li><em>is_fully_paid</em> - type: bool</li>
+<li><em>is_partial_paid</em> - type: bool</li>
+<li><em>is_over_paid</em> - type: bool</li>
+<li><em>pay_status</em> - type: int, one of <code>[0, 1, 2, 3, 4]</code></li>
+</ul>
+<h2 id="examples"><a class="header-link" href="#examples"></a>Examples</h2>
+<p>request:</p>
+<pre class="hljs"><code>curl -X GET -H <span class="hljs-string">"Acc-Token: token"</span> -H <span class="hljs-string">"Api-Agent: zk_ios"</span> <span class="hljs-string">"http://my.example.com:5001/remote/api/v2/list_invoices?page=2"</span></code></pre><p>response:</p>
+<pre class="hljs"><code>{
+    <span class="hljs-attr">"status"</span>: <span class="hljs-string">"ok"</span>,
+    <span class="hljs-attr">"errors"</span>: [],
+    <span class="hljs-attr">"data"</span>: {
+        <span class="hljs-attr">"total"</span>: <span class="hljs-number">120</span>,
+        <span class="hljs-attr">"invoices"</span>: [
+            {
+                <span class="hljs-attr">"is_over_paid"</span>: <span class="hljs-literal">false</span>,
+                <span class="hljs-attr">"title"</span>: <span class="hljs-string">"Рахунок ZK-0020293-3"</span>,
+                <span class="hljs-attr">"is_partial_paid"</span>: <span class="hljs-literal">false</span>,
+                <span class="hljs-attr">"is_fully_paid"</span>: <span class="hljs-literal">false</span>,
+                <span class="hljs-attr">"date_created"</span>: <span class="hljs-string">"2016-09-06T13:49:45"</span>,
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">20293</span>
+            },
+            {
+                <span class="hljs-attr">"is_over_paid"</span>: <span class="hljs-literal">false</span>,
+                <span class="hljs-attr">"title"</span>: <span class="hljs-string">"Рахунок ZK-0020292-3"</span>,
+                <span class="hljs-attr">"is_partial_paid"</span>: <span class="hljs-literal">false</span>,
+                <span class="hljs-attr">"is_fully_paid"</span>: <span class="hljs-literal">false</span>,
+                <span class="hljs-attr">"date_created"</span>: <span class="hljs-string">"2016-09-06T13:48:35"</span>,
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">20292</span>
+            },
+            {
+                <span class="hljs-attr">"is_over_paid"</span>: <span class="hljs-literal">false</span>,
+                <span class="hljs-attr">"title"</span>: <span class="hljs-string">"Рахунок ZK-0020291-3"</span>,
+                <span class="hljs-attr">"is_partial_paid"</span>: <span class="hljs-literal">false</span>,
+                <span class="hljs-attr">"is_fully_paid"</span>: <span class="hljs-literal">false</span>,
+                <span class="hljs-attr">"date_created"</span>: <span class="hljs-string">"2016-09-06T13:46:24"</span>,
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">20291</span>
+            },
+            {
+                <span class="hljs-attr">"is_over_paid"</span>: <span class="hljs-literal">false</span>,
+                <span class="hljs-attr">"title"</span>: <span class="hljs-string">"Рахунок ZK-0020290-3"</span>,
+                <span class="hljs-attr">"is_partial_paid"</span>: <span class="hljs-literal">false</span>,
+                <span class="hljs-attr">"is_fully_paid"</span>: <span class="hljs-literal">false</span>,
+                <span class="hljs-attr">"date_created"</span>: <span class="hljs-string">"2016-09-06T13:42:01"</span>,
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">20290</span>
+            },
+            {
+                <span class="hljs-attr">"is_over_paid"</span>: <span class="hljs-literal">false</span>,
+                <span class="hljs-attr">"title"</span>: <span class="hljs-string">"Рахунок ZK-0020289-3"</span>,
+                <span class="hljs-attr">"is_partial_paid"</span>: <span class="hljs-literal">false</span>,
+                <span class="hljs-attr">"is_fully_paid"</span>: <span class="hljs-literal">false</span>,
+                <span class="hljs-attr">"date_created"</span>: <span class="hljs-string">"2016-09-06T13:39:39"</span>,
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">20289</span>
+            },
+            {
+                <span class="hljs-attr">"is_over_paid"</span>: <span class="hljs-literal">false</span>,
+                <span class="hljs-attr">"title"</span>: <span class="hljs-string">"Рахунок ZK-0020288-2"</span>,
+                <span class="hljs-attr">"is_partial_paid"</span>: <span class="hljs-literal">false</span>,
+                <span class="hljs-attr">"is_fully_paid"</span>: <span class="hljs-literal">false</span>,
+                <span class="hljs-attr">"date_created"</span>: <span class="hljs-string">"2016-09-06T13:36:43"</span>,
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">20288</span>
+            },
+            {
+                <span class="hljs-attr">"is_over_paid"</span>: <span class="hljs-literal">false</span>,
+                <span class="hljs-attr">"title"</span>: <span class="hljs-string">"Рахунок ZK-0020287-3"</span>,
+                <span class="hljs-attr">"is_partial_paid"</span>: <span class="hljs-literal">false</span>,
+                <span class="hljs-attr">"is_fully_paid"</span>: <span class="hljs-literal">false</span>,
+                <span class="hljs-attr">"date_created"</span>: <span class="hljs-string">"2016-09-06T13:35:48"</span>,
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">20287</span>
+            },
+            {
+                <span class="hljs-attr">"is_over_paid"</span>: <span class="hljs-literal">false</span>,
+                <span class="hljs-attr">"title"</span>: <span class="hljs-string">"Рахунок ZK-0020286-3"</span>,
+                <span class="hljs-attr">"is_partial_paid"</span>: <span class="hljs-literal">false</span>,
+                <span class="hljs-attr">"is_fully_paid"</span>: <span class="hljs-literal">false</span>,
+                <span class="hljs-attr">"date_created"</span>: <span class="hljs-string">"2016-09-06T13:25:54"</span>,
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">20286</span>
+            },
+            {
+                <span class="hljs-attr">"is_over_paid"</span>: <span class="hljs-literal">false</span>,
+                <span class="hljs-attr">"title"</span>: <span class="hljs-string">"Рахунок ZK-0020285-3"</span>,
+                <span class="hljs-attr">"is_partial_paid"</span>: <span class="hljs-literal">false</span>,
+                <span class="hljs-attr">"is_fully_paid"</span>: <span class="hljs-literal">false</span>,
+                <span class="hljs-attr">"date_created"</span>: <span class="hljs-string">"2016-09-06T13:20:58"</span>,
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">20285</span>
+            },
+            {
+                <span class="hljs-attr">"is_over_paid"</span>: <span class="hljs-literal">false</span>,
+                <span class="hljs-attr">"title"</span>: <span class="hljs-string">"Рахунок ZK-0020284-1"</span>,
+                <span class="hljs-attr">"is_partial_paid"</span>: <span class="hljs-literal">false</span>,
+                <span class="hljs-attr">"is_fully_paid"</span>: <span class="hljs-literal">false</span>,
+                <span class="hljs-attr">"date_created"</span>: <span class="hljs-string">"2016-09-06T13:20:34"</span>,
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">20284</span>
+            },
+            {
+                <span class="hljs-attr">"is_over_paid"</span>: <span class="hljs-literal">false</span>,
+                <span class="hljs-attr">"title"</span>: <span class="hljs-string">"Рахунок ZK-0020283-3"</span>,
+                <span class="hljs-attr">"is_partial_paid"</span>: <span class="hljs-literal">false</span>,
+                <span class="hljs-attr">"is_fully_paid"</span>: <span class="hljs-literal">false</span>,
+                <span class="hljs-attr">"date_created"</span>: <span class="hljs-string">"2016-09-06T13:18:23"</span>,
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">20283</span>
+            },
+            {
+                <span class="hljs-attr">"is_over_paid"</span>: <span class="hljs-literal">false</span>,
+                <span class="hljs-attr">"title"</span>: <span class="hljs-string">"Рахунок ZK-0020282-2"</span>,
+                <span class="hljs-attr">"is_partial_paid"</span>: <span class="hljs-literal">false</span>,
+                <span class="hljs-attr">"is_fully_paid"</span>: <span class="hljs-literal">false</span>,
+                <span class="hljs-attr">"date_created"</span>: <span class="hljs-string">"2016-09-06T13:17:56"</span>,
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">20282</span>
+            },
+            {
+                <span class="hljs-attr">"is_over_paid"</span>: <span class="hljs-literal">false</span>,
+                <span class="hljs-attr">"title"</span>: <span class="hljs-string">"Рахунок ZK-0020234-1"</span>,
+                <span class="hljs-attr">"is_partial_paid"</span>: <span class="hljs-literal">false</span>,
+                <span class="hljs-attr">"is_fully_paid"</span>: <span class="hljs-literal">false</span>,
+                <span class="hljs-attr">"date_created"</span>: <span class="hljs-string">"2016-09-02T18:27:32"</span>,
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">20234</span>
+            },
+            {
+                <span class="hljs-attr">"is_over_paid"</span>: <span class="hljs-literal">false</span>,
+                <span class="hljs-attr">"title"</span>: <span class="hljs-string">"Рахунок ZK-0020231-1"</span>,
+                <span class="hljs-attr">"is_partial_paid"</span>: <span class="hljs-literal">false</span>,
+                <span class="hljs-attr">"is_fully_paid"</span>: <span class="hljs-literal">false</span>,
+                <span class="hljs-attr">"date_created"</span>: <span class="hljs-string">"2016-09-01T20:24:38"</span>,
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">20231</span>
+            },
+            {
+                <span class="hljs-attr">"is_over_paid"</span>: <span class="hljs-literal">false</span>,
+                <span class="hljs-attr">"title"</span>: <span class="hljs-string">"Рахунок ZK-0020219-1"</span>,
+                <span class="hljs-attr">"is_partial_paid"</span>: <span class="hljs-literal">false</span>,
+                <span class="hljs-attr">"is_fully_paid"</span>: <span class="hljs-literal">false</span>,
+                <span class="hljs-attr">"date_created"</span>: <span class="hljs-string">"2016-09-01T12:50:14"</span>,
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">20219</span>
+            },
+            {
+                <span class="hljs-attr">"is_over_paid"</span>: <span class="hljs-literal">false</span>,
+                <span class="hljs-attr">"title"</span>: <span class="hljs-string">"Рахунок ZK-0020200-1"</span>,
+                <span class="hljs-attr">"is_partial_paid"</span>: <span class="hljs-literal">true</span>,
+                <span class="hljs-attr">"is_fully_paid"</span>: <span class="hljs-literal">false</span>,
+                <span class="hljs-attr">"date_created"</span>: <span class="hljs-string">"2016-08-30T15:13:51"</span>,
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">20200</span>
+            },
+            {
+                <span class="hljs-attr">"is_over_paid"</span>: <span class="hljs-literal">false</span>,
+                <span class="hljs-attr">"title"</span>: <span class="hljs-string">"Рахунок ZK-0020199-1"</span>,
+                <span class="hljs-attr">"is_partial_paid"</span>: <span class="hljs-literal">true</span>,
+                <span class="hljs-attr">"is_fully_paid"</span>: <span class="hljs-literal">false</span>,
+                <span class="hljs-attr">"date_created"</span>: <span class="hljs-string">"2016-08-30T15:10:25"</span>,
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">20199</span>
+            },
+            {
+                <span class="hljs-attr">"is_over_paid"</span>: <span class="hljs-literal">false</span>,
+                <span class="hljs-attr">"title"</span>: <span class="hljs-string">"Рахунок ZK-0020193-1"</span>,
+                <span class="hljs-attr">"is_partial_paid"</span>: <span class="hljs-literal">true</span>,
+                <span class="hljs-attr">"is_fully_paid"</span>: <span class="hljs-literal">false</span>,
+                <span class="hljs-attr">"date_created"</span>: <span class="hljs-string">"2016-08-29T21:20:43"</span>,
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">20193</span>
+            },
+            {
+                <span class="hljs-attr">"is_over_paid"</span>: <span class="hljs-literal">false</span>,
+                <span class="hljs-attr">"title"</span>: <span class="hljs-string">"Рахунок ZK-0020187-1"</span>,
+                <span class="hljs-attr">"is_partial_paid"</span>: <span class="hljs-literal">false</span>,
+                <span class="hljs-attr">"is_fully_paid"</span>: <span class="hljs-literal">true</span>,
+                <span class="hljs-attr">"date_created"</span>: <span class="hljs-string">"2016-08-29T13:39:33"</span>,
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">20187</span>
+            },
+            {
+                <span class="hljs-attr">"is_over_paid"</span>: <span class="hljs-literal">false</span>,
+                <span class="hljs-attr">"title"</span>: <span class="hljs-string">"Рахунок ZK-0020172-0"</span>,
+                <span class="hljs-attr">"is_partial_paid"</span>: <span class="hljs-literal">true</span>,
+                <span class="hljs-attr">"is_fully_paid"</span>: <span class="hljs-literal">false</span>,
+                <span class="hljs-attr">"date_created"</span>: <span class="hljs-string">"2016-08-22T18:55:25"</span>,
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">20172</span>
+            }
+        ],
+        <span class="hljs-attr">"current_page"</span>: <span class="hljs-number">2</span>,
+        <span class="hljs-attr">"last_page"</span>: <span class="hljs-number">6</span>,
+        <span class="hljs-attr">"is_last_page"</span>: <span class="hljs-literal">false</span>
+    },
+    <span class="hljs-attr">"system"</span>: <span class="hljs-string">""</span>
+}</code></pre>    </article>
+  </body>
+</html>

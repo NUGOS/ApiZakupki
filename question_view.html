@@ -1,0 +1,148 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimal-ui">
+    <title>Просмотр вопроса</title>
+    <link type="text/css" rel="stylesheet" href="assets/css/github-markdown.css">
+    <link type="text/css" rel="stylesheet" href="assets/css/pilcrow.css">
+    <link type="text/css" rel="stylesheet" href="assets/css/hljs-github.min.css"/>
+  </head>
+  <body>
+    <article class="markdown-body"><h1 id="просмотр-вопроса"><a class="header-link" href="#просмотр-вопроса"></a>Просмотр вопроса</h1>
+<p><strong>GET remote/api/v1/question/{question_id}</strong></p>
+<blockquote>
+<p>id - id вопроса из <a href="./view_entity.html">закупки</a> или <a href="./view_entity_lot.html">лота</a></p>
+</blockquote>
+<p>request headers:</p>
+<ul class="list">
+<li><em>Api-Agent</em> - type: string, required</li>
+<li><em>Acc-Token</em> - type: string, required</li>
+</ul>
+<p>possible response fields:</p>
+<ul class="list">
+<li><em>status</em> - type: str, values: ok/error</li>
+<li><em>errors</em> - type: array of objects, validation errors</li>
+<li><em>data</em> - type: object</li>
+<li><em>system</em> - type: str, system error messages</li>
+</ul>
+<p>possible response data fields:</p>
+<ul class="list">
+<li><em>uid</em> - type: str or null</li>
+<li><em>title</em> - type: str</li>
+<li><em>has_answer</em> - type: bool</li>
+<li><em>important</em> - type: bool</li>
+<li><em>question_author</em> - type: str or null</li>
+<li><em>answer</em> - type: str or null</li>
+<li><em>date_created</em> - type: date str, format <strong>yyyy-mm-ddTHH:MM:SS.fZ</strong></li>
+<li><em>show_authors</em> - type: bool</li>
+<li><em>date_answered</em> - type: date str or null, format <strong>yyyy-mm-ddTHH:MM:SS.fZ</strong></li>
+<li><em>id</em> - type: int</li>
+<li><em>description</em> - type: str  </li>
+</ul>
+<p>request example:</p>
+<pre class="hljs"><code>curl --header <span class="hljs-string">"Acc-Token: eyJlbXBsb3llZSI6NjEyNjEsIm1lcmNoYW50Ijo1NTEzOH0.C-RgqA.iwxHPKJq2KHCj8Qe6BvcvJlSNss"</span> -X GET <span class="hljs-string">"http://my.example.com:5001/remote/api/v1/question/26840"</span></code></pre><p>response example</p>
+<pre class="hljs"><code>{
+  <span class="hljs-attr">"status"</span>: <span class="hljs-string">"ok"</span>,
+  <span class="hljs-attr">"errors"</span>: [
+  ],
+  <span class="hljs-attr">"data"</span>: {
+    <span class="hljs-attr">"uid"</span>: <span class="hljs-string">"a41c882f9258431080d3f2f237f85e70"</span>,
+    <span class="hljs-attr">"title"</span>: <span class="hljs-string">"test"</span>,
+    <span class="hljs-attr">"has_answer"</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">"important"</span>: <span class="hljs-literal">false</span>,
+    <span class="hljs-attr">"question_author"</span>: <span class="hljs-literal">null</span>,
+    <span class="hljs-attr">"answer"</span>: <span class="hljs-string">"response 1"</span>,
+    <span class="hljs-attr">"date_created"</span>: <span class="hljs-string">"2017-10-26T17:12:31"</span>,
+    <span class="hljs-attr">"show_authors"</span>: <span class="hljs-literal">false</span>,
+    <span class="hljs-attr">"date_answered"</span>: <span class="hljs-literal">null</span>,
+    <span class="hljs-attr">"id"</span>: <span class="hljs-number">26840</span>,
+    <span class="hljs-attr">"description"</span>: <span class="hljs-string">"test questui"</span>
+  },
+  <span class="hljs-attr">"system"</span>: <span class="hljs-string">""</span>
+}</code></pre><h1 id="создание-вопроса"><a class="header-link" href="#создание-вопроса"></a>Создание вопроса</h1>
+<p><strong>POST remote/api/v1/question/add</strong></p>
+<p>request headers:</p>
+<ul class="list">
+<li><em>Acc-Token</em> - type: string, required</li>
+</ul>
+<p>request fields:</p>
+<ul class="list">
+<li><em>state_purchase</em> - type: int, optional required, described below</li>
+<li><em>state_purchase_lot</em> - type: int, optional required, described below</li>
+<li><em>question</em> - type: str, max length - 10000, required</li>
+<li><em>title</em> - type: str, required</li>
+</ul>
+<blockquote>
+<p>About possible required fields. Question could be related to 
+purchase or to purchase lot, so if we want to 
+bind question to purchase <strong>state_purchase</strong> must be passed, 
+in other case, if question should be related to state purchase
+ lot - <strong>state_purchase_lot</strong> must be present in request data. And one more thing, 
+ if both <strong>state_purchase</strong> and <strong>state_purchase_lot</strong> presents 
+ in request - <strong>state_purchase</strong> <strong>will be ignored</strong> and question be related 
+ to passed lot id</p>
+</blockquote>
+<p>possible response fields:</p>
+<ul class="list">
+<li><em>status</em> - type: str, values: ok/error</li>
+<li><em>errors</em> - type: array of objects, validation errors</li>
+<li><em>data</em> - type: object</li>
+<li><em>system</em> - type: str, system error messages</li>
+</ul>
+<p>possible response data fields:</p>
+<ul class="list">
+<li><em>uid</em> - type: null, described below</li>
+<li><em>title</em> - type: str</li>
+<li><em>has_answer</em> - type: bool</li>
+<li><em>important</em> - type: bool</li>
+<li><em>question_author</em> - type: str or null</li>
+<li><em>answer</em> - type: str or null</li>
+<li><em>date_created</em> - type: date str, format <strong>yyyy-mm-ddTHH:MM:SS.fZ</strong></li>
+<li><em>show_authors</em> - type: bool</li>
+<li><em>date_answered</em> - type: date str or null, format <strong>yyyy-mm-ddTHH:MM:SS.fZ</strong></li>
+<li><em>id</em> - type: int</li>
+<li><em>description</em> - type: str</li>
+</ul>
+<blockquote>
+<p>At the moment when we have already stored question in our database
+its data still sending to CDB, and only if complete successful we get the <strong>uid</strong>,
+so, after question creation <strong>uid</strong> field always equals <strong>null</strong></p>
+</blockquote>
+<p>request example:</p>
+<pre class="hljs"><code>// request body, invalid
+{
+    <span class="hljs-attr">"valid"</span>: <span class="hljs-string">"json"</span>
+}</code></pre><pre class="hljs"><code>curl --header <span class="hljs-string">"Acc-Token: eyJlbXBsb3llZSI6NjEyNjEsIm1lcmNoYW50Ijo1NTEzOH0.C-RgqA.iwxHPKJq2KHCj8Qe6BvcvJlSNss"</span> -X POST <span class="hljs-string">"http://my.example.com:5001/remote/api/v1/question/add"</span> <span class="hljs-_">-d</span>@request_bodu.json</code></pre><p>response example:</p>
+<pre class="hljs"><code>{
+  <span class="hljs-attr">"status"</span>: <span class="hljs-string">"error"</span>,
+  <span class="hljs-attr">"errors"</span>: [
+  ],
+  <span class="hljs-attr">"system"</span>: <span class="hljs-string">"one of state_purchase or state_purchase_lot should be passed"</span>
+}</code></pre><p>request example:</p>
+<pre class="hljs"><code>{
+    <span class="hljs-attr">"state_purchase"</span>: <span class="hljs-number">273917</span>,
+    <span class="hljs-attr">"question"</span>: <span class="hljs-string">"q"</span>,
+    <span class="hljs-attr">"title"</span>: <span class="hljs-string">"t"</span>
+}</code></pre><pre class="hljs"><code>curl --header <span class="hljs-string">"Acc-Token: eyJlbXBsb3llZSI6NjEyNjEsIm1lcmNoYW50Ijo1NTEzOH0.C-RgqA.iwxHPKJq2KHCj8Qe6BvcvJlSNss"</span> -X POST <span class="hljs-string">"http://my.example.com:5001/remote/api/v1/question/add"</span> <span class="hljs-_">-d</span>@request_bodu.json</code></pre><p>response example:</p>
+<pre class="hljs"><code>{
+  <span class="hljs-attr">"status"</span>: <span class="hljs-string">"ok"</span>,
+  <span class="hljs-attr">"errors"</span>: [
+  ],
+  <span class="hljs-attr">"data"</span>: {
+    <span class="hljs-attr">"uid"</span>: <span class="hljs-literal">null</span>,
+    <span class="hljs-attr">"title"</span>: <span class="hljs-string">"t"</span>,
+    <span class="hljs-attr">"has_answer"</span>: <span class="hljs-literal">false</span>,
+    <span class="hljs-attr">"important"</span>: <span class="hljs-literal">false</span>,
+    <span class="hljs-attr">"question_author"</span>: <span class="hljs-literal">null</span>,
+    <span class="hljs-attr">"answer"</span>: <span class="hljs-literal">null</span>,
+    <span class="hljs-attr">"date_created"</span>: <span class="hljs-string">"2018-01-02T11:55:19"</span>,
+    <span class="hljs-attr">"show_authors"</span>: <span class="hljs-literal">false</span>,
+    <span class="hljs-attr">"date_answered"</span>: <span class="hljs-literal">null</span>,
+    <span class="hljs-attr">"id"</span>: <span class="hljs-number">26869</span>,
+    <span class="hljs-attr">"description"</span>: <span class="hljs-string">"q"</span>
+  },
+  <span class="hljs-attr">"system"</span>: <span class="hljs-string">""</span>
+}</code></pre>    </article>
+  </body>
+</html>

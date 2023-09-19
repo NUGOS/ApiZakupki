@@ -1,0 +1,90 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimal-ui">
+    <title>Time line для закупки</title>
+    <link type="text/css" rel="stylesheet" href="assets/css/github-markdown.css">
+    <link type="text/css" rel="stylesheet" href="assets/css/pilcrow.css">
+    <link type="text/css" rel="stylesheet" href="assets/css/hljs-github.min.css"/>
+  </head>
+  <body>
+    <article class="markdown-body"><h1 id="time-line-для-закупки"><a class="header-link" href="#time-line-для-закупки"></a>Time line для закупки</h1>
+<p><strong>GET remote/api/v1/time_line/{purchase_id}</strong></p>
+<p>request headers:</p>
+<ul class="list">
+<li><em>Api-Agent</em> - type: string, required</li>
+<li><em>Acc-Token</em> - type: string, required</li>
+</ul>
+<p>possible request arguments:</p>
+<ul class="list">
+<li><em>purchase_id</em> - type: int , required</li>
+</ul>
+<p>possible response fields:</p>
+<ul class="list">
+<li><em>status</em> - type: str, values: ok/error</li>
+<li><em>errors</em> - type: array of objects, validation errors</li>
+<li><em>data</em> - type: object</li>
+<li><em>system</em> - type: str, system error messages</li>
+</ul>
+<p>possible response data fields:</p>
+<ul class="list">
+<li><em>time_line</em> - type: array of <strong>line</strong> objects</li>
+</ul>
+<p>possible line fields:</p>
+<ul class="list">
+<li><em>status</em> - type: str, one of <a href="./static_data.html">key</a> form <strong>timeline_status</strong></li>
+<li><em>dt_end</em> - type: date str, format *yyyy-mm-ddTHH:MM:SS.fZ** or null</li>
+<li><em>dt_start</em> - type: date str, format *yyyy-mm-ddTHH:MM:SS.fZ** or null</li>
+<li><em>purchase_status</em> - type: str, one of <a href="./static_data.html">timeline_status</a> form <strong>status</strong></li>
+<li><em>description</em> - type: str</li>
+</ul>
+<p>request example:</p>
+<pre class="hljs"><code>curl -X GET <span class="hljs-string">"http://my.example.com:5001/remote/api/v1/time_line/2534"</span></code></pre><p>response example:</p>
+<pre class="hljs"><code>{
+  <span class="hljs-attr">"status"</span>: <span class="hljs-string">"ok"</span>,
+  <span class="hljs-attr">"errors"</span>: [
+  ],
+  <span class="hljs-attr">"data"</span>: {
+    <span class="hljs-attr">"time_line"</span>: [
+      {
+        <span class="hljs-attr">"status"</span>: <span class="hljs-string">"current"</span>,
+        <span class="hljs-attr">"dt_end"</span>: <span class="hljs-string">"2017-06-03T08:44:00Z"</span>,
+        <span class="hljs-attr">"description"</span>: <span class="hljs-string">"залишилось -12 днів"</span>,
+        <span class="hljs-attr">"dt_start"</span>: <span class="hljs-string">"2017-06-02T08:57:41.181Z"</span>,
+        <span class="hljs-attr">"purchase_status"</span>: <span class="hljs-string">"active_enquiries"</span>
+      },
+      {
+        <span class="hljs-attr">"status"</span>: <span class="hljs-string">"future"</span>,
+        <span class="hljs-attr">"dt_end"</span>: <span class="hljs-string">"2017-06-04T08:44:00Z"</span>,
+        <span class="hljs-attr">"description"</span>: <span class="hljs-string">"очікується"</span>,
+        <span class="hljs-attr">"dt_start"</span>: <span class="hljs-string">"2017-06-03T08:44:00Z"</span>,
+        <span class="hljs-attr">"purchase_status"</span>: <span class="hljs-string">"active_tendering"</span>
+      },
+      {
+        <span class="hljs-attr">"status"</span>: <span class="hljs-string">"future"</span>,
+        <span class="hljs-attr">"dt_end"</span>: <span class="hljs-literal">null</span>,
+        <span class="hljs-attr">"description"</span>: <span class="hljs-string">"очікується"</span>,
+        <span class="hljs-attr">"dt_start"</span>: <span class="hljs-literal">null</span>,
+        <span class="hljs-attr">"purchase_status"</span>: <span class="hljs-string">"active_auction"</span>
+      },
+      {
+        <span class="hljs-attr">"status"</span>: <span class="hljs-string">"future"</span>,
+        <span class="hljs-attr">"dt_end"</span>: <span class="hljs-literal">null</span>,
+        <span class="hljs-attr">"description"</span>: <span class="hljs-string">"очікується"</span>,
+        <span class="hljs-attr">"dt_start"</span>: <span class="hljs-literal">null</span>,
+        <span class="hljs-attr">"purchase_status"</span>: <span class="hljs-string">"active_qualification"</span>
+      },
+      {
+        <span class="hljs-attr">"status"</span>: <span class="hljs-string">"future"</span>,
+        <span class="hljs-attr">"dt_end"</span>: <span class="hljs-literal">null</span>,
+        <span class="hljs-attr">"description"</span>: <span class="hljs-string">"очікується"</span>,
+        <span class="hljs-attr">"dt_start"</span>: <span class="hljs-literal">null</span>,
+        <span class="hljs-attr">"purchase_status"</span>: <span class="hljs-string">"active_awarded"</span>
+      }
+    ]
+  },
+  <span class="hljs-attr">"system"</span>: <span class="hljs-string">""</span>
+}</code></pre>    </article>
+  </body>
+</html>

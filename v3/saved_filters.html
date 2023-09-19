@@ -1,0 +1,305 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimal-ui">
+    <title>List of all user saved filters</title>
+    <link type="text/css" rel="stylesheet" href="../assets/css/github-markdown.css">
+    <link type="text/css" rel="stylesheet" href="../assets/css/pilcrow.css">
+    <link type="text/css" rel="stylesheet" href="../assets/css/hljs-github.min.css"/>
+  </head>
+  <body>
+    <article class="markdown-body"><h1 id="list-of-all-user-saved-filters"><a class="header-link" href="#list-of-all-user-saved-filters"></a>List of all user saved filters</h1>
+<p><strong>GET remote/api/v3/saved_filters</strong></p>
+<p>request headers:</p>
+<ul class="list">
+<li><em>Api-Agent</em> - type: string, required</li>
+<li><em>Acc-Token</em> - type: string, required</li>
+</ul>
+<p>possible response fields:</p>
+<ul class="list">
+<li><em>status</em> - type: str, values: ok/error</li>
+<li><em>errors</em> - type: array of objects, validation errors</li>
+<li><em>data</em> - type: object</li>
+<li><em>system</em> - type: str, system error messages</li>
+</ul>
+<p>possible data fields:</p>
+<ul class="list">
+<li><em>saved_filters</em> - type: array of <strong>saved_filter</strong> objects or empty, described below</li>
+</ul>
+<p>saved filter fields:</p>
+<ul class="list">
+<li><em>id</em> - type: int, signed</li>
+<li><em>name</em> - type: str</li>
+<li><em>readonly</em> - type: bool</li>
+<li><em>selected</em> - type: bool</li>
+</ul>
+<h2 id="example"><a class="header-link" href="#example"></a>Example</h2>
+<p>request:</p>
+<pre class="hljs"><code>clear &amp;&amp; curl -X GET <span class="hljs-string">"http://my.example.com:5001/remote/api/v3/saved_filters"</span> --header <span class="hljs-string">"Acc-Token: 43b06b921e3df14a66cb9a38be51e71dabde5856"</span> --header <span class="hljs-string">"Api-Agent: zk_ios"</span> | json_pp</code></pre><p>response:</p>
+<pre class="hljs"><code>{
+   <span class="hljs-attr">"data"</span> : {
+      <span class="hljs-attr">"saved_filters"</span> : [
+         {
+            <span class="hljs-attr">"id"</span> : <span class="hljs-number">-1</span>,
+            <span class="hljs-attr">"name"</span> : <span class="hljs-string">"Підписка по категоріям"</span>,
+            <span class="hljs-attr">"readonly"</span> : <span class="hljs-literal">true</span>
+         },
+         {
+            <span class="hljs-attr">"id"</span> : <span class="hljs-number">-2</span>,
+            <span class="hljs-attr">"name"</span> : <span class="hljs-string">"Підписка на замовника"</span>,
+            <span class="hljs-attr">"readonly"</span> : <span class="hljs-literal">true</span>
+         },
+         {
+            <span class="hljs-attr">"id"</span> : <span class="hljs-number">1</span>,
+            <span class="hljs-attr">"name"</span> : <span class="hljs-string">"save"</span>,
+            <span class="hljs-attr">"readonly"</span> : <span class="hljs-literal">false</span>
+         },
+         {
+            <span class="hljs-attr">"id"</span> : <span class="hljs-number">2</span>,
+            <span class="hljs-attr">"name"</span> : <span class="hljs-string">"12341234"</span>,
+            <span class="hljs-attr">"readonly"</span> : <span class="hljs-literal">false</span>
+         },
+         {
+            <span class="hljs-attr">"id"</span> : <span class="hljs-number">3</span>,
+            <span class="hljs-attr">"name"</span> : <span class="hljs-string">"agfasdf"</span>,
+            <span class="hljs-attr">"readonly"</span> : <span class="hljs-literal">false</span>
+         },
+         {
+            <span class="hljs-attr">"id"</span> : <span class="hljs-number">4</span>,
+            <span class="hljs-attr">"name"</span> : <span class="hljs-string">"test_all_fields"</span>,
+            <span class="hljs-attr">"readonly"</span> : <span class="hljs-literal">false</span>
+         },
+         {
+            <span class="hljs-attr">"id"</span> : <span class="hljs-number">5</span>,
+            <span class="hljs-attr">"name"</span> : <span class="hljs-string">"fads"</span>,
+            <span class="hljs-attr">"readonly"</span> : <span class="hljs-literal">false</span>
+         },
+         {
+            <span class="hljs-attr">"id"</span> : <span class="hljs-number">6</span>,
+            <span class="hljs-attr">"name"</span> : <span class="hljs-string">"mob_ali"</span>,
+            <span class="hljs-attr">"readonly"</span> : <span class="hljs-literal">false</span>
+         },
+         {
+            <span class="hljs-attr">"id"</span> : <span class="hljs-number">7</span>,
+            <span class="hljs-attr">"name"</span> : <span class="hljs-string">"mob_ali"</span>,
+            <span class="hljs-attr">"readonly"</span> : <span class="hljs-literal">false</span>
+         },
+         {
+            <span class="hljs-attr">"id"</span> : <span class="hljs-number">10</span>,
+            <span class="hljs-attr">"name"</span> : <span class="hljs-string">"adsfasdfasdf"</span>,
+            <span class="hljs-attr">"readonly"</span> : <span class="hljs-literal">false</span>
+         },
+         {
+            <span class="hljs-attr">"id"</span> : <span class="hljs-number">11</span>,
+            <span class="hljs-attr">"name"</span> : <span class="hljs-string">"adsfasdfasdf"</span>,
+            <span class="hljs-attr">"readonly"</span> : <span class="hljs-literal">false</span>
+         },
+         {
+            <span class="hljs-attr">"id"</span> : <span class="hljs-number">8</span>,
+            <span class="hljs-attr">"name"</span> : <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"readonly"</span> : <span class="hljs-literal">false</span>
+         },
+         {
+            <span class="hljs-attr">"id"</span> : <span class="hljs-number">9</span>,
+            <span class="hljs-attr">"name"</span> : <span class="hljs-string">"999999999"</span>,
+            <span class="hljs-attr">"readonly"</span> : <span class="hljs-literal">false</span>
+         },
+         {
+            <span class="hljs-attr">"id"</span> : <span class="hljs-number">15</span>,
+            <span class="hljs-attr">"name"</span> : <span class="hljs-string">"adsfasdfasdf"</span>,
+            <span class="hljs-attr">"readonly"</span> : <span class="hljs-literal">false</span>
+         },
+         {
+            <span class="hljs-attr">"id"</span> : <span class="hljs-number">16</span>,
+            <span class="hljs-attr">"name"</span> : <span class="hljs-string">"adsfasdfasdf"</span>,
+            <span class="hljs-attr">"readonly"</span> : <span class="hljs-literal">false</span>
+         },
+         {
+            <span class="hljs-attr">"id"</span> : <span class="hljs-number">17</span>,
+            <span class="hljs-attr">"name"</span> : <span class="hljs-string">"adsfasdfasdf"</span>,
+            <span class="hljs-attr">"readonly"</span> : <span class="hljs-literal">false</span>
+         },
+         {
+            <span class="hljs-attr">"id"</span> : <span class="hljs-number">20</span>,
+            <span class="hljs-attr">"name"</span> : <span class="hljs-string">"adsfasdfasdf"</span>,
+            <span class="hljs-attr">"readonly"</span> : <span class="hljs-literal">false</span>
+         },
+         {
+            <span class="hljs-attr">"id"</span> : <span class="hljs-number">21</span>,
+            <span class="hljs-attr">"name"</span> : <span class="hljs-string">"adsfasdfasdf"</span>,
+            <span class="hljs-attr">"readonly"</span> : <span class="hljs-literal">false</span>
+         },
+         {
+            <span class="hljs-attr">"id"</span> : <span class="hljs-number">26</span>,
+            <span class="hljs-attr">"name"</span> : <span class="hljs-string">"{adsfasdfasdf}"</span>,
+            <span class="hljs-attr">"readonly"</span> : <span class="hljs-literal">false</span>
+         },
+         {
+            <span class="hljs-attr">"id"</span> : <span class="hljs-number">31</span>,
+            <span class="hljs-attr">"name"</span> : <span class="hljs-string">"adsfasdfasdf"</span>,
+            <span class="hljs-attr">"readonly"</span> : <span class="hljs-literal">false</span>
+         },
+         {
+            <span class="hljs-attr">"id"</span> : <span class="hljs-number">32</span>,
+            <span class="hljs-attr">"name"</span> : <span class="hljs-string">"adsfasdfasdf"</span>,
+            <span class="hljs-attr">"readonly"</span> : <span class="hljs-literal">false</span>
+         },
+         {
+            <span class="hljs-attr">"id"</span> : <span class="hljs-number">33</span>,
+            <span class="hljs-attr">"name"</span> : <span class="hljs-string">"adsfasdfasdf"</span>,
+            <span class="hljs-attr">"readonly"</span> : <span class="hljs-literal">false</span>
+         },
+         {
+            <span class="hljs-attr">"id"</span> : <span class="hljs-number">35</span>,
+            <span class="hljs-attr">"name"</span> : <span class="hljs-string">"fuck"</span>,
+            <span class="hljs-attr">"readonly"</span> : <span class="hljs-literal">false</span>
+         },
+         {
+            <span class="hljs-attr">"id"</span> : <span class="hljs-number">34</span>,
+            <span class="hljs-attr">"name"</span> : <span class="hljs-string">"fuck"</span>,
+            <span class="hljs-attr">"readonly"</span> : <span class="hljs-literal">false</span>
+         },
+         {
+            <span class="hljs-attr">"id"</span> : <span class="hljs-number">36</span>,
+            <span class="hljs-attr">"name"</span> : <span class="hljs-string">"fuck"</span>,
+            <span class="hljs-attr">"readonly"</span> : <span class="hljs-literal">false</span>
+         },
+         {
+            <span class="hljs-attr">"id"</span> : <span class="hljs-number">37</span>,
+            <span class="hljs-attr">"name"</span> : <span class="hljs-string">"afdaf"</span>,
+            <span class="hljs-attr">"readonly"</span> : <span class="hljs-literal">false</span>
+         },
+         {
+            <span class="hljs-attr">"id"</span> : <span class="hljs-number">39</span>,
+            <span class="hljs-attr">"name"</span> : <span class="hljs-string">"notest"</span>,
+            <span class="hljs-attr">"readonly"</span> : <span class="hljs-literal">false</span>
+         },
+         {
+            <span class="hljs-attr">"id"</span> : <span class="hljs-number">40</span>,
+            <span class="hljs-attr">"name"</span> : <span class="hljs-string">"adsfasdfasdf"</span>,
+            <span class="hljs-attr">"readonly"</span> : <span class="hljs-literal">false</span>
+         },
+         {
+            <span class="hljs-attr">"id"</span> : <span class="hljs-number">41</span>,
+            <span class="hljs-attr">"name"</span> : <span class="hljs-string">"all filters"</span>,
+            <span class="hljs-attr">"readonly"</span> : <span class="hljs-literal">false</span>
+         },
+         {
+            <span class="hljs-attr">"id"</span> : <span class="hljs-number">42</span>,
+            <span class="hljs-attr">"name"</span> : <span class="hljs-string">"all 2"</span>,
+            <span class="hljs-attr">"readonly"</span> : <span class="hljs-literal">false</span>
+         },
+         {
+            <span class="hljs-attr">"id"</span> : <span class="hljs-number">43</span>,
+            <span class="hljs-attr">"name"</span> : <span class="hljs-string">"managers"</span>,
+            <span class="hljs-attr">"readonly"</span> : <span class="hljs-literal">false</span>
+         },
+         {
+            <span class="hljs-attr">"id"</span> : <span class="hljs-number">44</span>,
+            <span class="hljs-attr">"name"</span> : <span class="hljs-string">"adsfasdfasdf"</span>,
+            <span class="hljs-attr">"readonly"</span> : <span class="hljs-literal">false</span>
+         },
+         {
+            <span class="hljs-attr">"id"</span> : <span class="hljs-number">45</span>,
+            <span class="hljs-attr">"name"</span> : <span class="hljs-string">"my_filter_1"</span>,
+            <span class="hljs-attr">"readonly"</span> : <span class="hljs-literal">false</span>
+         },
+         {
+            <span class="hljs-attr">"id"</span> : <span class="hljs-number">46</span>,
+            <span class="hljs-attr">"name"</span> : <span class="hljs-string">"my_filter_1"</span>,
+            <span class="hljs-attr">"readonly"</span> : <span class="hljs-literal">false</span>
+         },
+         {
+            <span class="hljs-attr">"id"</span> : <span class="hljs-number">47</span>,
+            <span class="hljs-attr">"name"</span> : <span class="hljs-string">"my_filter_1"</span>,
+            <span class="hljs-attr">"readonly"</span> : <span class="hljs-literal">false</span>
+         },
+         {
+            <span class="hljs-attr">"id"</span> : <span class="hljs-number">48</span>,
+            <span class="hljs-attr">"name"</span> : <span class="hljs-string">"fuck_1234"</span>,
+            <span class="hljs-attr">"readonly"</span> : <span class="hljs-literal">false</span>
+         },
+         {
+            <span class="hljs-attr">"id"</span> : <span class="hljs-number">49</span>,
+            <span class="hljs-attr">"name"</span> : <span class="hljs-string">"fuck_234"</span>,
+            <span class="hljs-attr">"readonly"</span> : <span class="hljs-literal">false</span>
+         },
+         {
+            <span class="hljs-attr">"id"</span> : <span class="hljs-number">50</span>,
+            <span class="hljs-attr">"name"</span> : <span class="hljs-string">"v3"</span>,
+            <span class="hljs-attr">"readonly"</span> : <span class="hljs-literal">false</span>
+         },
+         {
+            <span class="hljs-attr">"id"</span> : <span class="hljs-number">51</span>,
+            <span class="hljs-attr">"name"</span> : <span class="hljs-string">"v3"</span>,
+            <span class="hljs-attr">"readonly"</span> : <span class="hljs-literal">false</span>
+         },
+         {
+            <span class="hljs-attr">"id"</span> : <span class="hljs-number">52</span>,
+            <span class="hljs-attr">"name"</span> : <span class="hljs-string">"v3"</span>,
+            <span class="hljs-attr">"readonly"</span> : <span class="hljs-literal">false</span>
+         },
+         {
+            <span class="hljs-attr">"id"</span> : <span class="hljs-number">55</span>,
+            <span class="hljs-attr">"name"</span> : <span class="hljs-string">"v3"</span>,
+            <span class="hljs-attr">"readonly"</span> : <span class="hljs-literal">false</span>
+         },
+         {
+            <span class="hljs-attr">"id"</span> : <span class="hljs-number">56</span>,
+            <span class="hljs-attr">"name"</span> : <span class="hljs-string">"v3"</span>,
+            <span class="hljs-attr">"readonly"</span> : <span class="hljs-literal">false</span>
+         },
+         {
+            <span class="hljs-attr">"id"</span> : <span class="hljs-number">57</span>,
+            <span class="hljs-attr">"name"</span> : <span class="hljs-string">"kill pasha"</span>,
+            <span class="hljs-attr">"readonly"</span> : <span class="hljs-literal">false</span>
+         },
+         {
+            <span class="hljs-attr">"id"</span> : <span class="hljs-number">58</span>,
+            <span class="hljs-attr">"name"</span> : <span class="hljs-string">"kill pasha"</span>,
+            <span class="hljs-attr">"readonly"</span> : <span class="hljs-literal">false</span>
+         },
+         {
+            <span class="hljs-attr">"id"</span> : <span class="hljs-number">59</span>,
+            <span class="hljs-attr">"name"</span> : <span class="hljs-string">"kill pasha"</span>,
+            <span class="hljs-attr">"readonly"</span> : <span class="hljs-literal">false</span>
+         },
+         {
+            <span class="hljs-attr">"id"</span> : <span class="hljs-number">60</span>,
+            <span class="hljs-attr">"name"</span> : <span class="hljs-string">"kill pasha"</span>,
+            <span class="hljs-attr">"readonly"</span> : <span class="hljs-literal">false</span>
+         },
+         {
+            <span class="hljs-attr">"id"</span> : <span class="hljs-number">61</span>,
+            <span class="hljs-attr">"name"</span> : <span class="hljs-string">"kill pasha"</span>,
+            <span class="hljs-attr">"readonly"</span> : <span class="hljs-literal">false</span>
+         },
+         {
+            <span class="hljs-attr">"id"</span> : <span class="hljs-number">62</span>,
+            <span class="hljs-attr">"name"</span> : <span class="hljs-string">"fuck dates"</span>,
+            <span class="hljs-attr">"readonly"</span> : <span class="hljs-literal">false</span>
+         },
+         {
+            <span class="hljs-attr">"id"</span> : <span class="hljs-number">64</span>,
+            <span class="hljs-attr">"name"</span> : <span class="hljs-string">"v3"</span>,
+            <span class="hljs-attr">"readonly"</span> : <span class="hljs-literal">false</span>
+         },
+         {
+            <span class="hljs-attr">"id"</span> : <span class="hljs-number">-3</span>,
+            <span class="hljs-attr">"name"</span> : <span class="hljs-string">"Рекомендовані закупівлі"</span>,
+            <span class="hljs-attr">"readonly"</span> : <span class="hljs-literal">true</span>
+         },
+         {
+            <span class="hljs-attr">"id"</span> : <span class="hljs-number">-4</span>,
+            <span class="hljs-attr">"name"</span> : <span class="hljs-string">"Запрошення від замовника"</span>,
+            <span class="hljs-attr">"readonly"</span> : <span class="hljs-literal">true</span>
+         }
+      ]
+   },
+   <span class="hljs-attr">"errors"</span> : [],
+   <span class="hljs-attr">"status"</span> : <span class="hljs-string">"ok"</span>,
+   <span class="hljs-attr">"system"</span> : <span class="hljs-string">""</span>
+}</code></pre>    </article>
+  </body>
+</html>

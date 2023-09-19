@@ -1,0 +1,272 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimal-ui">
+    <title>TWO FACTOR AUTHORISATION</title>
+    <link type="text/css" rel="stylesheet" href="assets/css/github-markdown.css">
+    <link type="text/css" rel="stylesheet" href="assets/css/pilcrow.css">
+    <link type="text/css" rel="stylesheet" href="assets/css/hljs-github.min.css"/>
+  </head>
+  <body>
+    <article class="markdown-body"><h1 id="two-factor-authorisation"><a class="header-link" href="#two-factor-authorisation"></a>TWO FACTOR AUTHORISATION</h1>
+<p><strong>POST /remote/api/v1/tfa</strong></p>
+<p>request headers:</p>
+<ul class="list">
+<li><em>Api-Agent</em> - type: string, required</li>
+<li><em>Tfa-Token</em> - type: string, required, it&#39;s a string from tfa response data</li>
+</ul>
+<p>possible request fields:</p>
+<ul class="list">
+<li><em>code</em> - type: str, only digits, <strong>required</strong></li>
+</ul>
+<p>possible response fields:</p>
+<ul class="list">
+<li><em>status</em> - type: str, values: ok/error</li>
+<li><em>acc_token</em> - type: str</li>
+<li><em>errors</em> - type: array of objects, validation errors</li>
+<li><em>data</em> - type: object</li>
+<li><em>system</em> - type: str, system error messages</li>
+</ul>
+<p>possible response errors data:</p>
+<ul class="list">
+<li>list of objects - type: object, pairs of request field and array of string messages or empty list, examples showed below</li>
+</ul>
+<p>possible response system data:</p>
+<ul class="list">
+<li>list of string messages - type: array, system errors notifications or empty list, , examples showed below</li>
+</ul>
+<p>possible response data fields:</p>
+<ul class="list">
+<li><em>saved_filters</em> - type: array of objects or empty array, example <code>[{&quot;id&quot;: -1, &quot;name&quot;: &quot;filter name&quot;}]</code></li>
+<li><em>employee_first_name</em> - type: str</li>
+<li><em>merchant_type</em> - type: str, one of <code>[&quot;purchasing_agent&quot;,  &quot;supplier&quot;, &quot;auction_organizer&quot;, &quot;auction_participant&quot;, &quot;auction2_organizer&quot;]</code></li>
+<li><em>employee_last_name</em> - type: str</li>
+<li><em>is_state</em> - type: boolean</li>
+<li><em>is_verified</em> - type: boolean</li>
+<li><em>email</em> - type: str</li>
+<li><em>merchant_name</em> - type: str</li>
+<li><em>merchants</em> - type: array of <strong>merchant</strong> objects or empty, described below</li>
+<li><em>win_count</em> - type: int</li>
+<li><em>manager</em> - type: <strong>manager</strong> object, described below</li>
+<li><em>balance</em> - type: float</li>
+<li><em>subscription_on</em> - type: bool</li>
+</ul>
+<p>possible merchant fields:</p>
+<ul class="list">
+<li><em>id</em> - type: int</li>
+<li><em>name</em> - type: str</li>
+</ul>
+<p>manager fields:</p>
+<ul class="list">
+<li><em>name_ru</em> - type: str</li>
+<li><em>name_en</em> - type: str</li>
+<li><em>name_uk</em> - type: str</li>
+<li><em>phone</em> - type: str</li>
+<li><em>email</em> - type: str</li>
+<li><em>image</em> - type: url</li>
+<li><em>phone</em> - type: array of str</li>
+</ul>
+<p><strong>WARNING</strong></p>
+<p><em>phones</em> field type in <strong>manager</strong> object depends on <strong>ALL_PHONES_FOR_MOBILE_API</strong> flag value 
+in zk cabinet, ask some one from QA to check this flag value</p>
+<h1 id="examples"><a class="header-link" href="#examples"></a>Examples</h1>
+<h2 id="invalid-tfa-token-example"><a class="header-link" href="#invalid-tfa-token-example"></a>invalid tfa token example</h2>
+<p>request data:</p>
+<pre class="hljs"><code>{}</code></pre><p>invalid header request example:</p>
+<pre class="hljs"><code>curl --header <span class="hljs-string">"Content-Type: application/json"</span> -X POST <span class="hljs-string">"http://my.example.com:5001/remote/api/v1/tfa"</span> --data @request_data</code></pre><p>response example:</p>
+<pre class="hljs"><code>{
+    <span class="hljs-attr">"status"</span>: <span class="hljs-string">"error"</span>,
+    <span class="hljs-attr">"errors"</span>: [],
+    <span class="hljs-attr">"system"</span>: <span class="hljs-string">"tfa header invalid"</span>
+}</code></pre><h2 id="invalid-request-example"><a class="header-link" href="#invalid-request-example"></a>invalid request example</h2>
+<p>request data:</p>
+<pre class="hljs"><code>{}</code></pre><p>invalid request example:</p>
+<pre class="hljs"><code>curl --header <span class="hljs-string">"Content-Type: application/json"</span> --header <span class="hljs-string">"Tfa-Token: token"</span> -X POST <span class="hljs-string">"http://my.example.com:5001/remote/api/v1/tfa"</span> --data @request_data</code></pre><p>response example:</p>
+<pre class="hljs"><code>{
+    <span class="hljs-attr">"status"</span>: <span class="hljs-string">"error"</span>,
+    <span class="hljs-attr">"errors"</span>: [],
+    <span class="hljs-attr">"system"</span>: <span class="hljs-string">"invalid request"</span>
+}</code></pre><h2 id="invalid-code-format-examples"><a class="header-link" href="#invalid-code-format-examples"></a>invalid code format examples</h2>
+<p>request data:</p>
+<pre class="hljs"><code>{
+    <span class="hljs-attr">"no"</span>: <span class="hljs-string">"code"</span>
+}</code></pre><p>invalid request example:</p>
+<pre class="hljs"><code>curl --header <span class="hljs-string">"Content-Type: application/json"</span> --header <span class="hljs-string">"Tfa-Token: token"</span> -X POST <span class="hljs-string">"http://my.example.com:5001/remote/api/v1/tfa"</span> --data @request_data</code></pre><p>response example:</p>
+<pre class="hljs"><code>{
+    <span class="hljs-attr">"status"</span>: <span class="hljs-string">"error"</span>,
+    <span class="hljs-attr">"errors"</span>: [],
+    <span class="hljs-attr">"system"</span>: <span class="hljs-string">"code is required"</span>
+}</code></pre><p>request data:</p>
+<pre class="hljs"><code>{
+    <span class="hljs-attr">"code"</span>: <span class="hljs-string">"wrong code"</span>
+}</code></pre><p>invalid request example:</p>
+<pre class="hljs"><code>curl --header <span class="hljs-string">"Content-Type: application/json"</span> --header <span class="hljs-string">"Tfa-Token: token"</span> -X POST <span class="hljs-string">"http://my.example.com:5001/remote/api/v1/tfa"</span> --data @request_data</code></pre><p>response example:</p>
+<pre class="hljs"><code>{
+    <span class="hljs-attr">"status"</span>: <span class="hljs-string">"error"</span>,
+    <span class="hljs-attr">"errors"</span>: [],
+    <span class="hljs-attr">"system"</span>: <span class="hljs-string">"code must contain only digits"</span>
+}</code></pre><h2 id="invalid-code-or-code-expired"><a class="header-link" href="#invalid-code-or-code-expired"></a>invalid code or code expired</h2>
+<p>request data:</p>
+<pre class="hljs"><code>{
+    <span class="hljs-attr">"code"</span>: <span class="hljs-string">"0000"</span>
+}</code></pre><p>invalid request example:</p>
+<pre class="hljs"><code>curl --header <span class="hljs-string">"Content-Type: application/json"</span> --header <span class="hljs-string">"Tfa-Token: token"</span> -X POST <span class="hljs-string">"http://my.example.com:5001/remote/api/v1/tfa"</span> --data @request_data</code></pre><p>response example:</p>
+<pre class="hljs"><code>{
+    <span class="hljs-attr">"status"</span>: <span class="hljs-string">"error"</span>,
+    <span class="hljs-attr">"errors"</span>: [],
+    <span class="hljs-attr">"system"</span>: <span class="hljs-string">"invalid code or code expired"</span>
+}</code></pre><h2 id="success-example"><a class="header-link" href="#success-example"></a>success example</h2>
+<p>request data:</p>
+<pre class="hljs"><code>{
+    <span class="hljs-attr">"code"</span>: <span class="hljs-string">"0000"</span>
+}</code></pre><p>invalid request example:</p>
+<pre class="hljs"><code>curl --header <span class="hljs-string">"Content-Type: application/json"</span> --header <span class="hljs-string">"Tfa-Token: token"</span> -X POST <span class="hljs-string">"http://my.example.com:5001/remote/api/v1/tfa"</span> --data @request_data</code></pre><p>response example:</p>
+<pre class="hljs"><code>
+    <span class="hljs-string">"status"</span>: <span class="hljs-string">"ok"</span>,
+    <span class="hljs-string">"data"</span>: {
+        <span class="hljs-attr">"win_count"</span>: <span class="hljs-number">23</span>,
+        <span class="hljs-attr">"saved_filters"</span>: [
+            {
+                <span class="hljs-attr">"readonly"</span>: <span class="hljs-literal">true</span>,
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">-1</span>,
+                <span class="hljs-attr">"name"</span>: <span class="hljs-string">"\u041f\u0456\u0434\u043f\u0438\u0441\u043a\u0430 \u043f\u043e \u043a\u0430\u0442\u0435\u0433\u043e\u0440\u0456\u044f\u043c"</span>
+            },
+            {
+                <span class="hljs-attr">"readonly"</span>: <span class="hljs-literal">true</span>,
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">-2</span>,
+                <span class="hljs-attr">"name"</span>: <span class="hljs-string">"\u041f\u0456\u0434\u043f\u0438\u0441\u043a\u0430 \u043d\u0430 \u0437\u0430\u043c\u043e\u0432\u043d\u0438\u043a\u0430"</span>
+            },
+            {
+                <span class="hljs-attr">"readonly"</span>: <span class="hljs-literal">false</span>,
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">1</span>,
+                <span class="hljs-attr">"name"</span>: <span class="hljs-string">"save"</span>
+            },
+            {
+                <span class="hljs-attr">"readonly"</span>: <span class="hljs-literal">false</span>,
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">2</span>,
+                <span class="hljs-attr">"name"</span>: <span class="hljs-string">"12341234"</span>
+            },
+            {
+                <span class="hljs-attr">"readonly"</span>: <span class="hljs-literal">false</span>,
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">3</span>,
+                <span class="hljs-attr">"name"</span>: <span class="hljs-string">"agfasdf"</span>
+            },
+            {
+                <span class="hljs-attr">"readonly"</span>: <span class="hljs-literal">false</span>,
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">4</span>,
+                <span class="hljs-attr">"name"</span>: <span class="hljs-string">"test_all_fields"</span>
+            },
+            {
+                <span class="hljs-attr">"readonly"</span>: <span class="hljs-literal">false</span>,
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">5</span>,
+                <span class="hljs-attr">"name"</span>: <span class="hljs-string">"fads"</span>
+            },
+            {
+                <span class="hljs-attr">"readonly"</span>: <span class="hljs-literal">false</span>,
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">6</span>,
+                <span class="hljs-attr">"name"</span>: <span class="hljs-string">"mob_ali"</span>
+            },
+            {
+                <span class="hljs-attr">"readonly"</span>: <span class="hljs-literal">false</span>,
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">7</span>,
+                <span class="hljs-attr">"name"</span>: <span class="hljs-string">"mob_ali"</span>
+            },
+            {
+                <span class="hljs-attr">"readonly"</span>: <span class="hljs-literal">false</span>,
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">10</span>,
+                <span class="hljs-attr">"name"</span>: <span class="hljs-string">"adsfasdfasdf"</span>
+            },
+            {
+                <span class="hljs-attr">"readonly"</span>: <span class="hljs-literal">false</span>,
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">11</span>,
+                <span class="hljs-attr">"name"</span>: <span class="hljs-string">"adsfasdfasdf"</span>
+            },
+            {
+                <span class="hljs-attr">"readonly"</span>: <span class="hljs-literal">false</span>,
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">8</span>,
+                <span class="hljs-attr">"name"</span>: <span class="hljs-literal">null</span>
+            },
+            {
+                <span class="hljs-attr">"readonly"</span>: <span class="hljs-literal">false</span>,
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">9</span>,
+                <span class="hljs-attr">"name"</span>: <span class="hljs-string">"999999999"</span>
+            },
+            {
+                <span class="hljs-attr">"readonly"</span>: <span class="hljs-literal">false</span>,
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">15</span>,
+                <span class="hljs-attr">"name"</span>: <span class="hljs-string">"adsfasdfasdf"</span>
+            },
+            {
+                <span class="hljs-attr">"readonly"</span>: <span class="hljs-literal">false</span>,
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">16</span>,
+                <span class="hljs-attr">"name"</span>: <span class="hljs-string">"adsfasdfasdf"</span>
+            },
+            {
+                <span class="hljs-attr">"readonly"</span>: <span class="hljs-literal">false</span>,
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">17</span>,
+                <span class="hljs-attr">"name"</span>: <span class="hljs-string">"adsfasdfasdf"</span>
+            },
+            {
+                <span class="hljs-attr">"readonly"</span>: <span class="hljs-literal">false</span>,
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">20</span>,
+                <span class="hljs-attr">"name"</span>: <span class="hljs-string">"adsfasdfasdf"</span>
+            },
+            {
+                <span class="hljs-attr">"readonly"</span>: <span class="hljs-literal">false</span>,
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">21</span>,
+                <span class="hljs-attr">"name"</span>: <span class="hljs-string">"adsfasdfasdf"</span>
+            },
+            {
+                <span class="hljs-attr">"readonly"</span>: <span class="hljs-literal">false</span>,
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">26</span>,
+                <span class="hljs-attr">"name"</span>: <span class="hljs-string">"{adsfasdfasdf}"</span>
+            }
+        ],
+        <span class="hljs-attr">"merchant_type"</span>: <span class="hljs-string">"supplier"</span>,
+        <span class="hljs-attr">"employee_last_name"</span>: <span class="hljs-string">"\u0444\u0432\u044b\u0430\u044b\u0444\u0432\u0430"</span>,
+        <span class="hljs-attr">"employee_first_name"</span>: <span class="hljs-string">"\u0444\u044b\u0430\u0444\u044b\u0432"</span>,
+        <span class="hljs-attr">"merchants"</span>: [
+            {
+                <span class="hljs-attr">"is_current"</span>: <span class="hljs-literal">true</span>,
+                <span class="hljs-attr">"role"</span>: <span class="hljs-string">"admin"</span>,
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">55138</span>,
+                <span class="hljs-attr">"name"</span>: <span class="hljs-string">"\u0422\u041e\u0412 \"some76\""</span>
+            },
+            {
+                <span class="hljs-attr">"is_current"</span>: <span class="hljs-literal">false</span>,
+                <span class="hljs-attr">"role"</span>: <span class="hljs-string">"admin"</span>,
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">55316</span>,
+                <span class="hljs-attr">"name"</span>: <span class="hljs-string">"\u0424\u041e\u041f \"\u0413\u0440\u0438\u0431\u044b\""</span>
+            },
+            {
+                <span class="hljs-attr">"is_current"</span>: <span class="hljs-literal">false</span>,
+                <span class="hljs-attr">"role"</span>: <span class="hljs-string">"admin"</span>,
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">55328</span>,
+                <span class="hljs-attr">"name"</span>: <span class="hljs-string">"asdfasdfasdf"</span>
+            }
+        ],
+        <span class="hljs-attr">"is_state"</span>: <span class="hljs-literal">false</span>,
+        <span class="hljs-attr">"manager"</span>: {
+            <span class="hljs-attr">"name_ru"</span>: <span class="hljs-string">"asdfasdf"</span>,
+            <span class="hljs-attr">"phones"</span>: [
+                <span class="hljs-string">"123123123"</span>,
+                <span class="hljs-string">"+38 067 827 00 11"</span>,
+                <span class="hljs-string">"+38 050 827 00 11"</span>,
+                <span class="hljs-string">"+38 063 827 00 11"</span>
+            ],
+            <span class="hljs-attr">"image"</span>: <span class="hljs-string">"http://my.example.com:5001/media/files/1243719_teyt_img.png"</span>,
+            <span class="hljs-attr">"name_uk"</span>: <span class="hljs-string">"asdfasdf"</span>,
+            <span class="hljs-attr">"phone"</span>: <span class="hljs-string">"123123123"</span>,
+            <span class="hljs-attr">"name_en"</span>: <span class="hljs-string">"asdfasdf"</span>,
+            <span class="hljs-attr">"email"</span>: <span class="hljs-string">"sdfasdsdsddf@asdfasdf.ss"</span>
+        },
+        <span class="hljs-attr">"balance"</span>: <span class="hljs-number">1041207285.0</span>,
+        <span class="hljs-attr">"is_verified"</span>: <span class="hljs-literal">true</span>,
+        <span class="hljs-attr">"email"</span>: <span class="hljs-string">"some76@mailinator.com"</span>,
+        <span class="hljs-attr">"merchant_name"</span>: <span class="hljs-string">"\u0422\u041e\u0412 \"some76\""</span>
+    },
+    <span class="hljs-string">"acc_token"</span>: <span class="hljs-string">"9b765a194eb3ff2537d45d0b61b97448f1836c1e"</span>
+}</code></pre>    </article>
+  </body>
+</html>

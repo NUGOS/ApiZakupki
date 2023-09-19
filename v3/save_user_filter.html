@@ -1,0 +1,132 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimal-ui">
+    <title>Save user filter</title>
+    <link type="text/css" rel="stylesheet" href="../assets/css/github-markdown.css">
+    <link type="text/css" rel="stylesheet" href="../assets/css/pilcrow.css">
+    <link type="text/css" rel="stylesheet" href="../assets/css/hljs-github.min.css"/>
+  </head>
+  <body>
+    <article class="markdown-body"><h1 id="save-user-filter"><a class="header-link" href="#save-user-filter"></a>Save user filter</h1>
+<p><strong>POST remote/api/v3/save_filter</strong></p>
+<blockquote>
+<p>save search filters</p>
+</blockquote>
+<p>request headers:</p>
+<ul class="list">
+<li><em>Api-Agent</em> - type: string, required</li>
+<li><em>Acc-Token</em> - type: string, required</li>
+</ul>
+<p>possible request arguments:</p>
+<ul class="list">
+<li><em>filter_name</em> - type: string, required</li>
+<li><em>locations</em> - type: array of string, possible values - one or more <a href="./static.html">locations.value</a></li>
+<li><em>use_delivery_location</em> - type: bool</li>
+<li><em>primary_classifiers</em> - type: array of str, possible values - one or more <a href="./classifiers.html">primary_classifier.value</a></li>
+<li><em>amount_from</em> - type: float</li>
+<li><em>amount_to</em> - type: float</li>
+<li><em>merchant_name</em> - type: array of string, possible values - one or more <a href="../merchant_suggester.html">merchant_suggest.value</a></li>
+<li><em>method_type</em> - type: array of int, possible values - one or more <a href="./static.html">method_type.value</a></li>
+<li><em>range_date_created_dt_end</em> - type: string, values format <strong>YYYY-MM-DD</strong></li>
+<li><em>range_date_tendering_start_dt_start</em> - type: string, values format <strong>YYYY-MM-DD</strong></li>
+<li><em>range_date_tendering_start_dt_end</em> - type: string, values format <strong>YYYY-MM-DD</strong></li>
+<li><em>range_date_tendering_end_dt_start</em> - type: type: string, values format <strong>YYYY-MM-DD</strong></li>
+<li><em>range_date_tendering_end_dt_end</em> - type: type: string, values format <strong>YYYY-MM-DD</strong></li>
+<li><em>range_date_auction_start_dt_start</em> - type: type: string, values format <strong>YYYY-MM-DD</strong></li>
+<li><em>range_date_auction_start_dt_end</em> - type: string, values format <strong>YYYY-MM-DD</strong></li>
+<li><em>status</em> - type: array of int, possible values - one or more <a href="./static.html">status.value</a></li>
+<li><em>entity_type</em> - type: array of int, possible values - one or more <a href="./static.html">entity_type.value</a></li>
+<li><em>assignee_employee</em> - type: array of int, possible values - one or more <a href="../user_profile.html">idsassignment_data.available_users.id</a></li>
+<li><em>re</em> - type: int</li>
+<li><em>in</em> - type: int</li>
+<li><em>fp</em> - type: int, single, more details in <a href="./search.html">search</a></li>
+</ul>
+<p>possible response fields:</p>
+<ul class="list">
+<li><em>status</em> - type: str, values: ok/error</li>
+<li><em>errors</em> - type: array of objects, validation errors</li>
+<li><em>data</em> - type: object</li>
+<li><em>system</em> - type: str, system error messages</li>
+</ul>
+<p>possible response data fields:</p>
+<ul class="list">
+<li><em>status</em> - type: array of <strong>status</strong> objects or empty, possible values - one or more <a href="./static.html">stauses</a></li>
+<li><em>method_type</em> - type: array <strong>method_type</strong> objects or empty, possible values - one or more <a href="./static.html">method_types</a></li>
+<li><em>range_date_auction_start_dt_end</em> - type: date str or null, format <strong>YYYY-MM-DD</strong></li>
+<li><em>range_date_tendering_end_dt_start</em> - type: date str or null, format <strong>YYYY-MM-DD</strong></li>
+<li><em>locations</em> - type: array of <strong>location</strong> objects or empty, possible values - one or more <a href="./static.html">locations</a></li>
+<li><em>range_date_tendering_end_dt_end</em> - type: date str or null, format <strong>YYYY-MM-DD</strong></li>
+<li><em>amount_from</em> - type: float str or null</li>
+<li><em>amount_to</em> - type: float str or null</li>
+<li><em>range_date_created_dt_start</em> - type: date str or null, format <strong>YYYY-MM-DD</strong></li>
+<li><em>range_date_created_dt_end</em> - type: date str or null, format <strong>YYYY-MM-DD</strong></li>
+<li><em>keywords</em> - type: array of str or empty</li>
+<li><em>filter_id</em> - type: int (signed)</li>
+<li><em>range_date_auction_start_dt_start</em> - type: date str or null, format <strong>YYYY-MM-DD</strong></li>
+<li><em>range_date_tendering_start_dt_end</em> - type: date str or null, format <strong>YYYY-MM-DD</strong></li>
+<li><em>primary_classifier_id</em> - type: array of <strong>primary classifier</strong> objects or empty, see <a href="./classifiers.html">classifiers</a></li>
+<li><em>classifier_id</em> - type: array, always empty</li>
+<li><em>range_date_tendering_start_dt_start</em> - type: date str or null, format <strong>YYYY-MM-DD</strong></li>
+<li><em>merchant_name</em> - type: array of <strong>merchant_name</strong> objects or empty</li>
+<li><em>entity_type</em> - type: array of <strong>entity_type</strong> objects, described below</li>
+<li><em>re</em> - type: int</li>
+<li><em>in</em> - type: int</li>
+<li><em>fp</em> - type: int</li>
+</ul>
+<p>Example</p>
+<p>request:</p>
+<pre class="hljs"><code>clear &amp;&amp; curl -X POST --header <span class="hljs-string">"Acc-Token: 5a119647c3fa191ab60d41ed9fabf784453999d4"</span> --header <span class="hljs-string">"Api-Agent: zk_ios"</span> <span class="hljs-string">"http://my.example.com:5001/remote/api/v3/save_filter"</span> --data <span class="hljs-string">'{"filter_name": "v3", "primary_classifiers": ["03000000-1", "09000000-3", "14000000-1", "15000000-8"], "locations": ["95-98", "01-06"], "classifiers": ["01", "02"]}'</span> --header <span class="hljs-string">"Content-Type: application/json"</span> | json_pp</code></pre><p>response:</p>
+<pre class="hljs"><code>{
+   <span class="hljs-attr">"data"</span> : {
+      <span class="hljs-attr">"classifier_id"</span> : [],
+      <span class="hljs-attr">"entity_type"</span> : [],
+      <span class="hljs-attr">"filter_id"</span> : <span class="hljs-number">56</span>,
+      <span class="hljs-attr">"keywords"</span> : [],
+      <span class="hljs-attr">"locations"</span> : [
+         {
+            <span class="hljs-attr">"id"</span> : <span class="hljs-string">"95-98"</span>,
+            <span class="hljs-attr">"label"</span> : <span class="hljs-string">"АР Крим"</span>,
+            <span class="hljs-attr">"value"</span> : <span class="hljs-string">"95-98"</span>
+         },
+         {
+            <span class="hljs-attr">"id"</span> : <span class="hljs-string">"01-06"</span>,
+            <span class="hljs-attr">"label"</span> : <span class="hljs-string">"Київ"</span>,
+            <span class="hljs-attr">"value"</span> : <span class="hljs-string">"01-06"</span>
+         }
+      ],
+      <span class="hljs-attr">"primary_classifier_id"</span> : [
+         {
+            <span class="hljs-attr">"code"</span> : <span class="hljs-string">"14000000-1"</span>,
+            <span class="hljs-attr">"full_title"</span> : <span class="hljs-string">"14000000-1 Гірнича продукція, неблагородні метали та супутня продукція"</span>,
+            <span class="hljs-attr">"title"</span> : <span class="hljs-string">"Гірнича продукція, неблагородні метали та супутня продукція"</span>,
+            <span class="hljs-attr">"value"</span> : <span class="hljs-string">"14000000-1"</span>
+         },
+         {
+            <span class="hljs-attr">"code"</span> : <span class="hljs-string">"09000000-3"</span>,
+            <span class="hljs-attr">"full_title"</span> : <span class="hljs-string">"09000000-3 Нафтопродукти, паливо, електроенергія та інші джерела енергії"</span>,
+            <span class="hljs-attr">"title"</span> : <span class="hljs-string">"Нафтопродукти, паливо, електроенергія та інші джерела енергії"</span>,
+            <span class="hljs-attr">"value"</span> : <span class="hljs-string">"09000000-3"</span>
+         },
+         {
+            <span class="hljs-attr">"code"</span> : <span class="hljs-string">"03000000-1"</span>,
+            <span class="hljs-attr">"full_title"</span> : <span class="hljs-string">"03000000-1 Сільськогосподарська, фермерська продукція, продукція рибальства, лісівництва та супутня продукція"</span>,
+            <span class="hljs-attr">"title"</span> : <span class="hljs-string">"Сільськогосподарська, фермерська продукція, продукція рибальства, лісівництва та супутня продукція"</span>,
+            <span class="hljs-attr">"value"</span> : <span class="hljs-string">"03000000-1"</span>
+         },
+         {
+            <span class="hljs-attr">"code"</span> : <span class="hljs-string">"15000000-8"</span>,
+            <span class="hljs-attr">"full_title"</span> : <span class="hljs-string">"15000000-8 Продукти харчування, напої, тютюн та супутня продукція"</span>,
+            <span class="hljs-attr">"title"</span> : <span class="hljs-string">"Продукти харчування, напої, тютюн та супутня продукція"</span>,
+            <span class="hljs-attr">"value"</span> : <span class="hljs-string">"15000000-8"</span>
+         }
+      ],
+      <span class="hljs-attr">"status"</span> : []
+   },
+   <span class="hljs-attr">"errors"</span> : [],
+   <span class="hljs-attr">"status"</span> : <span class="hljs-string">"ok"</span>,
+   <span class="hljs-attr">"system"</span> : <span class="hljs-string">""</span>
+}</code></pre>    </article>
+  </body>
+</html>

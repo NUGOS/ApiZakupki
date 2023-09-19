@@ -1,0 +1,69 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimal-ui">
+    <title>Список сохраненных фильтров пользователя</title>
+    <link type="text/css" rel="stylesheet" href="assets/css/github-markdown.css">
+    <link type="text/css" rel="stylesheet" href="assets/css/pilcrow.css">
+    <link type="text/css" rel="stylesheet" href="assets/css/hljs-github.min.css"/>
+  </head>
+  <body>
+    <article class="markdown-body"><h1 id="список-сохраненных-фильтров-пользователя"><a class="header-link" href="#список-сохраненных-фильтров-пользователя"></a>Список сохраненных фильтров пользователя</h1>
+<p><strong>GET remote/api/v1/saved_filters</strong></p>
+<p>request headers:</p>
+<ul class="list">
+<li><em>Api-Agent</em> - type: string, required</li>
+<li><em>Acc-Token</em> - type: string, required</li>
+</ul>
+<p>possible response fields:</p>
+<ul class="list">
+<li><em>status</em> - type: str, values: ok/error</li>
+<li><em>errors</em> - type: array of objects, validation errors</li>
+<li><em>data</em> - type: object</li>
+<li><em>system</em> - type: str, system error messages</li>
+</ul>
+<p>possible data fields:</p>
+<ul class="list">
+<li><em>saved_filters</em> - type: array of <strong>saved_filter</strong> objects or empty, described below</li>
+</ul>
+<p>saved filter fields:</p>
+<ul class="list">
+<li><em>id</em> - type: int, signed</li>
+<li><em>name</em> - type: str</li>
+<li><em>readonly</em> - type: bool</li>
+<li><em>selected</em> - type: bool</li>
+</ul>
+<p>request example:</p>
+<pre class="hljs"><code>curl -X GET <span class="hljs-string">"http://my.example.com:5001/remote/api/v1/saved_filters"</span></code></pre><p>response example:</p>
+<pre class="hljs"><code>{
+  <span class="hljs-attr">"status"</span>: <span class="hljs-string">"ok"</span>,
+  <span class="hljs-attr">"errors"</span>: [],
+  <span class="hljs-attr">"data"</span>: {
+    <span class="hljs-attr">"saved_filters"</span>: [
+      {
+        <span class="hljs-attr">"id"</span>: <span class="hljs-number">-1</span>,
+        <span class="hljs-attr">"name"</span>: <span class="hljs-string">"Підписка по категоріям"</span>
+      },
+      {
+        <span class="hljs-attr">"id"</span>: <span class="hljs-number">-2</span>,
+        <span class="hljs-attr">"name"</span>: <span class="hljs-string">"Підписка на замовника"</span>
+      },
+      {
+        <span class="hljs-attr">"id"</span>: <span class="hljs-number">1</span>,
+        <span class="hljs-attr">"name"</span>: <span class="hljs-string">"save"</span>
+      },
+      {
+        <span class="hljs-attr">"id"</span>: <span class="hljs-number">2</span>,
+        <span class="hljs-attr">"name"</span>: <span class="hljs-string">"12341234"</span>
+      },
+      {
+        <span class="hljs-attr">"id"</span>: <span class="hljs-number">3</span>,
+        <span class="hljs-attr">"name"</span>: <span class="hljs-string">"agfasdf"</span>
+      }
+    ]
+  },
+  <span class="hljs-attr">"system"</span>: []
+}</code></pre>    </article>
+  </body>
+</html>

@@ -1,0 +1,164 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimal-ui">
+    <title>Данные из OpenDataBot</title>
+    <link type="text/css" rel="stylesheet" href="assets/css/github-markdown.css">
+    <link type="text/css" rel="stylesheet" href="assets/css/pilcrow.css">
+    <link type="text/css" rel="stylesheet" href="assets/css/hljs-github.min.css"/>
+  </head>
+  <body>
+    <article class="markdown-body"><h1 id="данные-из-opendatabot"><a class="header-link" href="#данные-из-opendatabot"></a>Данные из OpenDataBot</h1>
+<p><strong>GET remote/api/v2/bot_data?srn={srn|inn}</strong></p>
+<p>request headers:</p>
+<ul class="list">
+<li><em>Api-Agent</em> - type: string, reuqired</li>
+<li><em>Acc-Token</em> - type: string, required</li>
+</ul>
+<blockquote>
+<p>возвращает данные о ЕДРПОУ/ИНН если таки есть в OpenDataBot наееные по <strong>srn</strong></p>
+</blockquote>
+<p>possible request arguments:</p>
+<ul class="list">
+<li><em>srn</em> - type: string, required</li>
+</ul>
+<p>possible response fields:</p>
+<ul class="list">
+<li><em>status</em> - type: str, values: ok/error</li>
+<li><em>errors</em> - type: array of objects, validation errors</li>
+<li><em>data</em> - type: object</li>
+<li><em>system</em> - type: str, system error messages</li>
+</ul>
+<p>possible response data fields:</p>
+<ul class="list">
+<li><em>status</em> - type: string</li>
+<li><em>activities</em> - type: string</li>
+<li><em>ceo_name</em> - type: string</li>
+<li><em>pdv_code</em> - type: string,</li>
+<li><em>short_name</em> - type: string</li>
+<li><em>parsedOwnership</em> - type: int or null,</li>
+<li><em>parsedLocation</em> - type: <strong>parsedLocation</strong> object, described below</li>
+<li><em>beneficiaries</em> - type: array of <strong>beneficiaries</strong> objects, described below</li>
+<li><em>code</em> - type: string,</li>
+<li><em>location</em> - type: string</li>
+<li><em>full_name</em> - type: string</li>
+<li><em>database_date</em> - type: datetime string, format <strong>yyyy-mm-dd HH:MM:SS</strong></li>
+<li><em>pdv_status</em> - type: string</li>
+<li><em>phones</em> - type: arrays of string</li>
+<li><em>registration_date</em> - type: date string, format <strong>yyyy-mm-dd</strong></li>
+<li><em>sex</em> - type: string</li>
+<li><em>last_date</em> - type: datetime string, format <strong>yyyy-mm-dd HH:MM:SS</strong></li>
+<li><em>birth_date</em> - type: date string, format <strong>yyyy-mm-dd</strong></li>
+<li><em>additionally_activities</em> - type: array of string</li>
+<li><em>tax_debts</em> - type: object</li>
+<li><em>email</em> - type: string</li>
+<li><em>registration_number</em> - type: string</li>
+<li><em>history</em> - type: object or null</li>
+</ul>
+<p>parsedLocation object fields:</p>
+<ul class="list">
+<li><em>city</em> - type: string</li>
+<li><em>code</em> - type: string</li>
+<li><em>street</em> - type: string</li>
+<li><em>district</em> - type: string or null</li>
+<li><em>regionNameUK</em> - type: string</li>
+<li><em>regionId</em> - type: int</li>
+<li><em>countryId</em> - type: int</li>
+<li><em>regionName</em> - type: string</li>
+</ul>
+<p>beneficiaries object fields:</p>
+<ul class="list">
+<li><em>capital</em> - type: int</li>
+<li><em>location</em> - type: string</li>
+<li><em>title</em> - type: string</li>
+</ul>
+<h2 id="examples"><a class="header-link" href="#examples"></a>Examples</h2>
+<p>request</p>
+<pre class="hljs"><code>curl -X GET -H <span class="hljs-string">"Acc-Token: token"</span> -H <span class="hljs-string">"Api-Agent: zk_ios"</span> <span class="hljs-string">"http://my.example.com:5001/remote/api/v2/bot_data"</span></code></pre><p>response</p>
+<pre class="hljs"><code>{
+    <span class="hljs-attr">"status"</span>: <span class="hljs-string">"error"</span>,
+    <span class="hljs-attr">"errors"</span>: [],
+    <span class="hljs-attr">"system"</span>: <span class="hljs-string">"invalid srn"</span>
+}</code></pre><p>request</p>
+<pre class="hljs"><code>curl -X GET -H <span class="hljs-string">"Acc-Token: token"</span> -H <span class="hljs-string">"Api-Agent: zk_ios"</span> <span class="hljs-string">"http://my.example.com:5001/remote/api/v2/bot_data?srn=3215802814"</span></code></pre><p>response</p>
+<pre class="hljs"><code>{
+    <span class="hljs-attr">"status"</span>: <span class="hljs-string">"ok"</span>,
+    <span class="hljs-attr">"errors"</span>: [],
+    <span class="hljs-attr">"data"</span>: {
+        <span class="hljs-attr">"status"</span>: <span class="hljs-string">"зареєстровано"</span>,
+        <span class="hljs-attr">"activities"</span>: <span class="hljs-string">"62.01 Комп'ютерне програмування"</span>,
+        <span class="hljs-attr">"code"</span>: <span class="hljs-string">"3215802814"</span>,
+        <span class="hljs-attr">"pdv_code"</span>: <span class="hljs-string">""</span>,
+        <span class="hljs-attr">"phones"</span>: [
+            <span class="hljs-string">"0952095694"</span>
+        ],
+        <span class="hljs-attr">"registration_date"</span>: <span class="hljs-string">"2014-08-26"</span>,
+        <span class="hljs-attr">"sex"</span>: <span class="hljs-string">"male"</span>,
+        <span class="hljs-attr">"parsedLocation"</span>: {
+            <span class="hljs-attr">"city"</span>: <span class="hljs-string">"місто Маріуполь"</span>,
+            <span class="hljs-attr">"code"</span>: <span class="hljs-string">"87553"</span>,
+            <span class="hljs-attr">"street"</span>: <span class="hljs-string">"Приморський район ВУЛИЦЯ ЛАТИШЕВА буд. 27 кв. 87"</span>,
+            <span class="hljs-attr">"district"</span>: <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"regionNameUK"</span>: <span class="hljs-string">"Донецька область"</span>,
+            <span class="hljs-attr">"regionId"</span>: <span class="hljs-number">4</span>,
+            <span class="hljs-attr">"countryId"</span>: <span class="hljs-number">1</span>,
+            <span class="hljs-attr">"regionName"</span>: <span class="hljs-string">"Донецкая область"</span>
+        },
+        <span class="hljs-attr">"last_date"</span>: <span class="hljs-string">"2018-10-25 13:02:27"</span>,
+        <span class="hljs-attr">"pdv_status"</span>: <span class="hljs-string">""</span>,
+        <span class="hljs-attr">"location"</span>: <span class="hljs-string">"87553, Донецька обл., місто Маріуполь, Приморський район ВУЛИЦЯ ЛАТИШЕВА буд. 27 кв. 87"</span>,
+        <span class="hljs-attr">"full_name"</span>: <span class="hljs-string">"Погребняк Андрій Васильович"</span>,
+        <span class="hljs-attr">"parsedOwnership"</span>: <span class="hljs-number">2</span>,
+        <span class="hljs-attr">"birth_date"</span>: <span class="hljs-string">"1988-01-17"</span>,
+        <span class="hljs-attr">"additionally_activities"</span>: [
+            <span class="hljs-string">"58.29 Видання іншого програмного забезпечення"</span>,
+            <span class="hljs-string">"62.02 Консультування з питань інформатизації"</span>,
+            <span class="hljs-string">"62.09 Інша діяльність у сфері інформаційних технологій і комп'ютерних систем"</span>,
+            <span class="hljs-string">"63.11 Оброблення даних, розміщення інформації на веб-вузлах і пов'язана з ними діяльність"</span>
+        ],
+        <span class="hljs-attr">"tax_debts"</span>: {},
+        <span class="hljs-attr">"email"</span>: <span class="hljs-string">"fashust.nefor@gmail.com"</span>,
+        <span class="hljs-attr">"registration_number"</span>: <span class="hljs-string">"22740000000034832"</span>,
+        <span class="hljs-attr">"history"</span>: <span class="hljs-literal">null</span>
+    },
+    <span class="hljs-attr">"system"</span>: <span class="hljs-string">""</span>
+}</code></pre><p>request</p>
+<pre class="hljs"><code>curl -X GET -H <span class="hljs-string">"Acc-Token: token"</span> -H <span class="hljs-string">"Api-Agent: zk_ios"</span> <span class="hljs-string">"http://my.example.com:5001/remote/api/v2/bot_data?srn=03767831"</span></code></pre><p>response</p>
+<pre class="hljs"><code>{
+    <span class="hljs-attr">"status"</span>: <span class="hljs-string">"ok"</span>,
+    <span class="hljs-attr">"errors"</span>: [],
+    <span class="hljs-attr">"data"</span>: {
+        <span class="hljs-attr">"status"</span>: <span class="hljs-string">"зареєстровано"</span>,
+        <span class="hljs-attr">"activities"</span>: <span class="hljs-string">"84.12 Регулювання у сферах охорони здоров'я, освіти, культури та інших соціальних сферах, крім обов'язкового соціального страхування"</span>,
+        <span class="hljs-attr">"ceo_name"</span>: <span class="hljs-string">"Сириця Тарас Федорович"</span>,
+        <span class="hljs-attr">"pdv_code"</span>: <span class="hljs-string">""</span>,
+        <span class="hljs-attr">"short_name"</span>: <span class="hljs-string">"УПРАВЛІННЯ \"УКРСПОРТЗАБЕЗПЕЧЕННЯ\""</span>,
+        <span class="hljs-attr">"parsedOwnership"</span>: <span class="hljs-literal">null</span>,
+        <span class="hljs-attr">"parsedLocation"</span>: {
+            <span class="hljs-attr">"city"</span>: <span class="hljs-string">"Киев"</span>,
+            <span class="hljs-attr">"code"</span>: <span class="hljs-string">"01001"</span>,
+            <span class="hljs-attr">"street"</span>: <span class="hljs-string">"Печерський район ВУЛИЦЯ ЕСПЛАНАДНА будинок 30-Б"</span>,
+            <span class="hljs-attr">"district"</span>: <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"regionNameUK"</span>: <span class="hljs-string">"Київ"</span>,
+            <span class="hljs-attr">"regionId"</span>: <span class="hljs-number">26</span>,
+            <span class="hljs-attr">"countryId"</span>: <span class="hljs-number">1</span>,
+            <span class="hljs-attr">"regionName"</span>: <span class="hljs-string">"Киев"</span>
+        },
+        <span class="hljs-attr">"beneficiaries"</span>: [
+            {
+                <span class="hljs-attr">"capital"</span>: <span class="hljs-number">0</span>,
+                <span class="hljs-attr">"location"</span>: <span class="hljs-string">""</span>,
+                <span class="hljs-attr">"title"</span>: <span class="hljs-string">"МІНІСТЕРСТВО МОЛОДІ ТА СПОРТУ УКРАЇНИ"</span>
+            }
+        ],
+        <span class="hljs-attr">"code"</span>: <span class="hljs-string">"03767831"</span>,
+        <span class="hljs-attr">"location"</span>: <span class="hljs-string">"01001, м.Київ, Печерський район, ВУЛИЦЯ ЕСПЛАНАДНА, будинок 30-Б"</span>,
+        <span class="hljs-attr">"full_name"</span>: <span class="hljs-string">"ДЕРЖАВНА УСТАНОВА \"УПРАВЛІННЯ ЗБІРНИХ КОМАНД ТА ЗАБЕЗПЕЧЕННЯ СПОРТИВНИХ ЗАХОДІВ \"УКРСПОРТЗАБЕЗПЕЧЕННЯ\""</span>,
+        <span class="hljs-attr">"database_date"</span>: <span class="hljs-string">"2018-09-21 10:51:22"</span>,
+        <span class="hljs-attr">"pdv_status"</span>: <span class="hljs-string">""</span>
+    },
+    <span class="hljs-attr">"system"</span>: <span class="hljs-string">""</span>
+}</code></pre>    </article>
+  </body>
+</html>

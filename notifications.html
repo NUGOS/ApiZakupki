@@ -1,0 +1,458 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimal-ui">
+    <title>Уведомления</title>
+    <link type="text/css" rel="stylesheet" href="assets/css/github-markdown.css">
+    <link type="text/css" rel="stylesheet" href="assets/css/pilcrow.css">
+    <link type="text/css" rel="stylesheet" href="assets/css/hljs-github.min.css"/>
+  </head>
+  <body>
+    <article class="markdown-body"><h1 id="уведомления"><a class="header-link" href="#уведомления"></a>Уведомления</h1>
+<h2 id="список-уведомлений"><a class="header-link" href="#список-уведомлений"></a>Список уведомлений</h2>
+<p><strong>GET remote/api/v1/notifications</strong></p>
+<p>request headers:</p>
+<ul class="list">
+<li><em>Api-Agent</em> - type: string, reuqired</li>
+</ul>
+<blockquote>
+<p>Уведомления доступные в кабинете/api</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>event_name</th>
+<th>description</th>
+<th>icon</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>info_question_answered</td>
+<td>появился ответ на вопрос</td>
+<td>alarm</td>
+</tr>
+<tr>
+<td>info_note_publication</td>
+<td>новинки функционала и любые другие системные уведомления</td>
+<td>mail,alarm,magic,rocket</td>
+</tr>
+<tr>
+<td>supplier_verification_notification</td>
+<td>уведомление о верификации</td>
+<td>mail</td>
+</tr>
+<tr>
+<td>state_purchase_edited_event</td>
+<td>закупка, в которую было подано предложение была изменена</td>
+<td>alarm</td>
+</tr>
+<tr>
+<td>new_features_notification_supplier</td>
+<td>уведомление о новых возможностях для поставщика</td>
+<td>mail</td>
+</tr>
+<tr>
+<td>new_features_notification_purchasing_agent</td>
+<td>уведомление о новых возможностях для заказчика</td>
+<td>mail</td>
+</tr>
+<tr>
+<td>my_note</td>
+<td>????</td>
+<td>mail</td>
+</tr>
+<tr>
+<td>awaiting_profile_information</td>
+<td>уведомленио о необходимости заполнить инфо о компании</td>
+<td>mail</td>
+</tr>
+<tr>
+<td>awaiting_verification</td>
+<td>уведомление о необходимости верификации</td>
+<td>mail</td>
+</tr>
+<tr>
+<td>unanswered_question</td>
+<td>появился неотвеченный вопрос</td>
+<td>mail</td>
+</tr>
+<tr>
+<td>new_complaint</td>
+<td>появилась новая жалоба</td>
+<td>mail</td>
+</tr>
+<tr>
+<td>new_claim</td>
+<td>появилось новое требование</td>
+<td>mail</td>
+</tr>
+<tr>
+<td>purchasing_agent_unanswered_question</td>
+<td>появился новый неотвеченный вопрос (заказчик)</td>
+<td>alarm</td>
+</tr>
+<tr>
+<td>purchasing_agent_new_complaint</td>
+<td>появилась новая жалоба</td>
+<td>alarm</td>
+</tr>
+<tr>
+<td>purchasing_agent_new_claim</td>
+<td>появилось новое требование</td>
+<td>alarm</td>
+</tr>
+<tr>
+<td>purchasing_agent_awaiting_profile_information</td>
+<td>уведомленио о необходимости заполнить инфо о компании</td>
+<td>mail</td>
+</tr>
+<tr>
+<td>purchasing_agent_awaiting_verification</td>
+<td>уведомление о необходимости верификации</td>
+<td>mail</td>
+</tr>
+<tr>
+<td>state_purchase_winner_chosen</td>
+<td>выбран победитель в закупке</td>
+<td>mail</td>
+</tr>
+<tr>
+<td>state_award_winner_chosen</td>
+<td>выбран победитель в закупке</td>
+<td>mail</td>
+</tr>
+<tr>
+<td>state_award_lot_winner_chosen</td>
+<td>выбран победитель в лоте</td>
+<td>mail</td>
+</tr>
+<tr>
+<td>state_award_lot_won</td>
+<td>вы подебили в лоте</td>
+<td>mail</td>
+</tr>
+<tr>
+<td>state_award_won</td>
+<td>вы победили в закупке</td>
+<td>mail</td>
+</tr>
+<tr>
+<td>state_award_disqualified</td>
+<td>предлоение дисквалифицированно</td>
+<td>mail</td>
+</tr>
+<tr>
+<td>state_award_lot_disqualified</td>
+<td>предложение в лоте дисквалифицированно</td>
+<td>mail</td>
+</tr>
+<tr>
+<td>state_award_unfinished_confirmation</td>
+<td>не завершено подтверждение квалификации</td>
+<td>mail</td>
+</tr>
+<tr>
+<td>state_award_lot_unfinished_confirmation</td>
+<td>не завершено подтверждение квалификации в лоте</td>
+<td>mail</td>
+</tr>
+<tr>
+<td>state_award_pending</td>
+<td>предложение рассмотриватется</td>
+<td>mail</td>
+</tr>
+<tr>
+<td>state_award_lot_pending</td>
+<td>предложение в ллот рассматривается</td>
+<td>mail</td>
+</tr>
+<tr>
+<td>state_offer_failed_to_auto_activate</td>
+<td>возниклил проблемы с автоактивацией предложения</td>
+<td>mail</td>
+</tr>
+<tr>
+<td>purchase_sent_to_review</td>
+<td>закупка отправлена на review</td>
+<td>mail</td>
+</tr>
+<tr>
+<td>purchase_reviewed</td>
+<td>закупку отревьювели</td>
+<td>mail</td>
+</tr>
+</tbody>
+</table>
+<p>request headers:</p>
+<ul class="list">
+<li><em>Acc-Token</em> - type: string, required</li>
+</ul>
+<p>possible request arguments:</p>
+<ul class="list">
+<li><em>page</em> - type: int</li>
+<li><em>timestamp</em> - type: int or empty</li>
+</ul>
+<p>possible response fields:</p>
+<ul class="list">
+<li><em>status</em> - type: str, values: ok/error</li>
+<li><em>errors</em> - type: array of objects, validation errors</li>
+<li><em>data</em> - type: object</li>
+<li><em>system</em> - type: str, system error messages</li>
+</ul>
+<p>possible response data fields:</p>
+<ul class="list">
+<li><em>next_page</em> - type: int or null</li>
+<li><em>prev_page</em> - type: int or null</li>
+<li><em>notifications</em> - type: array of <strong>notification</strong> objects or empty, described below</li>
+<li><em>timestamp</em> - type: int</li>
+<li><em>current_page</em> - type: int</li>
+<li><em>total_pages</em> - type: int</li>
+<li><em>unread_count</em> - type: int</li>
+</ul>
+<p>notification object fields:</p>
+<ul class="list">
+<li><em>body_en</em> - type: str (could contain HTML code)</li>
+<li><em>body_ru</em> - type: str (could contain HTML code)</li>
+<li><em>body_uk</em> - type: str (could contain HTML code)</li>
+<li><em>status</em> - type: string</li>
+<li><em>event_id</em> - type: str</li>
+<li><em>is_read</em> - type: boolean</li>
+<li><em>created_datetime</em> - type: datetime str, format <strong>YYYY-MM-DD HH:MM:SS.f</strong></li>
+<li><em>disable</em> - type: boolean - if value set to false notification could be marked as read and back</li>
+<li><em>service_id</em> - type: int</li>
+<li><em>delivery_status</em> - type: str</li>
+<li><em>_id</em> - type: str</li>
+<li><em>type</em> - type: sty</li>
+<li><em>sent_datetime</em> - type: datetime str, format <strong>YYYY-MM-DD HH:MM:SS.f</strong></li>
+<li><em>event_name</em> - type: str</li>
+</ul>
+<p>request example:</p>
+<pre class="hljs"><code>curl -X GET --header <span class="hljs-string">"Acc-Token: eyJlbXBsb3llZSI6NjEyNjEsIm1lcmNoYW50Ijo1NTEzOH0.C8di6Q.JPtyyp32oH7KaM7WqyjQPE0SoXA"</span> -X GET <span class="hljs-string">"http://my.example.com:5001/remote/api/v1/notifications?\
+timestamp=1493907357&amp;\
+page=2"</span></code></pre><p>response example:</p>
+<pre class="hljs"><code>{
+  <span class="hljs-attr">"status"</span>: <span class="hljs-string">"ok"</span>,
+  <span class="hljs-attr">"errors"</span>: [
+  ],
+  <span class="hljs-attr">"data"</span>: {
+    <span class="hljs-attr">"next_page"</span>: <span class="hljs-literal">null</span>,
+    <span class="hljs-attr">"prev_page"</span>: <span class="hljs-literal">null</span>,
+    <span class="hljs-attr">"notifications"</span>: [
+      {
+        <span class="hljs-attr">"status"</span>: <span class="hljs-string">"published"</span>,
+        <span class="hljs-attr">"is_read"</span>: <span class="hljs-literal">false</span>,
+        <span class="hljs-attr">"event_id"</span>: <span class="hljs-string">"01f10b8e9da149bca19552e7d689ba78"</span>,
+        <span class="hljs-attr">"body_uk"</span>: <span class="hljs-string">"uk_text\n"</span>,
+        <span class="hljs-attr">"created_datetime"</span>: <span class="hljs-string">"2017-07-05 09:08:39.395000"</span>,
+        <span class="hljs-attr">"event_name"</span>: <span class="hljs-string">"info_note_publication"</span>,
+        <span class="hljs-attr">"disable"</span>: <span class="hljs-literal">false</span>,
+        <span class="hljs-attr">"read"</span>: <span class="hljs-literal">false</span>,
+        <span class="hljs-attr">"body_ru"</span>: <span class="hljs-string">"ru_text\n"</span>,
+        <span class="hljs-attr">"service_id"</span>: <span class="hljs-number">100</span>,
+        <span class="hljs-attr">"delivery_status"</span>: <span class="hljs-string">"sent"</span>,
+        <span class="hljs-attr">"_id"</span>: <span class="hljs-string">"595cac9730b8991206a45c70"</span>,
+        <span class="hljs-attr">"type"</span>: <span class="hljs-string">"cabinet"</span>,
+        <span class="hljs-attr">"body_en"</span>: <span class="hljs-string">"en_text\n"</span>,
+        <span class="hljs-attr">"sent_datetime"</span>: <span class="hljs-string">"2017-07-05 09:08:40.336000"</span>
+      },
+      {
+        <span class="hljs-attr">"status"</span>: <span class="hljs-string">"published"</span>,
+        <span class="hljs-attr">"is_read"</span>: <span class="hljs-literal">true</span>,
+        <span class="hljs-attr">"event_id"</span>: <span class="hljs-string">"d770b8b5505c4ff69f618055af827e3e"</span>,
+        <span class="hljs-attr">"body_uk"</span>: <span class="hljs-string">"test123\n"</span>,
+        <span class="hljs-attr">"created_datetime"</span>: <span class="hljs-string">"2017-06-26 11:14:19.500000"</span>,
+        <span class="hljs-attr">"event_name"</span>: <span class="hljs-string">"info_note_publication"</span>,
+        <span class="hljs-attr">"disable"</span>: <span class="hljs-literal">false</span>,
+        <span class="hljs-attr">"read"</span>: <span class="hljs-literal">true</span>,
+        <span class="hljs-attr">"body_ru"</span>: <span class="hljs-string">"test123\n"</span>,
+        <span class="hljs-attr">"service_id"</span>: <span class="hljs-number">100</span>,
+        <span class="hljs-attr">"delivery_status"</span>: <span class="hljs-string">"sent"</span>,
+        <span class="hljs-attr">"_id"</span>: <span class="hljs-string">"5950ec8b5c3dfb76cb6065ce"</span>,
+        <span class="hljs-attr">"type"</span>: <span class="hljs-string">"cabinet"</span>,
+        <span class="hljs-attr">"body_en"</span>: <span class="hljs-string">"test123\n"</span>,
+        <span class="hljs-attr">"sent_datetime"</span>: <span class="hljs-string">"2017-06-26 11:14:19.811000"</span>
+      },
+      {
+        <span class="hljs-attr">"status"</span>: <span class="hljs-string">"published"</span>,
+        <span class="hljs-attr">"is_read"</span>: <span class="hljs-literal">true</span>,
+        <span class="hljs-attr">"event_id"</span>: <span class="hljs-string">"7981af9ad866463da2f54165f326502d"</span>,
+        <span class="hljs-attr">"body_uk"</span>: <span class="hljs-string">"gadsfasdf\n"</span>,
+        <span class="hljs-attr">"created_datetime"</span>: <span class="hljs-string">"2017-06-16 13:46:32.634000"</span>,
+        <span class="hljs-attr">"event_name"</span>: <span class="hljs-string">"info_note_publication"</span>,
+        <span class="hljs-attr">"disable"</span>: <span class="hljs-literal">true</span>,
+        <span class="hljs-attr">"read"</span>: <span class="hljs-literal">false</span>,
+        <span class="hljs-attr">"body_ru"</span>: <span class="hljs-string">"asfasdf\n"</span>,
+        <span class="hljs-attr">"service_id"</span>: <span class="hljs-number">100</span>,
+        <span class="hljs-attr">"delivery_status"</span>: <span class="hljs-string">"sent"</span>,
+        <span class="hljs-attr">"_id"</span>: <span class="hljs-string">"5943e1384e62deb512084514"</span>,
+        <span class="hljs-attr">"type"</span>: <span class="hljs-string">"cabinet"</span>,
+        <span class="hljs-attr">"body_en"</span>: <span class="hljs-string">"agsdfasdf\n"</span>,
+        <span class="hljs-attr">"sent_datetime"</span>: <span class="hljs-string">"2017-06-16 13:46:32.943000"</span>
+      },
+      {
+        <span class="hljs-attr">"status"</span>: <span class="hljs-string">"published"</span>,
+        <span class="hljs-attr">"is_read"</span>: <span class="hljs-literal">true</span>,
+        <span class="hljs-attr">"event_id"</span>: <span class="hljs-string">"16ed6cd43ec94cd9a5a38d0e5a21211a"</span>,
+        <span class="hljs-attr">"body_uk"</span>: <span class="hljs-string">"Тендер &lt;a href=\"/cabinet/purchases/state_purchase/view/262496\"&gt;UA-2017-05-22-000024-2&lt;/a&gt;, в который вы подали свое предложение, был отредактирован Закупщиком"</span>,
+        <span class="hljs-attr">"created_datetime"</span>: <span class="hljs-string">"2017-06-13 10:15:49.288000"</span>,
+        <span class="hljs-attr">"event_name"</span>: <span class="hljs-string">"state_purchase_edited_event"</span>,
+        <span class="hljs-attr">"disable"</span>: <span class="hljs-literal">true</span>,
+        <span class="hljs-attr">"read"</span>: <span class="hljs-literal">false</span>,
+        <span class="hljs-attr">"body_ru"</span>: <span class="hljs-string">"Тендер &lt;a href=\"/cabinet/purchases/state_purchase/view/262496\"&gt;UA-2017-05-22-000024-2&lt;/a&gt;, в который вы подали свое предложение, был отредактирован Закупщиком"</span>,
+        <span class="hljs-attr">"service_id"</span>: <span class="hljs-number">100</span>,
+        <span class="hljs-attr">"delivery_status"</span>: <span class="hljs-string">"sent"</span>,
+        <span class="hljs-attr">"_id"</span>: <span class="hljs-string">"593fbb55a6b5c627b9e2d3de"</span>,
+        <span class="hljs-attr">"type"</span>: <span class="hljs-string">"cabinet"</span>,
+        <span class="hljs-attr">"body_en"</span>: <span class="hljs-string">"Тендер &lt;a href=\"/cabinet/purchases/state_purchase/view/262496\"&gt;UA-2017-05-22-000024-2&lt;/a&gt;, в который вы подали свое предложение, был отредактирован Закупщиком"</span>,
+        <span class="hljs-attr">"sent_datetime"</span>: <span class="hljs-string">"2017-06-13 10:15:50.523000"</span>
+      },
+      {
+        <span class="hljs-attr">"status"</span>: <span class="hljs-string">"published"</span>,
+        <span class="hljs-attr">"is_read"</span>: <span class="hljs-literal">true</span>,
+        <span class="hljs-attr">"event_id"</span>: <span class="hljs-string">"4e73d83bbf4e49fa90042f304436e4c2"</span>,
+        <span class="hljs-attr">"body_uk"</span>: <span class="hljs-string">"test1\n"</span>,
+        <span class="hljs-attr">"created_datetime"</span>: <span class="hljs-string">"2017-06-12 13:08:09.041000"</span>,
+        <span class="hljs-attr">"event_name"</span>: <span class="hljs-string">"info_note_publication"</span>,
+        <span class="hljs-attr">"disable"</span>: <span class="hljs-literal">true</span>,
+        <span class="hljs-attr">"read"</span>: <span class="hljs-literal">false</span>,
+        <span class="hljs-attr">"body_ru"</span>: <span class="hljs-string">"test1\n"</span>,
+        <span class="hljs-attr">"service_id"</span>: <span class="hljs-number">100</span>,
+        <span class="hljs-attr">"delivery_status"</span>: <span class="hljs-string">"sent"</span>,
+        <span class="hljs-attr">"_id"</span>: <span class="hljs-string">"593e9239532d1cb2403a686a"</span>,
+        <span class="hljs-attr">"type"</span>: <span class="hljs-string">"cabinet"</span>,
+        <span class="hljs-attr">"body_en"</span>: <span class="hljs-string">"test1\n"</span>,
+        <span class="hljs-attr">"sent_datetime"</span>: <span class="hljs-string">"2017-06-12 13:08:09.080000"</span>
+      },
+      {
+        <span class="hljs-attr">"status"</span>: <span class="hljs-string">"published"</span>,
+        <span class="hljs-attr">"is_read"</span>: <span class="hljs-literal">true</span>,
+        <span class="hljs-attr">"event_id"</span>: <span class="hljs-string">"ab7789cded40451d9791d1814b7d39de"</span>,
+        <span class="hljs-attr">"body_uk"</span>: <span class="hljs-string">"test0\n"</span>,
+        <span class="hljs-attr">"created_datetime"</span>: <span class="hljs-string">"2017-06-12 13:07:58.495000"</span>,
+        <span class="hljs-attr">"event_name"</span>: <span class="hljs-string">"info_note_publication"</span>,
+        <span class="hljs-attr">"disable"</span>: <span class="hljs-literal">true</span>,
+        <span class="hljs-attr">"read"</span>: <span class="hljs-literal">false</span>,
+        <span class="hljs-attr">"body_ru"</span>: <span class="hljs-string">"test0\n"</span>,
+        <span class="hljs-attr">"service_id"</span>: <span class="hljs-number">100</span>,
+        <span class="hljs-attr">"delivery_status"</span>: <span class="hljs-string">"sent"</span>,
+        <span class="hljs-attr">"_id"</span>: <span class="hljs-string">"593e922e532d1cb2403a6852"</span>,
+        <span class="hljs-attr">"type"</span>: <span class="hljs-string">"cabinet"</span>,
+        <span class="hljs-attr">"body_en"</span>: <span class="hljs-string">"test0\n"</span>,
+        <span class="hljs-attr">"sent_datetime"</span>: <span class="hljs-string">"2017-06-12 13:07:58.582000"</span>
+      }
+    ],
+    <span class="hljs-attr">"timestamp"</span>: <span class="hljs-number">1499245786</span>,
+    <span class="hljs-attr">"current_page"</span>: <span class="hljs-number">1</span>,
+    <span class="hljs-attr">"total_pages"</span>: <span class="hljs-number">1</span>,
+    <span class="hljs-attr">"unread_count"</span>: [
+      {
+        <span class="hljs-attr">"body"</span>: <span class="hljs-string">"% if lang == 'ru':\nru_text\n% elif lang == 'en':\nen_text\n% elif lang == 'uk':\nuk_text\n% endif"</span>,
+        <span class="hljs-attr">"status"</span>: <span class="hljs-string">"published"</span>,
+        <span class="hljs-attr">"event_id"</span>: <span class="hljs-string">"01f10b8e9da149bca19552e7d689ba78"</span>,
+        <span class="hljs-attr">"created_datetime"</span>: <span class="hljs-string">"2017-07-05 09:08:39.395000"</span>,
+        <span class="hljs-attr">"event_name"</span>: <span class="hljs-string">"info_note_publication"</span>,
+        <span class="hljs-attr">"cabinet_meta"</span>: {
+          <span class="hljs-attr">"read"</span>: <span class="hljs-literal">null</span>,
+          <span class="hljs-attr">"subject"</span>: <span class="hljs-string">"title"</span>
+        },
+        <span class="hljs-attr">"read"</span>: <span class="hljs-literal">false</span>,
+        <span class="hljs-attr">"receiver"</span>: {
+          <span class="hljs-attr">"employee_id"</span>: <span class="hljs-string">"all@zk"</span>,
+          <span class="hljs-attr">"role"</span>: <span class="hljs-string">"group"</span>,
+          <span class="hljs-attr">"merchant_id"</span>: <span class="hljs-literal">null</span>
+        },
+        <span class="hljs-attr">"service_id"</span>: <span class="hljs-number">100</span>,
+        <span class="hljs-attr">"delivery_status"</span>: <span class="hljs-string">"sent"</span>,
+        <span class="hljs-attr">"_id"</span>: <span class="hljs-string">"595cac9730b8991206a45c70"</span>,
+        <span class="hljs-attr">"type"</span>: <span class="hljs-string">"cabinet"</span>,
+        <span class="hljs-attr">"sent_datetime"</span>: <span class="hljs-string">"2017-07-05 09:08:40.336000"</span>
+      }
+    ]
+  },
+  <span class="hljs-attr">"system"</span>: <span class="hljs-string">""</span>
+}</code></pre><h2 id="кол-во-непрочитанных-уведомлений"><a class="header-link" href="#кол-во-непрочитанных-уведомлений"></a>Кол-во непрочитанных уведомлений</h2>
+<p><strong>GET remote/api/v1/unread_notifications_count</strong></p>
+<p>request headers:</p>
+<ul class="list">
+<li><em>Acc-Token</em> - type: string, required</li>
+</ul>
+<p>possible response fields:</p>
+<ul class="list">
+<li><em>status</em> - type: str, values: ok/error</li>
+<li><em>errors</em> - type: array of objects, validation errors</li>
+<li><em>data</em> - type: object</li>
+<li><em>system</em> - type: str, system error messages</li>
+</ul>
+<p>possible response data fields:</p>
+<ul class="list">
+<li><em>count</em> - type: int</li>
+</ul>
+<p>request example:</p>
+<pre class="hljs"><code>curl -X GET --header <span class="hljs-string">"Acc-Token: eyJlbXBsb3llZSI6NjEyNjEsIm1lcmNoYW50Ijo1NTEzOH0.C8di6Q.JPtyyp32oH7KaM7WqyjQPE0SoXA"</span> -X GET <span class="hljs-string">"http://my.example.com:5001/remote/api/v1/unread_notifications_count"</span></code></pre><p>response example:</p>
+<pre class="hljs"><code>{  
+    <span class="hljs-attr">"status"</span>:<span class="hljs-string">"ok"</span>,
+    <span class="hljs-attr">"errors"</span>:[],
+    <span class="hljs-attr">"data"</span>:{  
+        <span class="hljs-attr">"count"</span>:<span class="hljs-number">3</span>
+    },
+    <span class="hljs-attr">"system"</span>:[]
+}</code></pre><h2 id="сделать-прочинанным/не-прочитанным"><a class="header-link" href="#сделать-прочинанным/не-прочитанным"></a>Сделать прочинанным/не прочитанным</h2>
+<p><strong>POST remote/api/v1/notifications/toggle_read?notification_id={_id}</strong></p>
+<blockquote>
+<p>_id - id уведомления</p>
+</blockquote>
+<p>request headers:</p>
+<ul class="list">
+<li><em>Acc-Token</em> - type: string, required</li>
+</ul>
+<p>request params:</p>
+<ul class="list">
+<li><em>notification_id</em> - type: str, required</li>
+</ul>
+<p>possible response fields:</p>
+<ul class="list">
+<li><em>status</em> - type: str, values: ok/error</li>
+<li><em>errors</em> - type: array of objects, validation errors</li>
+<li><em>data</em> - type: object</li>
+<li><em>system</em> - type: str, system error messages</li>
+</ul>
+<p>possible response data fields:</p>
+<ul class="list">
+<li>response <strong>data</strong> always empty</li>
+</ul>
+<p>request example:</p>
+<pre class="hljs"><code>curl -X POST --header <span class="hljs-string">"Acc-Token: eyJlbXBsb3llZSI6NjEyNjEsIm1lcmNoYW50Ijo1NTEzOH0.C8di6Q.JPtyyp32oH7KaM7WqyjQPE0SoXA"</span> -X GET <span class="hljs-string">"http://my.example.com:5001/remote/api/v1/notifications/toggle_read?notification_id=590ad7847d90be953bb1623b"</span></code></pre><p>response example:</p>
+<pre class="hljs"><code>{  
+    <span class="hljs-attr">"status"</span>:<span class="hljs-string">"ok"</span>,
+    <span class="hljs-attr">"errors"</span>:[],
+    <span class="hljs-attr">"data"</span>:{},
+    <span class="hljs-attr">"system"</span>:[]
+}</code></pre><h2 id="отметить-все-уведомления-как-прочитанные"><a class="header-link" href="#отметить-все-уведомления-как-прочитанные"></a>Отметить все уведомления как прочитанные</h2>
+<p><strong>POST remote/api/v1/notifications/all_read</strong></p>
+<p>request headers:</p>
+<ul class="list">
+<li><em>Acc-Token</em> - type: string, required</li>
+</ul>
+<p>possible response fields:</p>
+<ul class="list">
+<li><em>status</em> - type: str, values: ok/error</li>
+<li><em>errors</em> - type: array of objects, validation errors</li>
+<li><em>data</em> - type: object</li>
+<li><em>system</em> - type: str, system error messages</li>
+</ul>
+<p>possible response data fields:</p>
+<ul class="list">
+<li>response <strong>data</strong> always empty</li>
+</ul>
+<p>request example:</p>
+<pre class="hljs"><code>curl -X POST --header <span class="hljs-string">"Acc-Token: eyJlbXBsb3llZSI6NjEyNjEsIm1lcmNoYW50Ijo1NTEzOH0.C8di6Q.JPtyyp32oH7KaM7WqyjQPE0SoXA"</span> -X GET <span class="hljs-string">"http://my.example.com:5001/remote/api/v1/notifications/all_read"</span></code></pre><p>response example:</p>
+<pre class="hljs"><code>{  
+    <span class="hljs-attr">"status"</span>:<span class="hljs-string">"ok"</span>,
+    <span class="hljs-attr">"errors"</span>:[],
+    <span class="hljs-attr">"data"</span>:{},
+    <span class="hljs-attr">"system"</span>:[]
+}</code></pre>    </article>
+  </body>
+</html>

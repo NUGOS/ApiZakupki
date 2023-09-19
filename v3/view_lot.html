@@ -1,0 +1,1307 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimal-ui">
+    <title>Lot view</title>
+    <link type="text/css" rel="stylesheet" href="../assets/css/github-markdown.css">
+    <link type="text/css" rel="stylesheet" href="../assets/css/pilcrow.css">
+    <link type="text/css" rel="stylesheet" href="../assets/css/hljs-github.min.css"/>
+  </head>
+  <body>
+    <article class="markdown-body"><h1 id="lot-view"><a class="header-link" href="#lot-view"></a>Lot view</h1>
+<p><strong>GET remote/api/v3/view/{tender_uid}/lot/{lot_uid}</strong></p>
+<blockquote>
+<p>tender_uid - purchase <strong>uid</strong> from <a href="./view.html">purchase object</a>, required</p>
+</blockquote>
+<blockquote>
+<p>lot_uid - lot <strong>uid</strong> from <a href="./view.html">purchase lot object</a>, required</p>
+</blockquote>
+<p>request headers:</p>
+<ul class="list">
+<li><em>Api-Agent</em> - type: string, required</li>
+<li><em>Acc-Token</em> - type: string, required</li>
+</ul>
+<p>possible response fields:</p>
+<ul class="list">
+<li><em>status</em> - type: str, values: ok/error</li>
+<li><em>errors</em> - type: array of objects, validation errors</li>
+<li><em>data</em> - type: object</li>
+<li><em>system</em> - type: str, system error messages</li>
+</ul>
+<p>possible response data fields:</p>
+<ul class="list">
+<li><strong>amount</strong> - type: <strong>amount object</strong>, see <a href="./view.html">view purchase doc</a></li>
+<li><strong>assignee_supplier_employee</strong> - type: <strong>assignee supplier</strong> object or null, see <a href="./view.html">view purchase doc</a></li>
+<li><strong>enquiry_period</strong> - type: object, <strong>state period object</strong>, see <a href="./view.html">view purchase doc</a></li>
+<li><strong>tendering_period</strong> - type: object, <strong>state period object</strong>, see <a href="./view.html">view purchase doc</a></li>
+<li><strong>auction_period</strong> - type: object, <strong>state period object</strong>, see <a href="./view.html">view purchase doc</a></li>
+<li><strong>auction_url</strong> - type: str or null</li>
+<li><strong>cancellations</strong> - type: <strong>cancellation object</strong>s list, see <a href="./view.html">view purchase doc</a></li>
+<li><strong>claims_count</strong> - type: int</li>
+<li><strong>complaints_count</strong> - type: int</li>
+<li><strong>descr</strong> - type: str or null</li>
+<li><strong>descr_en</strong> - type: str or null</li>
+<li><strong>documents</strong> - type: <strong>documents object</strong>, see <a href="./view.html">view purchase doc</a></li>
+<li><strong>features</strong> - type: <strong>feature object</strong>s list, see <a href="./view.html">view purchase doc</a></li>
+<li><strong>guarantee</strong> - type: <strong>guarantee object</strong>, see <a href="./view.html">view purchase doc</a></li>
+<li><strong>id</strong> - type: str</li>
+<li><strong>is_blocked</strong> - type: bool</li>
+<li><strong>is_participate</strong> - type: bool</li>
+<li><strong>items</strong> - type: <strong>item object</strong>s list, see <a href="./view.html">view purchase doc</a></li>
+<li><strong>lot_status</strong> - type: int</li>
+<li><strong>lot_status_text</strong> - type: str</li>
+<li><strong>offers</strong> - type: <strong>offer object</strong>s list, see <a href="./view.html">view purchase doc</a></li>
+<li><strong>pre_qualification</strong> - type: <strong>pre_qualification object</strong>s list, see <a href="./view.html">view purchase doc</a></li>
+<li><strong>public_link_lot</strong> - type: str</li>
+<li><strong>public_link_tender</strong> - type: str</li>
+<li><strong>qualification</strong> - type: <strong>qualification</strong> objects list or empty, see <a href="./view.html">view purchase doc</a></li>
+<li><strong>questions_count</strong> - type: int</li>
+<li><strong>stage1_id</strong> - type: str or null</li>
+<li><strong>stage2_id</strong> - type: str or null</li>
+<li><strong>step</strong> - type: <strong>amount object</strong>, see <a href="./view.html">view purchase doc</a></li>
+<li><strong>title</strong> - type: str</li>
+<li><strong>title_en</strong> - type: str or null</li>
+<li><strong>tender_id</strong> - type: str</li>
+<li><strong>user_offer</strong> - type: <strong>offer</strong> object or null, see <a href="./view.html">view purchase doc</a></li>
+<li><strong>main_procurement_category</strong> - type: <strong>main_procurement_category object</strong> or null, see <a href="./view.html">view purchase doc</a></li>
+<li><strong>milestones</strong> - type: array of <strong>milestones</strong> objects, see <a href="./view.html">view purchase doc</a></li>
+<li><strong>cabinet_url</strong> - type: str</li>
+<li><strong>is_free</strong> - type: bool</li>
+<li><strong>max_awards_count</strong> - type: int or null</li>
+<li><strong>clarifications_until</strong> - type: str or null, format: <strong>yyyy-mm-ddTHH:MM:SS</strong></li>
+<li><strong>complaint_period</strong> - type: object, <strong>state period object</strong>, described below</li>
+<li><strong>invalidation_date</strong> - type: str or null, format: <strong>yyyy-mm-ddTHH:MM:SS</strong></li>
+<li><strong>agreement_duration</strong> - type: srt or null</li>
+</ul>
+<p>Examples:</p>
+<p>request:</p>
+<pre class="hljs"><code>clear &amp;&amp; curl -X GET --header <span class="hljs-string">"Acc-Token: 5a119647c3fa191ab60d41ed9fabf784453999d4"</span> --header <span class="hljs-string">"Api-Agent: zk_ios"</span> <span class="hljs-string">"http://my.example.com:5001/remote/api/v3/view/b3c4961cc07d48cdba8b2e21462d9443/lot/227cfc866c084bc8a09e0873e236f311"</span> | json_pp</code></pre><p>response:</p>
+<pre class="hljs"><code>{
+   <span class="hljs-attr">"data"</span> : {
+      <span class="hljs-attr">"amount"</span> : {
+         <span class="hljs-attr">"amount"</span> : <span class="hljs-number">123123</span>,
+         <span class="hljs-attr">"currency"</span> : <span class="hljs-string">"UAH"</span>,
+         <span class="hljs-attr">"valueAddedTaxIncluded"</span> : <span class="hljs-literal">false</span>
+      },
+      <span class="hljs-attr">"assignee_supplier_employee"</span> : <span class="hljs-literal">null</span>,
+      <span class="hljs-attr">"auction_period"</span> : {
+         <span class="hljs-attr">"end"</span> : <span class="hljs-string">"2019-07-16T12:38:21"</span>,
+         <span class="hljs-attr">"start"</span> : <span class="hljs-string">"2019-07-16T12:38:21"</span>
+      },
+      <span class="hljs-attr">"auction_url"</span> : <span class="hljs-string">"https://auction-sandbox.prozorro.gov.ua/tenders/6456c852c8ec4171b6261b8ca5a59be1_42f5c550b8cd47e7be912dd247fc331e/login?bidder_id=5781dd02185240de8674f466839c4df5&amp;hash=42e10d8bfe219ff0cffcebd633c96e11b761eec9"</span>,
+      <span class="hljs-attr">"cancellations"</span> : [],
+      <span class="hljs-attr">"claim_complaint_info"</span> : {
+         <span class="hljs-attr">"can_claim"</span> : <span class="hljs-literal">false</span>,
+         <span class="hljs-attr">"can_complaint"</span> : [],
+         <span class="hljs-attr">"claim_until"</span> : <span class="hljs-literal">null</span>,
+         <span class="hljs-attr">"complaint_until"</span> : <span class="hljs-literal">null</span>
+      },
+      <span class="hljs-attr">"claims_count"</span> : <span class="hljs-number">0</span>,
+      <span class="hljs-attr">"complaints_count"</span> : <span class="hljs-number">0</span>,
+      <span class="hljs-attr">"descr"</span> : <span class="hljs-string">"v3ml"</span>,
+      <span class="hljs-attr">"descr_en"</span> : <span class="hljs-string">""</span>,
+      <span class="hljs-attr">"documents"</span> : {
+         <span class="hljs-attr">"lot"</span> : [
+            {
+               <span class="hljs-attr">"dateModified"</span> : <span class="hljs-string">"2019-07-16T10:55:22"</span>,
+               <span class="hljs-attr">"datePublished"</span> : <span class="hljs-string">"2019-07-16T10:55:22"</span>,
+               <span class="hljs-attr">"history"</span> : [],
+               <span class="hljs-attr">"id"</span> : <span class="hljs-string">"a89c3560188a430d969b35796fcb3456"</span>,
+               <span class="hljs-attr">"mimetype"</span> : <span class="hljs-string">"text/plain"</span>,
+               <span class="hljs-attr">"title"</span> : <span class="hljs-string">"test1.txt"</span>,
+               <span class="hljs-attr">"url"</span> : <span class="hljs-string">"https://public-docs-sandbox.prozorro.gov.ua/get/03addc082f4b46088dbd9b5d0db97fcb?KeyID=1331dc52&amp;Signature=wWn5Jf4cGhw%2FwHeRsJfhesnvy5JF0shipt7EAnr6i1UIZo5elZmWy2Eu%252BqLXDmC2OHGa73kebteb%2F8pCryo3Cg%253D%253D"</span>
+            },
+            {
+               <span class="hljs-attr">"dateModified"</span> : <span class="hljs-string">"2019-07-16T10:55:34"</span>,
+               <span class="hljs-attr">"datePublished"</span> : <span class="hljs-string">"2019-07-16T10:55:34"</span>,
+               <span class="hljs-attr">"history"</span> : [],
+               <span class="hljs-attr">"id"</span> : <span class="hljs-string">"e92dd706817a456fb6595ab2593974e0"</span>,
+               <span class="hljs-attr">"mimetype"</span> : <span class="hljs-string">"text/plain"</span>,
+               <span class="hljs-attr">"title"</span> : <span class="hljs-string">"test1.txt"</span>,
+               <span class="hljs-attr">"url"</span> : <span class="hljs-string">"https://public-docs-sandbox.prozorro.gov.ua/get/1dab7a1debdd454c9c6fd465b3e5d401?KeyID=1331dc52&amp;Signature=Tsq1b9MYEo7nGnvzKLqCwoMFgSvPyn6TZlFM0afiYdIwm2DjwmWAN9SiXGPXyshWVrrZ5Nlxv9aAIXnGANIeBA%253D%253D"</span>
+            },
+            {
+               <span class="hljs-attr">"dateModified"</span> : <span class="hljs-string">"2019-07-16T10:55:17"</span>,
+               <span class="hljs-attr">"datePublished"</span> : <span class="hljs-string">"2019-07-16T10:55:17"</span>,
+               <span class="hljs-attr">"history"</span> : [],
+               <span class="hljs-attr">"id"</span> : <span class="hljs-string">"b5ff737bcb6f4095871aee3130cc3570"</span>,
+               <span class="hljs-attr">"mimetype"</span> : <span class="hljs-string">"text/plain"</span>,
+               <span class="hljs-attr">"title"</span> : <span class="hljs-string">"test.txt"</span>,
+               <span class="hljs-attr">"url"</span> : <span class="hljs-string">"https://public-docs-sandbox.prozorro.gov.ua/get/abe376ca9bc8405eaabe02caafba6236?KeyID=1331dc52&amp;Signature=nTPE3xxXvGroVCU2ksr86lJL%2FF2nzehsuev2DK05A6sDWJ1P6ZfIcpV8fTQVCE8%2Fqj3R8xUnf9mvLpD1P37XBg%253D%253D"</span>
+            },
+            {
+               <span class="hljs-attr">"dateModified"</span> : <span class="hljs-string">"2019-07-16T10:55:30"</span>,
+               <span class="hljs-attr">"datePublished"</span> : <span class="hljs-string">"2019-07-16T10:55:30"</span>,
+               <span class="hljs-attr">"history"</span> : [],
+               <span class="hljs-attr">"id"</span> : <span class="hljs-string">"65c2f24adf1b4ff9bc3aea9168afc7c9"</span>,
+               <span class="hljs-attr">"mimetype"</span> : <span class="hljs-string">"text/plain"</span>,
+               <span class="hljs-attr">"title"</span> : <span class="hljs-string">"test.txt"</span>,
+               <span class="hljs-attr">"url"</span> : <span class="hljs-string">"https://public-docs-sandbox.prozorro.gov.ua/get/1263b2e5118b446ab377376a6322a18c?KeyID=1331dc52&amp;Signature=Ineu9M3df42JdVxhN77mZDF0%252BRFiv5vFEZp8%2FdqWoikb0dHMhxeiX9dJyNgv%252BIA39Ajj%252BVaWv%2FGMK71SV7%252B8DA%253D%253D"</span>
+            },
+            {
+               <span class="hljs-attr">"dateModified"</span> : <span class="hljs-string">"2019-07-16T10:55:33"</span>,
+               <span class="hljs-attr">"datePublished"</span> : <span class="hljs-string">"2019-07-16T10:55:33"</span>,
+               <span class="hljs-attr">"history"</span> : [],
+               <span class="hljs-attr">"id"</span> : <span class="hljs-string">"384b67a9a7e5431a85d6bcb83d61228d"</span>,
+               <span class="hljs-attr">"mimetype"</span> : <span class="hljs-string">"image/png"</span>,
+               <span class="hljs-attr">"title"</span> : <span class="hljs-string">"test_img.png"</span>,
+               <span class="hljs-attr">"url"</span> : <span class="hljs-string">"https://public-docs-sandbox.prozorro.gov.ua/get/9de8299cc5ca48e5873af94635408665?KeyID=1331dc52&amp;Signature=qnogrDB3wXDEJDIytWQ%2FIltOL1omnRIlMdVZanG4BoUOnqBIyeJtpZBfd2x2UM3ajxf5G0PubV0hgXJvceZ9Ag%253D%253D"</span>
+            },
+            {
+               <span class="hljs-attr">"dateModified"</span> : <span class="hljs-string">"2019-07-16T10:55:32"</span>,
+               <span class="hljs-attr">"datePublished"</span> : <span class="hljs-string">"2019-07-16T10:55:32"</span>,
+               <span class="hljs-attr">"history"</span> : [],
+               <span class="hljs-attr">"id"</span> : <span class="hljs-string">"bfdcdab05ed44fb1b2fac141df6bc382"</span>,
+               <span class="hljs-attr">"mimetype"</span> : <span class="hljs-string">"text/html"</span>,
+               <span class="hljs-attr">"title"</span> : <span class="hljs-string">"test.html"</span>,
+               <span class="hljs-attr">"url"</span> : <span class="hljs-string">"https://public-docs-sandbox.prozorro.gov.ua/get/347c63022d884c4f9b5643efb30914d6?KeyID=1331dc52&amp;Signature=oEsuA7lhgFSY4LVEHrB3o%2FeiJlVgbLXGIJppsjPGCwk2n6CHb9V2zarBDiq0yWS0uJOZf2%2FQB1kM1maNuwYqDQ%253D%253D"</span>
+            },
+            {
+               <span class="hljs-attr">"dateModified"</span> : <span class="hljs-string">"2019-07-16T10:55:21"</span>,
+               <span class="hljs-attr">"datePublished"</span> : <span class="hljs-string">"2019-07-16T10:55:21"</span>,
+               <span class="hljs-attr">"history"</span> : [],
+               <span class="hljs-attr">"id"</span> : <span class="hljs-string">"7df8037480b344268239cfd7c98216b0"</span>,
+               <span class="hljs-attr">"mimetype"</span> : <span class="hljs-string">"image/png"</span>,
+               <span class="hljs-attr">"title"</span> : <span class="hljs-string">"test_img.png"</span>,
+               <span class="hljs-attr">"url"</span> : <span class="hljs-string">"https://public-docs-sandbox.prozorro.gov.ua/get/0f126ee998a7461a97364ee877354f1e?KeyID=1331dc52&amp;Signature=FQB4xqcKPRhs5ZlEsVkBR4KupmFP0U87yNHT5jT67E5numgVteMfM2k8C81Z0JBO9%2FY%2FavahuvVu3Hs7q9ArAA%253D%253D"</span>
+            },
+            {
+               <span class="hljs-attr">"dateModified"</span> : <span class="hljs-string">"2019-07-16T10:55:19"</span>,
+               <span class="hljs-attr">"datePublished"</span> : <span class="hljs-string">"2019-07-16T10:55:19"</span>,
+               <span class="hljs-attr">"history"</span> : [],
+               <span class="hljs-attr">"id"</span> : <span class="hljs-string">"bce8de3ad99e4d6eb136931c399264d5"</span>,
+               <span class="hljs-attr">"mimetype"</span> : <span class="hljs-string">"text/html"</span>,
+               <span class="hljs-attr">"title"</span> : <span class="hljs-string">"test.html"</span>,
+               <span class="hljs-attr">"url"</span> : <span class="hljs-string">"https://public-docs-sandbox.prozorro.gov.ua/get/a9a238acfdb1438dafeade65179c3dcb?KeyID=1331dc52&amp;Signature=K8LoLf%2FeMvJiPlNu8of6BxDupx7yfxDXLZzU1u9mlme5GbEe2JW1WyQohLcA%2FwRmVLxMo7jEsSSIgGSIiPBpCw%253D%253D"</span>
+            }
+         ]
+      },
+      <span class="hljs-attr">"features"</span> : [
+         {
+            <span class="hljs-attr">"code"</span> : <span class="hljs-string">"a99c755a7bf04650a56143d906e9fb1d"</span>,
+            <span class="hljs-attr">"descr"</span> : <span class="hljs-string">"v3ml"</span>,
+            <span class="hljs-attr">"descr_en"</span> : <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"options"</span> : [
+               {
+                  <span class="hljs-attr">"coefficient"</span> : <span class="hljs-number">0.03</span>,
+                  <span class="hljs-attr">"title"</span> : <span class="hljs-string">"v3ml"</span>,
+                  <span class="hljs-attr">"title_en"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"weight"</span> : <span class="hljs-number">3</span>
+               },
+               {
+                  <span class="hljs-attr">"coefficient"</span> : <span class="hljs-number">0.02</span>,
+                  <span class="hljs-attr">"title"</span> : <span class="hljs-string">"v3ml"</span>,
+                  <span class="hljs-attr">"title_en"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"weight"</span> : <span class="hljs-number">2</span>
+               },
+               {
+                  <span class="hljs-attr">"coefficient"</span> : <span class="hljs-number">0.01</span>,
+                  <span class="hljs-attr">"title"</span> : <span class="hljs-string">"v3ml"</span>,
+                  <span class="hljs-attr">"title_en"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"weight"</span> : <span class="hljs-number">1</span>
+               },
+               {
+                  <span class="hljs-attr">"coefficient"</span> : <span class="hljs-number">0</span>,
+                  <span class="hljs-attr">"title"</span> : <span class="hljs-string">"v3ml"</span>,
+                  <span class="hljs-attr">"title_en"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"weight"</span> : <span class="hljs-number">0</span>
+               }
+            ],
+            <span class="hljs-attr">"title"</span> : <span class="hljs-string">"v3ml"</span>,
+            <span class="hljs-attr">"title_en"</span> : <span class="hljs-literal">null</span>
+         },
+         {
+            <span class="hljs-attr">"code"</span> : <span class="hljs-string">"916771cab7f14445b63322858fa235ff"</span>,
+            <span class="hljs-attr">"descr"</span> : <span class="hljs-string">"v3ml"</span>,
+            <span class="hljs-attr">"descr_en"</span> : <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"options"</span> : [
+               {
+                  <span class="hljs-attr">"coefficient"</span> : <span class="hljs-number">0.03</span>,
+                  <span class="hljs-attr">"title"</span> : <span class="hljs-string">"v3ml"</span>,
+                  <span class="hljs-attr">"title_en"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"weight"</span> : <span class="hljs-number">3</span>
+               },
+               {
+                  <span class="hljs-attr">"coefficient"</span> : <span class="hljs-number">0.02</span>,
+                  <span class="hljs-attr">"title"</span> : <span class="hljs-string">"v3ml"</span>,
+                  <span class="hljs-attr">"title_en"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"weight"</span> : <span class="hljs-number">2</span>
+               },
+               {
+                  <span class="hljs-attr">"coefficient"</span> : <span class="hljs-number">0.01</span>,
+                  <span class="hljs-attr">"title"</span> : <span class="hljs-string">"v3ml"</span>,
+                  <span class="hljs-attr">"title_en"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"weight"</span> : <span class="hljs-number">1</span>
+               },
+               {
+                  <span class="hljs-attr">"coefficient"</span> : <span class="hljs-number">0</span>,
+                  <span class="hljs-attr">"title"</span> : <span class="hljs-string">"v3ml"</span>,
+                  <span class="hljs-attr">"title_en"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"weight"</span> : <span class="hljs-number">0</span>
+               }
+            ],
+            <span class="hljs-attr">"title"</span> : <span class="hljs-string">"v3ml"</span>,
+            <span class="hljs-attr">"title_en"</span> : <span class="hljs-literal">null</span>
+         },
+         {
+            <span class="hljs-attr">"code"</span> : <span class="hljs-string">"b69d46e79b3f4a8eb1e7a52bf54f8a20"</span>,
+            <span class="hljs-attr">"descr"</span> : <span class="hljs-string">"asdfsaf"</span>,
+            <span class="hljs-attr">"descr_en"</span> : <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"options"</span> : [
+               {
+                  <span class="hljs-attr">"coefficient"</span> : <span class="hljs-number">0.02</span>,
+                  <span class="hljs-attr">"title"</span> : <span class="hljs-string">"asdfsaf"</span>,
+                  <span class="hljs-attr">"title_en"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"weight"</span> : <span class="hljs-number">2</span>
+               },
+               {
+                  <span class="hljs-attr">"coefficient"</span> : <span class="hljs-number">0.01</span>,
+                  <span class="hljs-attr">"title"</span> : <span class="hljs-string">"asdfsaf"</span>,
+                  <span class="hljs-attr">"title_en"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"weight"</span> : <span class="hljs-number">1</span>
+               },
+               {
+                  <span class="hljs-attr">"coefficient"</span> : <span class="hljs-number">0</span>,
+                  <span class="hljs-attr">"title"</span> : <span class="hljs-string">"asdfsaf"</span>,
+                  <span class="hljs-attr">"title_en"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"weight"</span> : <span class="hljs-number">0</span>
+               }
+            ],
+            <span class="hljs-attr">"title"</span> : <span class="hljs-string">"asdfsaf"</span>,
+            <span class="hljs-attr">"title_en"</span> : <span class="hljs-literal">null</span>
+         }
+      ],
+      <span class="hljs-attr">"guarantee"</span> : {
+         <span class="hljs-attr">"amount"</span> : <span class="hljs-number">123123</span>,
+         <span class="hljs-attr">"currency"</span> : <span class="hljs-string">"UAH"</span>
+      },
+      <span class="hljs-attr">"id"</span> : <span class="hljs-string">"42f5c550b8cd47e7be912dd247fc331e"</span>,
+      <span class="hljs-attr">"is_blocked"</span> : <span class="hljs-literal">false</span>,
+      <span class="hljs-attr">"is_participate"</span> : <span class="hljs-literal">true</span>,
+      <span class="hljs-attr">"items"</span> : [
+         {
+            <span class="hljs-attr">"classifiers"</span> : [],
+            <span class="hljs-attr">"delivery_address"</span> : {
+               <span class="hljs-attr">"country_name"</span> : <span class="hljs-string">"Україна"</span>,
+               <span class="hljs-attr">"is_all_ukraine"</span> : <span class="hljs-literal">true</span>,
+               <span class="hljs-attr">"locality"</span> : <span class="hljs-literal">null</span>,
+               <span class="hljs-attr">"postal_code"</span> : <span class="hljs-literal">null</span>,
+               <span class="hljs-attr">"region"</span> : <span class="hljs-string">"Відповідно до документації"</span>,
+               <span class="hljs-attr">"street_address"</span> : <span class="hljs-literal">null</span>
+            },
+            <span class="hljs-attr">"delivery_period"</span> : {
+               <span class="hljs-attr">"end"</span> : <span class="hljs-string">"2019-07-28T00:00:00"</span>,
+               <span class="hljs-attr">"start"</span> : <span class="hljs-literal">null</span>
+            },
+            <span class="hljs-attr">"descr"</span> : <span class="hljs-string">"v3ml"</span>,
+            <span class="hljs-attr">"descr_en"</span> : <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"features"</span> : [],
+            <span class="hljs-attr">"id"</span> : <span class="hljs-string">"d236bcdebdb64eda99335d966f5e11a1"</span>,
+            <span class="hljs-attr">"primary_classifier"</span> : {
+               <span class="hljs-attr">"code"</span> : <span class="hljs-string">"03000000-1"</span>,
+               <span class="hljs-attr">"id"</span> : <span class="hljs-string">"03000000-1"</span>,
+               <span class="hljs-attr">"name_with_code"</span> : <span class="hljs-string">"03000000-1 Сільськогосподарська, фермерська продукція, продукція рибальства, лісівництва та супутня продукція"</span>,
+               <span class="hljs-attr">"type"</span> : <span class="hljs-string">"ДК 021"</span>
+            },
+            <span class="hljs-attr">"quantity"</span> : <span class="hljs-number">123</span>,
+            <span class="hljs-attr">"status"</span> : <span class="hljs-number">0</span>,
+            <span class="hljs-attr">"uid"</span> : <span class="hljs-string">"d236bcdebdb64eda99335d966f5e11a1"</span>,
+            <span class="hljs-attr">"unit"</span> : {
+               <span class="hljs-attr">"code"</span> : <span class="hljs-string">"KVR"</span>,
+               <span class="hljs-attr">"name"</span> : <span class="hljs-string">"кіловар"</span>
+            }
+         }
+      ],
+      <span class="hljs-attr">"lot_status"</span> : <span class="hljs-number">2</span>,
+      <span class="hljs-attr">"lot_status_text"</span> : <span class="hljs-string">"завершено"</span>,
+      <span class="hljs-attr">"offers"</span> : [
+         {
+            <span class="hljs-attr">"amount_weight"</span> : <span class="hljs-number">87</span>,
+            <span class="hljs-attr">"auction_url"</span> : <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"auto_active"</span> : <span class="hljs-literal">true</span>,
+            <span class="hljs-attr">"coefficient_of_features"</span> : <span class="hljs-number">1.09195402298851</span>,
+            <span class="hljs-attr">"documents"</span> : {
+               <span class="hljs-attr">"offer"</span> : [
+                  {
+                     <span class="hljs-attr">"confidentiality"</span> : <span class="hljs-string">"public"</span>,
+                     <span class="hljs-attr">"dateModified"</span> : <span class="hljs-string">"2019-07-16T13:59:52"</span>,
+                     <span class="hljs-attr">"datePublished"</span> : <span class="hljs-string">"2019-07-16T13:59:52"</span>,
+                     <span class="hljs-attr">"history"</span> : [],
+                     <span class="hljs-attr">"id"</span> : <span class="hljs-string">"f1d07df2e5c347c296f140cb0310bc91"</span>,
+                     <span class="hljs-attr">"mimetype"</span> : <span class="hljs-string">"text/plain"</span>,
+                     <span class="hljs-attr">"title"</span> : <span class="hljs-string">"test.txt"</span>,
+                     <span class="hljs-attr">"url"</span> : <span class="hljs-string">"http://my.example.com:5001/media/files/1246092_test.txt"</span>
+                  },
+                  {
+                     <span class="hljs-attr">"confidentiality"</span> : <span class="hljs-string">"public"</span>,
+                     <span class="hljs-attr">"dateModified"</span> : <span class="hljs-string">"2019-07-16T13:59:52"</span>,
+                     <span class="hljs-attr">"datePublished"</span> : <span class="hljs-string">"2019-07-16T13:59:52"</span>,
+                     <span class="hljs-attr">"history"</span> : [],
+                     <span class="hljs-attr">"id"</span> : <span class="hljs-string">"a88ecaa744c84d7aa4abdfe5ed5a8c06"</span>,
+                     <span class="hljs-attr">"mimetype"</span> : <span class="hljs-string">"text/plain"</span>,
+                     <span class="hljs-attr">"title"</span> : <span class="hljs-string">"test1.txt"</span>,
+                     <span class="hljs-attr">"url"</span> : <span class="hljs-string">"http://my.example.com:5001/media/files/1246093_test1.txt"</span>
+                  },
+                  {
+                     <span class="hljs-attr">"confidentiality"</span> : <span class="hljs-string">"public"</span>,
+                     <span class="hljs-attr">"dateModified"</span> : <span class="hljs-string">"2019-07-16T13:59:52"</span>,
+                     <span class="hljs-attr">"datePublished"</span> : <span class="hljs-string">"2019-07-16T13:59:52"</span>,
+                     <span class="hljs-attr">"history"</span> : [],
+                     <span class="hljs-attr">"id"</span> : <span class="hljs-string">"3364b4c1a1d143b6a099360e0fbda10b"</span>,
+                     <span class="hljs-attr">"mimetype"</span> : <span class="hljs-string">"text/html"</span>,
+                     <span class="hljs-attr">"title"</span> : <span class="hljs-string">"test.html"</span>,
+                     <span class="hljs-attr">"url"</span> : <span class="hljs-string">"http://my.example.com:5001/media/files/1246091_test.html"</span>
+                  },
+                  {
+                     <span class="hljs-attr">"confidentiality"</span> : <span class="hljs-string">"public"</span>,
+                     <span class="hljs-attr">"dateModified"</span> : <span class="hljs-string">"2019-07-16T13:59:52"</span>,
+                     <span class="hljs-attr">"datePublished"</span> : <span class="hljs-string">"2019-07-16T13:59:52"</span>,
+                     <span class="hljs-attr">"history"</span> : [],
+                     <span class="hljs-attr">"id"</span> : <span class="hljs-string">"1c0299c427a541589eae28afc2bc3e95"</span>,
+                     <span class="hljs-attr">"mimetype"</span> : <span class="hljs-string">"image/png"</span>,
+                     <span class="hljs-attr">"title"</span> : <span class="hljs-string">"test_img.png"</span>,
+                     <span class="hljs-attr">"url"</span> : <span class="hljs-string">"http://my.example.com:5001/media/files/1246090_test_img.png"</span>
+                  }
+               ],
+               <span class="hljs-attr">"offer_lot"</span> : [
+                  {
+                     <span class="hljs-attr">"confidentiality"</span> : <span class="hljs-string">"public"</span>,
+                     <span class="hljs-attr">"dateModified"</span> : <span class="hljs-string">"2019-07-16T13:59:52"</span>,
+                     <span class="hljs-attr">"datePublished"</span> : <span class="hljs-string">"2019-07-16T13:59:52"</span>,
+                     <span class="hljs-attr">"history"</span> : [],
+                     <span class="hljs-attr">"id"</span> : <span class="hljs-string">"c0e87bb940d049a89116a5aee7354793"</span>,
+                     <span class="hljs-attr">"mimetype"</span> : <span class="hljs-string">"image/png"</span>,
+                     <span class="hljs-attr">"title"</span> : <span class="hljs-string">"test_img.png"</span>,
+                     <span class="hljs-attr">"url"</span> : <span class="hljs-string">"http://my.example.com:5001/media/files/1246094_test_img.png"</span>
+                  },
+                  {
+                     <span class="hljs-attr">"confidentiality"</span> : <span class="hljs-string">"public"</span>,
+                     <span class="hljs-attr">"dateModified"</span> : <span class="hljs-string">"2019-07-16T13:59:52"</span>,
+                     <span class="hljs-attr">"datePublished"</span> : <span class="hljs-string">"2019-07-16T13:59:52"</span>,
+                     <span class="hljs-attr">"history"</span> : [],
+                     <span class="hljs-attr">"id"</span> : <span class="hljs-string">"32622cfd83f0407ba86dbf3d70efd4a3"</span>,
+                     <span class="hljs-attr">"mimetype"</span> : <span class="hljs-string">"text/plain"</span>,
+                     <span class="hljs-attr">"title"</span> : <span class="hljs-string">"test.txt"</span>,
+                     <span class="hljs-attr">"url"</span> : <span class="hljs-string">"http://my.example.com:5001/media/files/1246096_test.txt"</span>
+                  },
+                  {
+                     <span class="hljs-attr">"confidentiality"</span> : <span class="hljs-string">"public"</span>,
+                     <span class="hljs-attr">"dateModified"</span> : <span class="hljs-string">"2019-07-16T13:59:52"</span>,
+                     <span class="hljs-attr">"datePublished"</span> : <span class="hljs-string">"2019-07-16T13:59:52"</span>,
+                     <span class="hljs-attr">"history"</span> : [],
+                     <span class="hljs-attr">"id"</span> : <span class="hljs-string">"38ecdf55e23e45e18cb4d4579a454767"</span>,
+                     <span class="hljs-attr">"mimetype"</span> : <span class="hljs-string">"text/plain"</span>,
+                     <span class="hljs-attr">"title"</span> : <span class="hljs-string">"test1.txt"</span>,
+                     <span class="hljs-attr">"url"</span> : <span class="hljs-string">"http://my.example.com:5001/media/files/1246097_test1.txt"</span>
+                  },
+                  {
+                     <span class="hljs-attr">"confidentiality"</span> : <span class="hljs-string">"public"</span>,
+                     <span class="hljs-attr">"dateModified"</span> : <span class="hljs-string">"2019-07-16T13:59:52"</span>,
+                     <span class="hljs-attr">"datePublished"</span> : <span class="hljs-string">"2019-07-16T13:59:52"</span>,
+                     <span class="hljs-attr">"history"</span> : [],
+                     <span class="hljs-attr">"id"</span> : <span class="hljs-string">"ee36e82b0aa14606b446673372a24d64"</span>,
+                     <span class="hljs-attr">"mimetype"</span> : <span class="hljs-string">"text/html"</span>,
+                     <span class="hljs-attr">"title"</span> : <span class="hljs-string">"test.html"</span>,
+                     <span class="hljs-attr">"url"</span> : <span class="hljs-string">"http://my.example.com:5001/media/files/1246095_test.html"</span>
+                  }
+               ]
+            },
+            <span class="hljs-attr">"features"</span> : [
+               {
+                  <span class="hljs-attr">"code"</span> : <span class="hljs-string">"988860c82edd495cace395b2866b3e81"</span>,
+                  <span class="hljs-attr">"descr"</span> : <span class="hljs-string">"v3ml"</span>,
+                  <span class="hljs-attr">"descr_en"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"options"</span> : [
+                     {
+                        <span class="hljs-attr">"coefficient"</span> : <span class="hljs-number">0</span>,
+                        <span class="hljs-attr">"title"</span> : <span class="hljs-string">"v3ml"</span>,
+                        <span class="hljs-attr">"title_en"</span> : <span class="hljs-literal">null</span>,
+                        <span class="hljs-attr">"weight"</span> : <span class="hljs-number">0</span>
+                     }
+                  ],
+                  <span class="hljs-attr">"title"</span> : <span class="hljs-string">"v3ml"</span>,
+                  <span class="hljs-attr">"title_en"</span> : <span class="hljs-literal">null</span>
+               },
+               {
+                  <span class="hljs-attr">"code"</span> : <span class="hljs-string">"f2e92f92e62041e384dfa1f05f333ea1"</span>,
+                  <span class="hljs-attr">"descr"</span> : <span class="hljs-string">"v3ml"</span>,
+                  <span class="hljs-attr">"descr_en"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"options"</span> : [
+                     {
+                        <span class="hljs-attr">"coefficient"</span> : <span class="hljs-number">0.01</span>,
+                        <span class="hljs-attr">"title"</span> : <span class="hljs-string">"v3ml"</span>,
+                        <span class="hljs-attr">"title_en"</span> : <span class="hljs-literal">null</span>,
+                        <span class="hljs-attr">"weight"</span> : <span class="hljs-number">1</span>
+                     }
+                  ],
+                  <span class="hljs-attr">"title"</span> : <span class="hljs-string">"v3ml"</span>,
+                  <span class="hljs-attr">"title_en"</span> : <span class="hljs-literal">null</span>
+               },
+               {
+                  <span class="hljs-attr">"code"</span> : <span class="hljs-string">"a99c755a7bf04650a56143d906e9fb1d"</span>,
+                  <span class="hljs-attr">"descr"</span> : <span class="hljs-string">"v3ml"</span>,
+                  <span class="hljs-attr">"descr_en"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"options"</span> : [
+                     {
+                        <span class="hljs-attr">"coefficient"</span> : <span class="hljs-number">0.02</span>,
+                        <span class="hljs-attr">"title"</span> : <span class="hljs-string">"v3ml"</span>,
+                        <span class="hljs-attr">"title_en"</span> : <span class="hljs-literal">null</span>,
+                        <span class="hljs-attr">"weight"</span> : <span class="hljs-number">2</span>
+                     }
+                  ],
+                  <span class="hljs-attr">"title"</span> : <span class="hljs-string">"v3ml"</span>,
+                  <span class="hljs-attr">"title_en"</span> : <span class="hljs-literal">null</span>
+               },
+               {
+                  <span class="hljs-attr">"code"</span> : <span class="hljs-string">"916771cab7f14445b63322858fa235ff"</span>,
+                  <span class="hljs-attr">"descr"</span> : <span class="hljs-string">"v3ml"</span>,
+                  <span class="hljs-attr">"descr_en"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"options"</span> : [
+                     {
+                        <span class="hljs-attr">"coefficient"</span> : <span class="hljs-number">0.03</span>,
+                        <span class="hljs-attr">"title"</span> : <span class="hljs-string">"v3ml"</span>,
+                        <span class="hljs-attr">"title_en"</span> : <span class="hljs-literal">null</span>,
+                        <span class="hljs-attr">"weight"</span> : <span class="hljs-number">3</span>
+                     }
+                  ],
+                  <span class="hljs-attr">"title"</span> : <span class="hljs-string">"v3ml"</span>,
+                  <span class="hljs-attr">"title_en"</span> : <span class="hljs-literal">null</span>
+               },
+               {
+                  <span class="hljs-attr">"code"</span> : <span class="hljs-string">"b69d46e79b3f4a8eb1e7a52bf54f8a20"</span>,
+                  <span class="hljs-attr">"descr"</span> : <span class="hljs-string">"asdfsaf"</span>,
+                  <span class="hljs-attr">"descr_en"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"options"</span> : [
+                     {
+                        <span class="hljs-attr">"coefficient"</span> : <span class="hljs-number">0.02</span>,
+                        <span class="hljs-attr">"title"</span> : <span class="hljs-string">"asdfsaf"</span>,
+                        <span class="hljs-attr">"title_en"</span> : <span class="hljs-literal">null</span>,
+                        <span class="hljs-attr">"weight"</span> : <span class="hljs-number">2</span>
+                     }
+                  ],
+                  <span class="hljs-attr">"title"</span> : <span class="hljs-string">"asdfsaf"</span>,
+                  <span class="hljs-attr">"title_en"</span> : <span class="hljs-literal">null</span>
+               }
+            ],
+            <span class="hljs-attr">"merchant"</span> : {
+               <span class="hljs-attr">"address"</span> : {
+                  <span class="hljs-attr">"countryName"</span> : <span class="hljs-string">"Україна"</span>,
+                  <span class="hljs-attr">"locality"</span> : <span class="hljs-string">"sdfdasdfa"</span>,
+                  <span class="hljs-attr">"postalCode"</span> : <span class="hljs-string">"12332"</span>,
+                  <span class="hljs-attr">"region"</span> : <span class="hljs-string">"Донецька область"</span>,
+                  <span class="hljs-attr">"streetAddress"</span> : <span class="hljs-string">"asdfasdfasdf"</span>
+               },
+               <span class="hljs-attr">"contactPoint"</span> : {
+                  <span class="hljs-attr">"email"</span> : <span class="hljs-string">"some78@mailinator.com"</span>,
+                  <span class="hljs-attr">"name"</span> : <span class="hljs-string">"some dasfasdf some"</span>,
+                  <span class="hljs-attr">"telephone"</span> : <span class="hljs-string">"+38042"</span>
+               },
+               <span class="hljs-attr">"identifier"</span> : {
+                  <span class="hljs-attr">"id"</span> : <span class="hljs-string">"23412343241"</span>,
+                  <span class="hljs-attr">"legalName"</span> : <span class="hljs-string">"Название моей компании"</span>,
+                  <span class="hljs-attr">"scheme"</span> : <span class="hljs-string">"UA-EDR"</span>,
+                  <span class="hljs-attr">"uri"</span> : <span class="hljs-literal">null</span>
+               },
+               <span class="hljs-attr">"name"</span> : <span class="hljs-string">"Название моей компании"</span>,
+               <span class="hljs-attr">"scale"</span> : <span class="hljs-string">"mid"</span>
+            },
+            <span class="hljs-attr">"net_present_amount"</span> : <span class="hljs-number">112754.747368421</span>,
+            <span class="hljs-attr">"status"</span> : <span class="hljs-number">0</span>,
+            <span class="hljs-attr">"status_text"</span> : <span class="hljs-string">"активно"</span>,
+            <span class="hljs-attr">"subcontracting_details"</span> : <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"uid"</span> : <span class="hljs-string">"b095569e949449ff93503f10783094bc"</span>,
+            <span class="hljs-attr">"value"</span> : {
+               <span class="hljs-attr">"amount"</span> : <span class="hljs-number">123123</span>,
+               <span class="hljs-attr">"currency"</span> : <span class="hljs-string">"UAH"</span>,
+               <span class="hljs-attr">"valueAddedTaxIncluded"</span> : <span class="hljs-literal">false</span>
+            }
+         },
+         {
+            <span class="hljs-attr">"amount_weight"</span> : <span class="hljs-number">87</span>,
+            <span class="hljs-attr">"auction_url"</span> : <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"auto_active"</span> : <span class="hljs-literal">true</span>,
+            <span class="hljs-attr">"coefficient_of_features"</span> : <span class="hljs-number">1.09195402298851</span>,
+            <span class="hljs-attr">"documents"</span> : {
+               <span class="hljs-attr">"contract"</span> : [
+                  {
+                     <span class="hljs-attr">"dateModified"</span> : <span class="hljs-string">"2019-07-29T15:06:43"</span>,
+                     <span class="hljs-attr">"datePublished"</span> : <span class="hljs-string">"2019-07-29T15:06:43"</span>,
+                     <span class="hljs-attr">"history"</span> : [],
+                     <span class="hljs-attr">"id"</span> : <span class="hljs-string">"8ce8b2abc52046799136e29baa304d55"</span>,
+                     <span class="hljs-attr">"mimetype"</span> : <span class="hljs-string">"application/pkcs7-signature"</span>,
+                     <span class="hljs-attr">"title"</span> : <span class="hljs-string">"sign.p7s"</span>,
+                     <span class="hljs-attr">"url"</span> : <span class="hljs-string">"https://public-docs-sandbox.prozorro.gov.ua/get/af5303d33d3640f2866057b0ee0944ed?KeyID=1331dc52&amp;Signature=5gW6rWUBM33a0f%252B9%252BVpabfvOGIyDAqBHWB%252BoG%2Frs8WxzK5C1aqRxwjBZz4l12C3D%252BqAQyvo2ZtrggS%252Br67HWCQ%253D%253D"</span>
+                  },
+                  {
+                     <span class="hljs-attr">"dateModified"</span> : <span class="hljs-string">"2019-07-29T15:05:46"</span>,
+                     <span class="hljs-attr">"datePublished"</span> : <span class="hljs-string">"2019-07-29T15:05:46"</span>,
+                     <span class="hljs-attr">"history"</span> : [],
+                     <span class="hljs-attr">"id"</span> : <span class="hljs-string">"546c4f9c09ad403ea797996b25bb8a02"</span>,
+                     <span class="hljs-attr">"mimetype"</span> : <span class="hljs-string">"text/plain"</span>,
+                     <span class="hljs-attr">"title"</span> : <span class="hljs-string">"test1.txt"</span>,
+                     <span class="hljs-attr">"url"</span> : <span class="hljs-string">"https://public-docs-sandbox.prozorro.gov.ua/get/f674163b7ab548928c6180bcc5f7477e?KeyID=1331dc52&amp;Signature=qLKtRMfe3a9v6UcfzlWPP94FIVyrq7IecZUIh1ySQapiutW86SjVdo6ihx5%252BXWD%2FCd5zLGhUNI6MIcYiWyzdBA%253D%253D"</span>
+                  }
+               ],
+               <span class="hljs-attr">"offer"</span> : [
+                  {
+                     <span class="hljs-attr">"confidentiality"</span> : <span class="hljs-string">"public"</span>,
+                     <span class="hljs-attr">"dateModified"</span> : <span class="hljs-string">"2019-07-16T13:57:24"</span>,
+                     <span class="hljs-attr">"datePublished"</span> : <span class="hljs-string">"2019-07-16T13:57:24"</span>,
+                     <span class="hljs-attr">"history"</span> : [],
+                     <span class="hljs-attr">"id"</span> : <span class="hljs-string">"a60e47769a194c05807aca1f4569f29f"</span>,
+                     <span class="hljs-attr">"mimetype"</span> : <span class="hljs-string">"image/png"</span>,
+                     <span class="hljs-attr">"title"</span> : <span class="hljs-string">"test_img.png"</span>,
+                     <span class="hljs-attr">"url"</span> : <span class="hljs-string">"http://my.example.com:5001/media/files/1246078_test_img.png"</span>
+                  },
+                  {
+                     <span class="hljs-attr">"confidentiality"</span> : <span class="hljs-string">"public"</span>,
+                     <span class="hljs-attr">"dateModified"</span> : <span class="hljs-string">"2019-07-16T13:57:24"</span>,
+                     <span class="hljs-attr">"datePublished"</span> : <span class="hljs-string">"2019-07-16T13:57:24"</span>,
+                     <span class="hljs-attr">"history"</span> : [],
+                     <span class="hljs-attr">"id"</span> : <span class="hljs-string">"4475f440fe454cbcb71c70f7441141c0"</span>,
+                     <span class="hljs-attr">"mimetype"</span> : <span class="hljs-string">"text/html"</span>,
+                     <span class="hljs-attr">"title"</span> : <span class="hljs-string">"test.html"</span>,
+                     <span class="hljs-attr">"url"</span> : <span class="hljs-string">"http://my.example.com:5001/media/files/1246079_test.html"</span>
+                  },
+                  {
+                     <span class="hljs-attr">"confidentiality"</span> : <span class="hljs-string">"public"</span>,
+                     <span class="hljs-attr">"dateModified"</span> : <span class="hljs-string">"2019-07-16T13:57:24"</span>,
+                     <span class="hljs-attr">"datePublished"</span> : <span class="hljs-string">"2019-07-16T13:57:24"</span>,
+                     <span class="hljs-attr">"history"</span> : [],
+                     <span class="hljs-attr">"id"</span> : <span class="hljs-string">"389e4f4c19404e44bbaebed7cd272310"</span>,
+                     <span class="hljs-attr">"mimetype"</span> : <span class="hljs-string">"text/plain"</span>,
+                     <span class="hljs-attr">"title"</span> : <span class="hljs-string">"test1.txt"</span>,
+                     <span class="hljs-attr">"url"</span> : <span class="hljs-string">"http://my.example.com:5001/media/files/1246081_test1.txt"</span>
+                  },
+                  {
+                     <span class="hljs-attr">"confidentiality"</span> : <span class="hljs-string">"public"</span>,
+                     <span class="hljs-attr">"dateModified"</span> : <span class="hljs-string">"2019-07-16T13:57:24"</span>,
+                     <span class="hljs-attr">"datePublished"</span> : <span class="hljs-string">"2019-07-16T13:57:24"</span>,
+                     <span class="hljs-attr">"history"</span> : [],
+                     <span class="hljs-attr">"id"</span> : <span class="hljs-string">"8faf557a6a8b4126b2d49aad82d2f1df"</span>,
+                     <span class="hljs-attr">"mimetype"</span> : <span class="hljs-string">"text/plain"</span>,
+                     <span class="hljs-attr">"title"</span> : <span class="hljs-string">"test.txt"</span>,
+                     <span class="hljs-attr">"url"</span> : <span class="hljs-string">"http://my.example.com:5001/media/files/1246080_test.txt"</span>
+                  }
+               ],
+               <span class="hljs-attr">"offer_lot"</span> : [
+                  {
+                     <span class="hljs-attr">"confidentiality"</span> : <span class="hljs-string">"public"</span>,
+                     <span class="hljs-attr">"dateModified"</span> : <span class="hljs-string">"2019-07-16T13:57:24"</span>,
+                     <span class="hljs-attr">"datePublished"</span> : <span class="hljs-string">"2019-07-16T13:57:24"</span>,
+                     <span class="hljs-attr">"history"</span> : [],
+                     <span class="hljs-attr">"id"</span> : <span class="hljs-string">"7e9edf2a07d44e0692ea95784a9a2dc3"</span>,
+                     <span class="hljs-attr">"mimetype"</span> : <span class="hljs-string">"text/plain"</span>,
+                     <span class="hljs-attr">"title"</span> : <span class="hljs-string">"test.txt"</span>,
+                     <span class="hljs-attr">"url"</span> : <span class="hljs-string">"http://my.example.com:5001/media/files/1246084_test.txt"</span>
+                  },
+                  {
+                     <span class="hljs-attr">"confidentiality"</span> : <span class="hljs-string">"public"</span>,
+                     <span class="hljs-attr">"dateModified"</span> : <span class="hljs-string">"2019-07-16T13:57:24"</span>,
+                     <span class="hljs-attr">"datePublished"</span> : <span class="hljs-string">"2019-07-16T13:57:24"</span>,
+                     <span class="hljs-attr">"history"</span> : [],
+                     <span class="hljs-attr">"id"</span> : <span class="hljs-string">"ea47152a940848b599fddc25b5f3dc25"</span>,
+                     <span class="hljs-attr">"mimetype"</span> : <span class="hljs-string">"image/png"</span>,
+                     <span class="hljs-attr">"title"</span> : <span class="hljs-string">"test_img.png"</span>,
+                     <span class="hljs-attr">"url"</span> : <span class="hljs-string">"http://my.example.com:5001/media/files/1246082_test_img.png"</span>
+                  },
+                  {
+                     <span class="hljs-attr">"confidentiality"</span> : <span class="hljs-string">"public"</span>,
+                     <span class="hljs-attr">"dateModified"</span> : <span class="hljs-string">"2019-07-16T13:57:24"</span>,
+                     <span class="hljs-attr">"datePublished"</span> : <span class="hljs-string">"2019-07-16T13:57:24"</span>,
+                     <span class="hljs-attr">"history"</span> : [],
+                     <span class="hljs-attr">"id"</span> : <span class="hljs-string">"d4b5db7321724e4c80676050a9cc3a0e"</span>,
+                     <span class="hljs-attr">"mimetype"</span> : <span class="hljs-string">"text/plain"</span>,
+                     <span class="hljs-attr">"title"</span> : <span class="hljs-string">"test1.txt"</span>,
+                     <span class="hljs-attr">"url"</span> : <span class="hljs-string">"http://my.example.com:5001/media/files/1246086_test1.txt"</span>
+                  },
+                  {
+                     <span class="hljs-attr">"confidentiality"</span> : <span class="hljs-string">"public"</span>,
+                     <span class="hljs-attr">"dateModified"</span> : <span class="hljs-string">"2019-07-16T13:57:24"</span>,
+                     <span class="hljs-attr">"datePublished"</span> : <span class="hljs-string">"2019-07-16T13:57:24"</span>,
+                     <span class="hljs-attr">"history"</span> : [],
+                     <span class="hljs-attr">"id"</span> : <span class="hljs-string">"0e9afd1b8e564f41aafb71257a07583b"</span>,
+                     <span class="hljs-attr">"mimetype"</span> : <span class="hljs-string">"text/html"</span>,
+                     <span class="hljs-attr">"title"</span> : <span class="hljs-string">"test.html"</span>,
+                     <span class="hljs-attr">"url"</span> : <span class="hljs-string">"http://my.example.com:5001/media/files/1246083_test.html"</span>
+                  }
+               ],
+               <span class="hljs-attr">"qualification"</span> : [
+                  {
+                     <span class="hljs-attr">"dateModified"</span> : <span class="hljs-string">"2019-07-29T11:48:17"</span>,
+                     <span class="hljs-attr">"datePublished"</span> : <span class="hljs-string">"2019-07-29T11:48:17"</span>,
+                     <span class="hljs-attr">"history"</span> : [],
+                     <span class="hljs-attr">"id"</span> : <span class="hljs-string">"4df903de0cb14d8aab347d45897f76c0"</span>,
+                     <span class="hljs-attr">"mimetype"</span> : <span class="hljs-string">"application/pkcs7-signature"</span>,
+                     <span class="hljs-attr">"title"</span> : <span class="hljs-string">"sign.p7s"</span>,
+                     <span class="hljs-attr">"url"</span> : <span class="hljs-string">"https://public-docs-sandbox.prozorro.gov.ua/get/45d8f3f6133644bc934226d11597259a?KeyID=1331dc52&amp;Signature=KkUuTI%252BeZP%252BIv%2F9uoCkD4egjunjD48Vl%252BFUAK5mDwFtIooZC9qi5LKB4rr9u7GFZr76RrkVNsxS9hW9IngROBQ%253D%253D"</span>
+                  },
+                  {
+                     <span class="hljs-attr">"dateModified"</span> : <span class="hljs-string">"2019-07-17T13:17:39"</span>,
+                     <span class="hljs-attr">"datePublished"</span> : <span class="hljs-string">"2019-07-17T13:17:39"</span>,
+                     <span class="hljs-attr">"documentType"</span> : <span class="hljs-string">"registerExtract"</span>,
+                     <span class="hljs-attr">"history"</span> : [],
+                     <span class="hljs-attr">"id"</span> : <span class="hljs-string">"2426adf5db4a4a0dbba857632c597a99"</span>,
+                     <span class="hljs-attr">"mimetype"</span> : <span class="hljs-literal">null</span>,
+                     <span class="hljs-attr">"title"</span> : <span class="hljs-string">"edr_identification.yaml"</span>,
+                     <span class="hljs-attr">"url"</span> : <span class="hljs-string">"https://public-docs-sandbox.prozorro.gov.ua/get/3bb014a953484d2daa8674515d5030ad?KeyID=1331dc52&amp;Signature=dM1FGndh9JdDVmP%252B1y%2Fq08kqAeNhGaJylcmVPK2ysio4HDJ3GAk6fMxs6XUNfppx1h%2FOMU%2Fx%252BDDXOfdZQxbXCA%253D%253D"</span>
+                  },
+                  {
+                     <span class="hljs-attr">"dateModified"</span> : <span class="hljs-string">"2019-07-29T11:47:54"</span>,
+                     <span class="hljs-attr">"datePublished"</span> : <span class="hljs-string">"2019-07-29T11:47:54"</span>,
+                     <span class="hljs-attr">"history"</span> : [],
+                     <span class="hljs-attr">"id"</span> : <span class="hljs-string">"cacf17e9b82f4704b468db3680c1f6c3"</span>,
+                     <span class="hljs-attr">"mimetype"</span> : <span class="hljs-string">"text/plain"</span>,
+                     <span class="hljs-attr">"title"</span> : <span class="hljs-string">"test.txt"</span>,
+                     <span class="hljs-attr">"url"</span> : <span class="hljs-string">"https://public-docs-sandbox.prozorro.gov.ua/get/d1cdb992374d41bba8a2e44849a2a7fa?KeyID=1331dc52&amp;Signature=o5VzmOS%252BuR5Z2sM7zrkP56mdwT%2FBDoX%2FOG0FDSY%2FYpwwOwOJjWCZvSi8J4tUbNZzdMqvQNQ1tTHOXmCq4IedBA%253D%253D"</span>
+                  }
+               ]
+            },
+            <span class="hljs-attr">"features"</span> : [
+               {
+                  <span class="hljs-attr">"code"</span> : <span class="hljs-string">"988860c82edd495cace395b2866b3e81"</span>,
+                  <span class="hljs-attr">"descr"</span> : <span class="hljs-string">"v3ml"</span>,
+                  <span class="hljs-attr">"descr_en"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"options"</span> : [
+                     {
+                        <span class="hljs-attr">"coefficient"</span> : <span class="hljs-number">0</span>,
+                        <span class="hljs-attr">"title"</span> : <span class="hljs-string">"v3ml"</span>,
+                        <span class="hljs-attr">"title_en"</span> : <span class="hljs-literal">null</span>,
+                        <span class="hljs-attr">"weight"</span> : <span class="hljs-number">0</span>
+                     }
+                  ],
+                  <span class="hljs-attr">"title"</span> : <span class="hljs-string">"v3ml"</span>,
+                  <span class="hljs-attr">"title_en"</span> : <span class="hljs-literal">null</span>
+               },
+               {
+                  <span class="hljs-attr">"code"</span> : <span class="hljs-string">"f2e92f92e62041e384dfa1f05f333ea1"</span>,
+                  <span class="hljs-attr">"descr"</span> : <span class="hljs-string">"v3ml"</span>,
+                  <span class="hljs-attr">"descr_en"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"options"</span> : [
+                     {
+                        <span class="hljs-attr">"coefficient"</span> : <span class="hljs-number">0.01</span>,
+                        <span class="hljs-attr">"title"</span> : <span class="hljs-string">"v3ml"</span>,
+                        <span class="hljs-attr">"title_en"</span> : <span class="hljs-literal">null</span>,
+                        <span class="hljs-attr">"weight"</span> : <span class="hljs-number">1</span>
+                     }
+                  ],
+                  <span class="hljs-attr">"title"</span> : <span class="hljs-string">"v3ml"</span>,
+                  <span class="hljs-attr">"title_en"</span> : <span class="hljs-literal">null</span>
+               },
+               {
+                  <span class="hljs-attr">"code"</span> : <span class="hljs-string">"a99c755a7bf04650a56143d906e9fb1d"</span>,
+                  <span class="hljs-attr">"descr"</span> : <span class="hljs-string">"v3ml"</span>,
+                  <span class="hljs-attr">"descr_en"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"options"</span> : [
+                     {
+                        <span class="hljs-attr">"coefficient"</span> : <span class="hljs-number">0.02</span>,
+                        <span class="hljs-attr">"title"</span> : <span class="hljs-string">"v3ml"</span>,
+                        <span class="hljs-attr">"title_en"</span> : <span class="hljs-literal">null</span>,
+                        <span class="hljs-attr">"weight"</span> : <span class="hljs-number">2</span>
+                     }
+                  ],
+                  <span class="hljs-attr">"title"</span> : <span class="hljs-string">"v3ml"</span>,
+                  <span class="hljs-attr">"title_en"</span> : <span class="hljs-literal">null</span>
+               },
+               {
+                  <span class="hljs-attr">"code"</span> : <span class="hljs-string">"916771cab7f14445b63322858fa235ff"</span>,
+                  <span class="hljs-attr">"descr"</span> : <span class="hljs-string">"v3ml"</span>,
+                  <span class="hljs-attr">"descr_en"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"options"</span> : [
+                     {
+                        <span class="hljs-attr">"coefficient"</span> : <span class="hljs-number">0.03</span>,
+                        <span class="hljs-attr">"title"</span> : <span class="hljs-string">"v3ml"</span>,
+                        <span class="hljs-attr">"title_en"</span> : <span class="hljs-literal">null</span>,
+                        <span class="hljs-attr">"weight"</span> : <span class="hljs-number">3</span>
+                     }
+                  ],
+                  <span class="hljs-attr">"title"</span> : <span class="hljs-string">"v3ml"</span>,
+                  <span class="hljs-attr">"title_en"</span> : <span class="hljs-literal">null</span>
+               },
+               {
+                  <span class="hljs-attr">"code"</span> : <span class="hljs-string">"b69d46e79b3f4a8eb1e7a52bf54f8a20"</span>,
+                  <span class="hljs-attr">"descr"</span> : <span class="hljs-string">"asdfsaf"</span>,
+                  <span class="hljs-attr">"descr_en"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"options"</span> : [
+                     {
+                        <span class="hljs-attr">"coefficient"</span> : <span class="hljs-number">0.02</span>,
+                        <span class="hljs-attr">"title"</span> : <span class="hljs-string">"asdfsaf"</span>,
+                        <span class="hljs-attr">"title_en"</span> : <span class="hljs-literal">null</span>,
+                        <span class="hljs-attr">"weight"</span> : <span class="hljs-number">2</span>
+                     }
+                  ],
+                  <span class="hljs-attr">"title"</span> : <span class="hljs-string">"asdfsaf"</span>,
+                  <span class="hljs-attr">"title_en"</span> : <span class="hljs-literal">null</span>
+               }
+            ],
+            <span class="hljs-attr">"merchant"</span> : {
+               <span class="hljs-attr">"address"</span> : {
+                  <span class="hljs-attr">"countryName"</span> : <span class="hljs-string">"Україна"</span>,
+                  <span class="hljs-attr">"locality"</span> : <span class="hljs-string">"dfasdfsdaf"</span>,
+                  <span class="hljs-attr">"postalCode"</span> : <span class="hljs-string">"123123"</span>,
+                  <span class="hljs-attr">"region"</span> : <span class="hljs-string">"Волинська область"</span>,
+                  <span class="hljs-attr">"streetAddress"</span> : <span class="hljs-string">"adfasdf"</span>
+               },
+               <span class="hljs-attr">"contactPoint"</span> : {
+                  <span class="hljs-attr">"email"</span> : <span class="hljs-string">"some76@mailinator.com"</span>,
+                  <span class="hljs-attr">"name"</span> : <span class="hljs-string">"фыафыв adsfasdf фвыаыфва"</span>,
+                  <span class="hljs-attr">"telephone"</span> : <span class="hljs-string">"+380509999999"</span>
+               },
+               <span class="hljs-attr">"identifier"</span> : {
+                  <span class="hljs-attr">"id"</span> : <span class="hljs-string">"81726354"</span>,
+                  <span class="hljs-attr">"legalName"</span> : <span class="hljs-string">"ТОВ \"some76\""</span>,
+                  <span class="hljs-attr">"scheme"</span> : <span class="hljs-string">"UA-EDR"</span>,
+                  <span class="hljs-attr">"uri"</span> : <span class="hljs-literal">null</span>
+               },
+               <span class="hljs-attr">"name"</span> : <span class="hljs-string">"ТОВ \"some76\""</span>,
+               <span class="hljs-attr">"scale"</span> : <span class="hljs-string">"mid"</span>
+            },
+            <span class="hljs-attr">"net_present_amount"</span> : <span class="hljs-number">112754.747368421</span>,
+            <span class="hljs-attr">"status"</span> : <span class="hljs-number">0</span>,
+            <span class="hljs-attr">"status_text"</span> : <span class="hljs-string">"активно"</span>,
+            <span class="hljs-attr">"subcontracting_details"</span> : <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"uid"</span> : <span class="hljs-string">"5781dd02185240de8674f466839c4df5"</span>,
+            <span class="hljs-attr">"value"</span> : {
+               <span class="hljs-attr">"amount"</span> : <span class="hljs-number">123123</span>,
+               <span class="hljs-attr">"currency"</span> : <span class="hljs-string">"UAH"</span>,
+               <span class="hljs-attr">"valueAddedTaxIncluded"</span> : <span class="hljs-literal">false</span>
+            }
+         }
+      ],
+      <span class="hljs-attr">"pre_qualification"</span> : [],
+      <span class="hljs-attr">"public_link_lot"</span> : <span class="hljs-string">"http://zakupki.example.com:5001/gov/tenders/UA-2019-07-16-000038-c/lot-42f5c550b8cd47e7be912dd247fc331e"</span>,
+      <span class="hljs-attr">"public_link_tender"</span> : <span class="hljs-string">"http://zakupki.example.com:5001/gov/tenders/UA-2019-07-16-000038-c"</span>,
+      <span class="hljs-attr">"qualification"</span> : [
+         {
+            <span class="hljs-attr">"amount_weight"</span> : <span class="hljs-number">87</span>,
+            <span class="hljs-attr">"coefficient_of_features"</span> : <span class="hljs-number">1.09195402298851</span>,
+            <span class="hljs-attr">"contract"</span> : {
+               <span class="hljs-attr">"awardID"</span> : <span class="hljs-string">"be84b2ac819f4ada8fe40640819c9b2d"</span>,
+               <span class="hljs-attr">"contractID"</span> : <span class="hljs-string">"UA-2019-07-16-000038-c-c1"</span>,
+               <span class="hljs-attr">"contractNumber"</span> : <span class="hljs-string">"123123"</span>,
+               <span class="hljs-attr">"date"</span> : <span class="hljs-string">"2019-07-29T12:07:07"</span>,
+               <span class="hljs-attr">"dateSigned"</span> : <span class="hljs-string">"2019-07-29T12:00:00+03:00"</span>,
+               <span class="hljs-attr">"date_signed"</span> : <span class="hljs-literal">null</span>,
+               <span class="hljs-attr">"documents"</span> : {
+                  <span class="hljs-attr">"contract"</span> : [
+                     {
+                        <span class="hljs-attr">"dateModified"</span> : <span class="hljs-string">"2019-07-29T15:06:43"</span>,
+                        <span class="hljs-attr">"datePublished"</span> : <span class="hljs-string">"2019-07-29T15:06:43"</span>,
+                        <span class="hljs-attr">"history"</span> : [],
+                        <span class="hljs-attr">"id"</span> : <span class="hljs-string">"8ce8b2abc52046799136e29baa304d55"</span>,
+                        <span class="hljs-attr">"mimetype"</span> : <span class="hljs-string">"application/pkcs7-signature"</span>,
+                        <span class="hljs-attr">"title"</span> : <span class="hljs-string">"sign.p7s"</span>,
+                        <span class="hljs-attr">"url"</span> : <span class="hljs-string">"https://public-docs-sandbox.prozorro.gov.ua/get/af5303d33d3640f2866057b0ee0944ed?KeyID=1331dc52&amp;Signature=5gW6rWUBM33a0f%252B9%252BVpabfvOGIyDAqBHWB%252BoG%2Frs8WxzK5C1aqRxwjBZz4l12C3D%252BqAQyvo2ZtrggS%252Br67HWCQ%253D%253D"</span>
+                     },
+                     {
+                        <span class="hljs-attr">"dateModified"</span> : <span class="hljs-string">"2019-07-29T15:05:46"</span>,
+                        <span class="hljs-attr">"datePublished"</span> : <span class="hljs-string">"2019-07-29T15:05:46"</span>,
+                        <span class="hljs-attr">"history"</span> : [],
+                        <span class="hljs-attr">"id"</span> : <span class="hljs-string">"546c4f9c09ad403ea797996b25bb8a02"</span>,
+                        <span class="hljs-attr">"mimetype"</span> : <span class="hljs-string">"text/plain"</span>,
+                        <span class="hljs-attr">"title"</span> : <span class="hljs-string">"test1.txt"</span>,
+                        <span class="hljs-attr">"url"</span> : <span class="hljs-string">"https://public-docs-sandbox.prozorro.gov.ua/get/f674163b7ab548928c6180bcc5f7477e?KeyID=1331dc52&amp;Signature=qLKtRMfe3a9v6UcfzlWPP94FIVyrq7IecZUIh1ySQapiutW86SjVdo6ihx5%252BXWD%2FCd5zLGhUNI6MIcYiWyzdBA%253D%253D"</span>
+                     }
+                  ]
+               },
+               <span class="hljs-attr">"id"</span> : <span class="hljs-string">"d484da90e2e448d7b577fc98824f3906"</span>,
+               <span class="hljs-attr">"period"</span> : {
+                  <span class="hljs-attr">"end_date"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"start_date"</span> : <span class="hljs-literal">null</span>
+               },
+               <span class="hljs-attr">"status"</span> : <span class="hljs-number">1</span>,
+               <span class="hljs-attr">"status_text"</span> : <span class="hljs-string">"підписано"</span>,
+               <span class="hljs-attr">"value"</span> : {
+                  <span class="hljs-attr">"amount"</span> : <span class="hljs-number">123123</span>,
+                  <span class="hljs-attr">"amountNet"</span> : <span class="hljs-number">123123</span>,
+                  <span class="hljs-attr">"currency"</span> : <span class="hljs-string">"UAH"</span>,
+                  <span class="hljs-attr">"valueAddedTaxIncluded"</span> : <span class="hljs-literal">false</span>
+               }
+            },
+            <span class="hljs-attr">"documents"</span> : {
+               <span class="hljs-attr">"contract"</span> : [
+                  {
+                     <span class="hljs-attr">"dateModified"</span> : <span class="hljs-string">"2019-07-29T15:06:43"</span>,
+                     <span class="hljs-attr">"datePublished"</span> : <span class="hljs-string">"2019-07-29T15:06:43"</span>,
+                     <span class="hljs-attr">"history"</span> : [],
+                     <span class="hljs-attr">"id"</span> : <span class="hljs-string">"8ce8b2abc52046799136e29baa304d55"</span>,
+                     <span class="hljs-attr">"mimetype"</span> : <span class="hljs-string">"application/pkcs7-signature"</span>,
+                     <span class="hljs-attr">"title"</span> : <span class="hljs-string">"sign.p7s"</span>,
+                     <span class="hljs-attr">"url"</span> : <span class="hljs-string">"https://public-docs-sandbox.prozorro.gov.ua/get/af5303d33d3640f2866057b0ee0944ed?KeyID=1331dc52&amp;Signature=5gW6rWUBM33a0f%252B9%252BVpabfvOGIyDAqBHWB%252BoG%2Frs8WxzK5C1aqRxwjBZz4l12C3D%252BqAQyvo2ZtrggS%252Br67HWCQ%253D%253D"</span>
+                  },
+                  {
+                     <span class="hljs-attr">"dateModified"</span> : <span class="hljs-string">"2019-07-29T15:05:46"</span>,
+                     <span class="hljs-attr">"datePublished"</span> : <span class="hljs-string">"2019-07-29T15:05:46"</span>,
+                     <span class="hljs-attr">"history"</span> : [],
+                     <span class="hljs-attr">"id"</span> : <span class="hljs-string">"546c4f9c09ad403ea797996b25bb8a02"</span>,
+                     <span class="hljs-attr">"mimetype"</span> : <span class="hljs-string">"text/plain"</span>,
+                     <span class="hljs-attr">"title"</span> : <span class="hljs-string">"test1.txt"</span>,
+                     <span class="hljs-attr">"url"</span> : <span class="hljs-string">"https://public-docs-sandbox.prozorro.gov.ua/get/f674163b7ab548928c6180bcc5f7477e?KeyID=1331dc52&amp;Signature=qLKtRMfe3a9v6UcfzlWPP94FIVyrq7IecZUIh1ySQapiutW86SjVdo6ihx5%252BXWD%2FCd5zLGhUNI6MIcYiWyzdBA%253D%253D"</span>
+                  }
+               ],
+               <span class="hljs-attr">"offer"</span> : [
+                  {
+                     <span class="hljs-attr">"confidentiality"</span> : <span class="hljs-string">"public"</span>,
+                     <span class="hljs-attr">"dateModified"</span> : <span class="hljs-string">"2019-07-16T13:57:24"</span>,
+                     <span class="hljs-attr">"datePublished"</span> : <span class="hljs-string">"2019-07-16T13:57:24"</span>,
+                     <span class="hljs-attr">"history"</span> : [],
+                     <span class="hljs-attr">"id"</span> : <span class="hljs-string">"a60e47769a194c05807aca1f4569f29f"</span>,
+                     <span class="hljs-attr">"mimetype"</span> : <span class="hljs-string">"image/png"</span>,
+                     <span class="hljs-attr">"title"</span> : <span class="hljs-string">"test_img.png"</span>,
+                     <span class="hljs-attr">"url"</span> : <span class="hljs-string">"http://my.example.com:5001/media/files/1246078_test_img.png"</span>
+                  },
+                  {
+                     <span class="hljs-attr">"confidentiality"</span> : <span class="hljs-string">"public"</span>,
+                     <span class="hljs-attr">"dateModified"</span> : <span class="hljs-string">"2019-07-16T13:57:24"</span>,
+                     <span class="hljs-attr">"datePublished"</span> : <span class="hljs-string">"2019-07-16T13:57:24"</span>,
+                     <span class="hljs-attr">"history"</span> : [],
+                     <span class="hljs-attr">"id"</span> : <span class="hljs-string">"4475f440fe454cbcb71c70f7441141c0"</span>,
+                     <span class="hljs-attr">"mimetype"</span> : <span class="hljs-string">"text/html"</span>,
+                     <span class="hljs-attr">"title"</span> : <span class="hljs-string">"test.html"</span>,
+                     <span class="hljs-attr">"url"</span> : <span class="hljs-string">"http://my.example.com:5001/media/files/1246079_test.html"</span>
+                  },
+                  {
+                     <span class="hljs-attr">"confidentiality"</span> : <span class="hljs-string">"public"</span>,
+                     <span class="hljs-attr">"dateModified"</span> : <span class="hljs-string">"2019-07-16T13:57:24"</span>,
+                     <span class="hljs-attr">"datePublished"</span> : <span class="hljs-string">"2019-07-16T13:57:24"</span>,
+                     <span class="hljs-attr">"history"</span> : [],
+                     <span class="hljs-attr">"id"</span> : <span class="hljs-string">"389e4f4c19404e44bbaebed7cd272310"</span>,
+                     <span class="hljs-attr">"mimetype"</span> : <span class="hljs-string">"text/plain"</span>,
+                     <span class="hljs-attr">"title"</span> : <span class="hljs-string">"test1.txt"</span>,
+                     <span class="hljs-attr">"url"</span> : <span class="hljs-string">"http://my.example.com:5001/media/files/1246081_test1.txt"</span>
+                  },
+                  {
+                     <span class="hljs-attr">"confidentiality"</span> : <span class="hljs-string">"public"</span>,
+                     <span class="hljs-attr">"dateModified"</span> : <span class="hljs-string">"2019-07-16T13:57:24"</span>,
+                     <span class="hljs-attr">"datePublished"</span> : <span class="hljs-string">"2019-07-16T13:57:24"</span>,
+                     <span class="hljs-attr">"history"</span> : [],
+                     <span class="hljs-attr">"id"</span> : <span class="hljs-string">"8faf557a6a8b4126b2d49aad82d2f1df"</span>,
+                     <span class="hljs-attr">"mimetype"</span> : <span class="hljs-string">"text/plain"</span>,
+                     <span class="hljs-attr">"title"</span> : <span class="hljs-string">"test.txt"</span>,
+                     <span class="hljs-attr">"url"</span> : <span class="hljs-string">"http://my.example.com:5001/media/files/1246080_test.txt"</span>
+                  }
+               ],
+               <span class="hljs-attr">"offer_lot"</span> : [
+                  {
+                     <span class="hljs-attr">"confidentiality"</span> : <span class="hljs-string">"public"</span>,
+                     <span class="hljs-attr">"dateModified"</span> : <span class="hljs-string">"2019-07-16T13:57:24"</span>,
+                     <span class="hljs-attr">"datePublished"</span> : <span class="hljs-string">"2019-07-16T13:57:24"</span>,
+                     <span class="hljs-attr">"history"</span> : [],
+                     <span class="hljs-attr">"id"</span> : <span class="hljs-string">"7e9edf2a07d44e0692ea95784a9a2dc3"</span>,
+                     <span class="hljs-attr">"mimetype"</span> : <span class="hljs-string">"text/plain"</span>,
+                     <span class="hljs-attr">"title"</span> : <span class="hljs-string">"test.txt"</span>,
+                     <span class="hljs-attr">"url"</span> : <span class="hljs-string">"http://my.example.com:5001/media/files/1246084_test.txt"</span>
+                  },
+                  {
+                     <span class="hljs-attr">"confidentiality"</span> : <span class="hljs-string">"public"</span>,
+                     <span class="hljs-attr">"dateModified"</span> : <span class="hljs-string">"2019-07-16T13:57:24"</span>,
+                     <span class="hljs-attr">"datePublished"</span> : <span class="hljs-string">"2019-07-16T13:57:24"</span>,
+                     <span class="hljs-attr">"history"</span> : [],
+                     <span class="hljs-attr">"id"</span> : <span class="hljs-string">"ea47152a940848b599fddc25b5f3dc25"</span>,
+                     <span class="hljs-attr">"mimetype"</span> : <span class="hljs-string">"image/png"</span>,
+                     <span class="hljs-attr">"title"</span> : <span class="hljs-string">"test_img.png"</span>,
+                     <span class="hljs-attr">"url"</span> : <span class="hljs-string">"http://my.example.com:5001/media/files/1246082_test_img.png"</span>
+                  },
+                  {
+                     <span class="hljs-attr">"confidentiality"</span> : <span class="hljs-string">"public"</span>,
+                     <span class="hljs-attr">"dateModified"</span> : <span class="hljs-string">"2019-07-16T13:57:24"</span>,
+                     <span class="hljs-attr">"datePublished"</span> : <span class="hljs-string">"2019-07-16T13:57:24"</span>,
+                     <span class="hljs-attr">"history"</span> : [],
+                     <span class="hljs-attr">"id"</span> : <span class="hljs-string">"d4b5db7321724e4c80676050a9cc3a0e"</span>,
+                     <span class="hljs-attr">"mimetype"</span> : <span class="hljs-string">"text/plain"</span>,
+                     <span class="hljs-attr">"title"</span> : <span class="hljs-string">"test1.txt"</span>,
+                     <span class="hljs-attr">"url"</span> : <span class="hljs-string">"http://my.example.com:5001/media/files/1246086_test1.txt"</span>
+                  },
+                  {
+                     <span class="hljs-attr">"confidentiality"</span> : <span class="hljs-string">"public"</span>,
+                     <span class="hljs-attr">"dateModified"</span> : <span class="hljs-string">"2019-07-16T13:57:24"</span>,
+                     <span class="hljs-attr">"datePublished"</span> : <span class="hljs-string">"2019-07-16T13:57:24"</span>,
+                     <span class="hljs-attr">"history"</span> : [],
+                     <span class="hljs-attr">"id"</span> : <span class="hljs-string">"0e9afd1b8e564f41aafb71257a07583b"</span>,
+                     <span class="hljs-attr">"mimetype"</span> : <span class="hljs-string">"text/html"</span>,
+                     <span class="hljs-attr">"title"</span> : <span class="hljs-string">"test.html"</span>,
+                     <span class="hljs-attr">"url"</span> : <span class="hljs-string">"http://my.example.com:5001/media/files/1246083_test.html"</span>
+                  }
+               ],
+               <span class="hljs-attr">"qualification"</span> : [
+                  {
+                     <span class="hljs-attr">"dateModified"</span> : <span class="hljs-string">"2019-07-29T11:48:17"</span>,
+                     <span class="hljs-attr">"datePublished"</span> : <span class="hljs-string">"2019-07-29T11:48:17"</span>,
+                     <span class="hljs-attr">"history"</span> : [],
+                     <span class="hljs-attr">"id"</span> : <span class="hljs-string">"4df903de0cb14d8aab347d45897f76c0"</span>,
+                     <span class="hljs-attr">"mimetype"</span> : <span class="hljs-string">"application/pkcs7-signature"</span>,
+                     <span class="hljs-attr">"title"</span> : <span class="hljs-string">"sign.p7s"</span>,
+                     <span class="hljs-attr">"url"</span> : <span class="hljs-string">"https://public-docs-sandbox.prozorro.gov.ua/get/45d8f3f6133644bc934226d11597259a?KeyID=1331dc52&amp;Signature=KkUuTI%252BeZP%252BIv%2F9uoCkD4egjunjD48Vl%252BFUAK5mDwFtIooZC9qi5LKB4rr9u7GFZr76RrkVNsxS9hW9IngROBQ%253D%253D"</span>
+                  },
+                  {
+                     <span class="hljs-attr">"dateModified"</span> : <span class="hljs-string">"2019-07-17T13:17:39"</span>,
+                     <span class="hljs-attr">"datePublished"</span> : <span class="hljs-string">"2019-07-17T13:17:39"</span>,
+                     <span class="hljs-attr">"documentType"</span> : <span class="hljs-string">"registerExtract"</span>,
+                     <span class="hljs-attr">"history"</span> : [],
+                     <span class="hljs-attr">"id"</span> : <span class="hljs-string">"2426adf5db4a4a0dbba857632c597a99"</span>,
+                     <span class="hljs-attr">"mimetype"</span> : <span class="hljs-literal">null</span>,
+                     <span class="hljs-attr">"title"</span> : <span class="hljs-string">"edr_identification.yaml"</span>,
+                     <span class="hljs-attr">"url"</span> : <span class="hljs-string">"https://public-docs-sandbox.prozorro.gov.ua/get/3bb014a953484d2daa8674515d5030ad?KeyID=1331dc52&amp;Signature=dM1FGndh9JdDVmP%252B1y%2Fq08kqAeNhGaJylcmVPK2ysio4HDJ3GAk6fMxs6XUNfppx1h%2FOMU%2Fx%252BDDXOfdZQxbXCA%253D%253D"</span>
+                  },
+                  {
+                     <span class="hljs-attr">"dateModified"</span> : <span class="hljs-string">"2019-07-29T11:47:54"</span>,
+                     <span class="hljs-attr">"datePublished"</span> : <span class="hljs-string">"2019-07-29T11:47:54"</span>,
+                     <span class="hljs-attr">"history"</span> : [],
+                     <span class="hljs-attr">"id"</span> : <span class="hljs-string">"cacf17e9b82f4704b468db3680c1f6c3"</span>,
+                     <span class="hljs-attr">"mimetype"</span> : <span class="hljs-string">"text/plain"</span>,
+                     <span class="hljs-attr">"title"</span> : <span class="hljs-string">"test.txt"</span>,
+                     <span class="hljs-attr">"url"</span> : <span class="hljs-string">"https://public-docs-sandbox.prozorro.gov.ua/get/d1cdb992374d41bba8a2e44849a2a7fa?KeyID=1331dc52&amp;Signature=o5VzmOS%252BuR5Z2sM7zrkP56mdwT%2FBDoX%2FOG0FDSY%2FYpwwOwOJjWCZvSi8J4tUbNZzdMqvQNQ1tTHOXmCq4IedBA%253D%253D"</span>
+                  }
+               ]
+            },
+            <span class="hljs-attr">"features"</span> : [
+               {
+                  <span class="hljs-attr">"code"</span> : <span class="hljs-string">"988860c82edd495cace395b2866b3e81"</span>,
+                  <span class="hljs-attr">"descr"</span> : <span class="hljs-string">"v3ml"</span>,
+                  <span class="hljs-attr">"descr_en"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"options"</span> : [
+                     {
+                        <span class="hljs-attr">"coefficient"</span> : <span class="hljs-number">0</span>,
+                        <span class="hljs-attr">"title"</span> : <span class="hljs-string">"v3ml"</span>,
+                        <span class="hljs-attr">"title_en"</span> : <span class="hljs-literal">null</span>,
+                        <span class="hljs-attr">"weight"</span> : <span class="hljs-number">0</span>
+                     }
+                  ],
+                  <span class="hljs-attr">"title"</span> : <span class="hljs-string">"v3ml"</span>,
+                  <span class="hljs-attr">"title_en"</span> : <span class="hljs-literal">null</span>
+               },
+               {
+                  <span class="hljs-attr">"code"</span> : <span class="hljs-string">"f2e92f92e62041e384dfa1f05f333ea1"</span>,
+                  <span class="hljs-attr">"descr"</span> : <span class="hljs-string">"v3ml"</span>,
+                  <span class="hljs-attr">"descr_en"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"options"</span> : [
+                     {
+                        <span class="hljs-attr">"coefficient"</span> : <span class="hljs-number">0.01</span>,
+                        <span class="hljs-attr">"title"</span> : <span class="hljs-string">"v3ml"</span>,
+                        <span class="hljs-attr">"title_en"</span> : <span class="hljs-literal">null</span>,
+                        <span class="hljs-attr">"weight"</span> : <span class="hljs-number">1</span>
+                     }
+                  ],
+                  <span class="hljs-attr">"title"</span> : <span class="hljs-string">"v3ml"</span>,
+                  <span class="hljs-attr">"title_en"</span> : <span class="hljs-literal">null</span>
+               },
+               {
+                  <span class="hljs-attr">"code"</span> : <span class="hljs-string">"a99c755a7bf04650a56143d906e9fb1d"</span>,
+                  <span class="hljs-attr">"descr"</span> : <span class="hljs-string">"v3ml"</span>,
+                  <span class="hljs-attr">"descr_en"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"options"</span> : [
+                     {
+                        <span class="hljs-attr">"coefficient"</span> : <span class="hljs-number">0.02</span>,
+                        <span class="hljs-attr">"title"</span> : <span class="hljs-string">"v3ml"</span>,
+                        <span class="hljs-attr">"title_en"</span> : <span class="hljs-literal">null</span>,
+                        <span class="hljs-attr">"weight"</span> : <span class="hljs-number">2</span>
+                     }
+                  ],
+                  <span class="hljs-attr">"title"</span> : <span class="hljs-string">"v3ml"</span>,
+                  <span class="hljs-attr">"title_en"</span> : <span class="hljs-literal">null</span>
+               },
+               {
+                  <span class="hljs-attr">"code"</span> : <span class="hljs-string">"916771cab7f14445b63322858fa235ff"</span>,
+                  <span class="hljs-attr">"descr"</span> : <span class="hljs-string">"v3ml"</span>,
+                  <span class="hljs-attr">"descr_en"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"options"</span> : [
+                     {
+                        <span class="hljs-attr">"coefficient"</span> : <span class="hljs-number">0.03</span>,
+                        <span class="hljs-attr">"title"</span> : <span class="hljs-string">"v3ml"</span>,
+                        <span class="hljs-attr">"title_en"</span> : <span class="hljs-literal">null</span>,
+                        <span class="hljs-attr">"weight"</span> : <span class="hljs-number">3</span>
+                     }
+                  ],
+                  <span class="hljs-attr">"title"</span> : <span class="hljs-string">"v3ml"</span>,
+                  <span class="hljs-attr">"title_en"</span> : <span class="hljs-literal">null</span>
+               },
+               {
+                  <span class="hljs-attr">"code"</span> : <span class="hljs-string">"b69d46e79b3f4a8eb1e7a52bf54f8a20"</span>,
+                  <span class="hljs-attr">"descr"</span> : <span class="hljs-string">"asdfsaf"</span>,
+                  <span class="hljs-attr">"descr_en"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"options"</span> : [
+                     {
+                        <span class="hljs-attr">"coefficient"</span> : <span class="hljs-number">0.02</span>,
+                        <span class="hljs-attr">"title"</span> : <span class="hljs-string">"asdfsaf"</span>,
+                        <span class="hljs-attr">"title_en"</span> : <span class="hljs-literal">null</span>,
+                        <span class="hljs-attr">"weight"</span> : <span class="hljs-number">2</span>
+                     }
+                  ],
+                  <span class="hljs-attr">"title"</span> : <span class="hljs-string">"asdfsaf"</span>,
+                  <span class="hljs-attr">"title_en"</span> : <span class="hljs-literal">null</span>
+               }
+            ],
+            <span class="hljs-attr">"id"</span> : <span class="hljs-string">"be84b2ac819f4ada8fe40640819c9b2d"</span>,
+            <span class="hljs-attr">"merchant"</span> : {
+               <span class="hljs-attr">"address"</span> : {
+                  <span class="hljs-attr">"countryName"</span> : <span class="hljs-string">"Україна"</span>,
+                  <span class="hljs-attr">"locality"</span> : <span class="hljs-string">"dfasdfsdaf"</span>,
+                  <span class="hljs-attr">"postalCode"</span> : <span class="hljs-string">"123123"</span>,
+                  <span class="hljs-attr">"region"</span> : <span class="hljs-string">"Волинська область"</span>,
+                  <span class="hljs-attr">"streetAddress"</span> : <span class="hljs-string">"adfasdf"</span>
+               },
+               <span class="hljs-attr">"contactPoint"</span> : {
+                  <span class="hljs-attr">"email"</span> : <span class="hljs-string">"some76@mailinator.com"</span>,
+                  <span class="hljs-attr">"name"</span> : <span class="hljs-string">"фыафыв adsfasdf фвыаыфва"</span>,
+                  <span class="hljs-attr">"telephone"</span> : <span class="hljs-string">"+380509999999"</span>
+               },
+               <span class="hljs-attr">"identifier"</span> : {
+                  <span class="hljs-attr">"id"</span> : <span class="hljs-string">"81726354"</span>,
+                  <span class="hljs-attr">"legalName"</span> : <span class="hljs-string">"ТОВ \"some76\""</span>,
+                  <span class="hljs-attr">"scheme"</span> : <span class="hljs-string">"UA-EDR"</span>,
+                  <span class="hljs-attr">"uri"</span> : <span class="hljs-literal">null</span>
+               },
+               <span class="hljs-attr">"name"</span> : <span class="hljs-string">"ТОВ \"some76\""</span>,
+               <span class="hljs-attr">"scale"</span> : <span class="hljs-string">"mid"</span>
+            },
+            <span class="hljs-attr">"net_present_amount"</span> : <span class="hljs-number">112754.747368421</span>,
+            <span class="hljs-attr">"status"</span> : <span class="hljs-number">2</span>,
+            <span class="hljs-attr">"status_text"</span> : <span class="hljs-string">"визнаний переможцем"</span>,
+            <span class="hljs-attr">"value"</span> : {
+               <span class="hljs-attr">"amount"</span> : <span class="hljs-number">123123</span>,
+               <span class="hljs-attr">"currency"</span> : <span class="hljs-string">"UAH"</span>,
+               <span class="hljs-attr">"valueAddedTaxIncluded"</span> : <span class="hljs-literal">false</span>
+            }
+         }
+      ],
+      <span class="hljs-attr">"questions_count"</span> : <span class="hljs-number">0</span>,
+      <span class="hljs-attr">"stage1_id"</span> : <span class="hljs-literal">null</span>,
+      <span class="hljs-attr">"stage2_id"</span> : <span class="hljs-literal">null</span>,
+      <span class="hljs-attr">"step"</span> : {
+         <span class="hljs-attr">"amount"</span> : <span class="hljs-number">123</span>,
+         <span class="hljs-attr">"currency"</span> : <span class="hljs-string">"UAH"</span>,
+         <span class="hljs-attr">"valueAddedTaxIncluded"</span> : <span class="hljs-literal">false</span>
+      },
+      <span class="hljs-attr">"title"</span> : <span class="hljs-string">"v3ml"</span>,
+      <span class="hljs-attr">"title_en"</span> : <span class="hljs-literal">null</span>,
+      <span class="hljs-attr">"user_offer"</span> : {
+         <span class="hljs-attr">"amount_weight"</span> : <span class="hljs-number">87</span>,
+         <span class="hljs-attr">"auction_url"</span> : <span class="hljs-literal">null</span>,
+         <span class="hljs-attr">"auto_active"</span> : <span class="hljs-literal">true</span>,
+         <span class="hljs-attr">"coefficient_of_features"</span> : <span class="hljs-number">1.09195402298851</span>,
+         <span class="hljs-attr">"documents"</span> : {
+            <span class="hljs-attr">"offer"</span> : [
+               {
+                  <span class="hljs-attr">"confidentiality"</span> : <span class="hljs-string">"public"</span>,
+                  <span class="hljs-attr">"dateModified"</span> : <span class="hljs-string">"2019-07-16T13:57:24"</span>,
+                  <span class="hljs-attr">"datePublished"</span> : <span class="hljs-string">"2019-07-16T13:57:24"</span>,
+                  <span class="hljs-attr">"history"</span> : [],
+                  <span class="hljs-attr">"id"</span> : <span class="hljs-string">"a60e47769a194c05807aca1f4569f29f"</span>,
+                  <span class="hljs-attr">"mimetype"</span> : <span class="hljs-string">"image/png"</span>,
+                  <span class="hljs-attr">"title"</span> : <span class="hljs-string">"test_img.png"</span>,
+                  <span class="hljs-attr">"url"</span> : <span class="hljs-string">"http://my.example.com:5001/media/files/1246078_test_img.png"</span>
+               },
+               {
+                  <span class="hljs-attr">"confidentiality"</span> : <span class="hljs-string">"public"</span>,
+                  <span class="hljs-attr">"dateModified"</span> : <span class="hljs-string">"2019-07-16T13:57:24"</span>,
+                  <span class="hljs-attr">"datePublished"</span> : <span class="hljs-string">"2019-07-16T13:57:24"</span>,
+                  <span class="hljs-attr">"history"</span> : [],
+                  <span class="hljs-attr">"id"</span> : <span class="hljs-string">"4475f440fe454cbcb71c70f7441141c0"</span>,
+                  <span class="hljs-attr">"mimetype"</span> : <span class="hljs-string">"text/html"</span>,
+                  <span class="hljs-attr">"title"</span> : <span class="hljs-string">"test.html"</span>,
+                  <span class="hljs-attr">"url"</span> : <span class="hljs-string">"http://my.example.com:5001/media/files/1246079_test.html"</span>
+               },
+               {
+                  <span class="hljs-attr">"confidentiality"</span> : <span class="hljs-string">"public"</span>,
+                  <span class="hljs-attr">"dateModified"</span> : <span class="hljs-string">"2019-07-16T13:57:24"</span>,
+                  <span class="hljs-attr">"datePublished"</span> : <span class="hljs-string">"2019-07-16T13:57:24"</span>,
+                  <span class="hljs-attr">"history"</span> : [],
+                  <span class="hljs-attr">"id"</span> : <span class="hljs-string">"389e4f4c19404e44bbaebed7cd272310"</span>,
+                  <span class="hljs-attr">"mimetype"</span> : <span class="hljs-string">"text/plain"</span>,
+                  <span class="hljs-attr">"title"</span> : <span class="hljs-string">"test1.txt"</span>,
+                  <span class="hljs-attr">"url"</span> : <span class="hljs-string">"http://my.example.com:5001/media/files/1246081_test1.txt"</span>
+               },
+               {
+                  <span class="hljs-attr">"confidentiality"</span> : <span class="hljs-string">"public"</span>,
+                  <span class="hljs-attr">"dateModified"</span> : <span class="hljs-string">"2019-07-16T13:57:24"</span>,
+                  <span class="hljs-attr">"datePublished"</span> : <span class="hljs-string">"2019-07-16T13:57:24"</span>,
+                  <span class="hljs-attr">"history"</span> : [],
+                  <span class="hljs-attr">"id"</span> : <span class="hljs-string">"8faf557a6a8b4126b2d49aad82d2f1df"</span>,
+                  <span class="hljs-attr">"mimetype"</span> : <span class="hljs-string">"text/plain"</span>,
+                  <span class="hljs-attr">"title"</span> : <span class="hljs-string">"test.txt"</span>,
+                  <span class="hljs-attr">"url"</span> : <span class="hljs-string">"http://my.example.com:5001/media/files/1246080_test.txt"</span>
+               }
+            ],
+            <span class="hljs-attr">"offer_lot"</span> : [
+               {
+                  <span class="hljs-attr">"confidentiality"</span> : <span class="hljs-string">"public"</span>,
+                  <span class="hljs-attr">"dateModified"</span> : <span class="hljs-string">"2019-07-16T13:57:24"</span>,
+                  <span class="hljs-attr">"datePublished"</span> : <span class="hljs-string">"2019-07-16T13:57:24"</span>,
+                  <span class="hljs-attr">"history"</span> : [],
+                  <span class="hljs-attr">"id"</span> : <span class="hljs-string">"7e9edf2a07d44e0692ea95784a9a2dc3"</span>,
+                  <span class="hljs-attr">"mimetype"</span> : <span class="hljs-string">"text/plain"</span>,
+                  <span class="hljs-attr">"title"</span> : <span class="hljs-string">"test.txt"</span>,
+                  <span class="hljs-attr">"url"</span> : <span class="hljs-string">"http://my.example.com:5001/media/files/1246084_test.txt"</span>
+               },
+               {
+                  <span class="hljs-attr">"confidentiality"</span> : <span class="hljs-string">"public"</span>,
+                  <span class="hljs-attr">"dateModified"</span> : <span class="hljs-string">"2019-07-16T13:57:24"</span>,
+                  <span class="hljs-attr">"datePublished"</span> : <span class="hljs-string">"2019-07-16T13:57:24"</span>,
+                  <span class="hljs-attr">"history"</span> : [],
+                  <span class="hljs-attr">"id"</span> : <span class="hljs-string">"ea47152a940848b599fddc25b5f3dc25"</span>,
+                  <span class="hljs-attr">"mimetype"</span> : <span class="hljs-string">"image/png"</span>,
+                  <span class="hljs-attr">"title"</span> : <span class="hljs-string">"test_img.png"</span>,
+                  <span class="hljs-attr">"url"</span> : <span class="hljs-string">"http://my.example.com:5001/media/files/1246082_test_img.png"</span>
+               },
+               {
+                  <span class="hljs-attr">"confidentiality"</span> : <span class="hljs-string">"public"</span>,
+                  <span class="hljs-attr">"dateModified"</span> : <span class="hljs-string">"2019-07-16T13:57:24"</span>,
+                  <span class="hljs-attr">"datePublished"</span> : <span class="hljs-string">"2019-07-16T13:57:24"</span>,
+                  <span class="hljs-attr">"history"</span> : [],
+                  <span class="hljs-attr">"id"</span> : <span class="hljs-string">"d4b5db7321724e4c80676050a9cc3a0e"</span>,
+                  <span class="hljs-attr">"mimetype"</span> : <span class="hljs-string">"text/plain"</span>,
+                  <span class="hljs-attr">"title"</span> : <span class="hljs-string">"test1.txt"</span>,
+                  <span class="hljs-attr">"url"</span> : <span class="hljs-string">"http://my.example.com:5001/media/files/1246086_test1.txt"</span>
+               },
+               {
+                  <span class="hljs-attr">"confidentiality"</span> : <span class="hljs-string">"public"</span>,
+                  <span class="hljs-attr">"dateModified"</span> : <span class="hljs-string">"2019-07-16T13:57:24"</span>,
+                  <span class="hljs-attr">"datePublished"</span> : <span class="hljs-string">"2019-07-16T13:57:24"</span>,
+                  <span class="hljs-attr">"history"</span> : [],
+                  <span class="hljs-attr">"id"</span> : <span class="hljs-string">"0e9afd1b8e564f41aafb71257a07583b"</span>,
+                  <span class="hljs-attr">"mimetype"</span> : <span class="hljs-string">"text/html"</span>,
+                  <span class="hljs-attr">"title"</span> : <span class="hljs-string">"test.html"</span>,
+                  <span class="hljs-attr">"url"</span> : <span class="hljs-string">"http://my.example.com:5001/media/files/1246083_test.html"</span>
+               }
+            ]
+         },
+         <span class="hljs-attr">"features"</span> : [
+            {
+               <span class="hljs-attr">"code"</span> : <span class="hljs-string">"988860c82edd495cace395b2866b3e81"</span>,
+               <span class="hljs-attr">"descr"</span> : <span class="hljs-string">"v3ml"</span>,
+               <span class="hljs-attr">"descr_en"</span> : <span class="hljs-literal">null</span>,
+               <span class="hljs-attr">"options"</span> : [
+                  {
+                     <span class="hljs-attr">"coefficient"</span> : <span class="hljs-number">0</span>,
+                     <span class="hljs-attr">"title"</span> : <span class="hljs-string">"v3ml"</span>,
+                     <span class="hljs-attr">"title_en"</span> : <span class="hljs-literal">null</span>,
+                     <span class="hljs-attr">"weight"</span> : <span class="hljs-number">0</span>
+                  }
+               ],
+               <span class="hljs-attr">"title"</span> : <span class="hljs-string">"v3ml"</span>,
+               <span class="hljs-attr">"title_en"</span> : <span class="hljs-literal">null</span>
+            },
+            {
+               <span class="hljs-attr">"code"</span> : <span class="hljs-string">"f2e92f92e62041e384dfa1f05f333ea1"</span>,
+               <span class="hljs-attr">"descr"</span> : <span class="hljs-string">"v3ml"</span>,
+               <span class="hljs-attr">"descr_en"</span> : <span class="hljs-literal">null</span>,
+               <span class="hljs-attr">"options"</span> : [
+                  {
+                     <span class="hljs-attr">"coefficient"</span> : <span class="hljs-number">0.01</span>,
+                     <span class="hljs-attr">"title"</span> : <span class="hljs-string">"v3ml"</span>,
+                     <span class="hljs-attr">"title_en"</span> : <span class="hljs-literal">null</span>,
+                     <span class="hljs-attr">"weight"</span> : <span class="hljs-number">1</span>
+                  }
+               ],
+               <span class="hljs-attr">"title"</span> : <span class="hljs-string">"v3ml"</span>,
+               <span class="hljs-attr">"title_en"</span> : <span class="hljs-literal">null</span>
+            },
+            {
+               <span class="hljs-attr">"code"</span> : <span class="hljs-string">"a99c755a7bf04650a56143d906e9fb1d"</span>,
+               <span class="hljs-attr">"descr"</span> : <span class="hljs-string">"v3ml"</span>,
+               <span class="hljs-attr">"descr_en"</span> : <span class="hljs-literal">null</span>,
+               <span class="hljs-attr">"options"</span> : [
+                  {
+                     <span class="hljs-attr">"coefficient"</span> : <span class="hljs-number">0.02</span>,
+                     <span class="hljs-attr">"title"</span> : <span class="hljs-string">"v3ml"</span>,
+                     <span class="hljs-attr">"title_en"</span> : <span class="hljs-literal">null</span>,
+                     <span class="hljs-attr">"weight"</span> : <span class="hljs-number">2</span>
+                  }
+               ],
+               <span class="hljs-attr">"title"</span> : <span class="hljs-string">"v3ml"</span>,
+               <span class="hljs-attr">"title_en"</span> : <span class="hljs-literal">null</span>
+            },
+            {
+               <span class="hljs-attr">"code"</span> : <span class="hljs-string">"916771cab7f14445b63322858fa235ff"</span>,
+               <span class="hljs-attr">"descr"</span> : <span class="hljs-string">"v3ml"</span>,
+               <span class="hljs-attr">"descr_en"</span> : <span class="hljs-literal">null</span>,
+               <span class="hljs-attr">"options"</span> : [
+                  {
+                     <span class="hljs-attr">"coefficient"</span> : <span class="hljs-number">0.03</span>,
+                     <span class="hljs-attr">"title"</span> : <span class="hljs-string">"v3ml"</span>,
+                     <span class="hljs-attr">"title_en"</span> : <span class="hljs-literal">null</span>,
+                     <span class="hljs-attr">"weight"</span> : <span class="hljs-number">3</span>
+                  }
+               ],
+               <span class="hljs-attr">"title"</span> : <span class="hljs-string">"v3ml"</span>,
+               <span class="hljs-attr">"title_en"</span> : <span class="hljs-literal">null</span>
+            },
+            {
+               <span class="hljs-attr">"code"</span> : <span class="hljs-string">"b69d46e79b3f4a8eb1e7a52bf54f8a20"</span>,
+               <span class="hljs-attr">"descr"</span> : <span class="hljs-string">"asdfsaf"</span>,
+               <span class="hljs-attr">"descr_en"</span> : <span class="hljs-literal">null</span>,
+               <span class="hljs-attr">"options"</span> : [
+                  {
+                     <span class="hljs-attr">"coefficient"</span> : <span class="hljs-number">0.02</span>,
+                     <span class="hljs-attr">"title"</span> : <span class="hljs-string">"asdfsaf"</span>,
+                     <span class="hljs-attr">"title_en"</span> : <span class="hljs-literal">null</span>,
+                     <span class="hljs-attr">"weight"</span> : <span class="hljs-number">2</span>
+                  }
+               ],
+               <span class="hljs-attr">"title"</span> : <span class="hljs-string">"asdfsaf"</span>,
+               <span class="hljs-attr">"title_en"</span> : <span class="hljs-literal">null</span>
+            }
+         ],
+         <span class="hljs-attr">"merchant"</span> : {
+            <span class="hljs-attr">"address"</span> : {
+               <span class="hljs-attr">"countryName"</span> : <span class="hljs-string">"Україна"</span>,
+               <span class="hljs-attr">"locality"</span> : <span class="hljs-string">"dfasdfsdaf"</span>,
+               <span class="hljs-attr">"postalCode"</span> : <span class="hljs-string">"123123"</span>,
+               <span class="hljs-attr">"region"</span> : <span class="hljs-string">"Волинська область"</span>,
+               <span class="hljs-attr">"streetAddress"</span> : <span class="hljs-string">"adfasdf"</span>
+            },
+            <span class="hljs-attr">"contactPoint"</span> : {
+               <span class="hljs-attr">"email"</span> : <span class="hljs-string">"some76@mailinator.com"</span>,
+               <span class="hljs-attr">"name"</span> : <span class="hljs-string">"фыафыв adsfasdf фвыаыфва"</span>,
+               <span class="hljs-attr">"telephone"</span> : <span class="hljs-string">"+380509999999"</span>
+            },
+            <span class="hljs-attr">"identifier"</span> : {
+               <span class="hljs-attr">"id"</span> : <span class="hljs-string">"81726354"</span>,
+               <span class="hljs-attr">"legalName"</span> : <span class="hljs-string">"ТОВ \"some76\""</span>,
+               <span class="hljs-attr">"scheme"</span> : <span class="hljs-string">"UA-EDR"</span>,
+               <span class="hljs-attr">"uri"</span> : <span class="hljs-literal">null</span>
+            },
+            <span class="hljs-attr">"name"</span> : <span class="hljs-string">"ТОВ \"some76\""</span>,
+            <span class="hljs-attr">"scale"</span> : <span class="hljs-string">"mid"</span>
+         },
+         <span class="hljs-attr">"net_present_amount"</span> : <span class="hljs-number">112754.747368421</span>,
+         <span class="hljs-attr">"status"</span> : <span class="hljs-number">0</span>,
+         <span class="hljs-attr">"status_text"</span> : <span class="hljs-string">"активно"</span>,
+         <span class="hljs-attr">"subcontracting_details"</span> : <span class="hljs-literal">null</span>,
+         <span class="hljs-attr">"uid"</span> : <span class="hljs-string">"5781dd02185240de8674f466839c4df5"</span>,
+         <span class="hljs-attr">"value"</span> : {
+            <span class="hljs-attr">"amount"</span> : <span class="hljs-number">123123</span>,
+            <span class="hljs-attr">"currency"</span> : <span class="hljs-string">"UAH"</span>,
+            <span class="hljs-attr">"valueAddedTaxIncluded"</span> : <span class="hljs-literal">false</span>
+         }
+        },
+        <span class="hljs-attr">"main_procurement_category"</span> : {
+              <span class="hljs-attr">"label"</span> : <span class="hljs-string">"товари"</span>,
+              <span class="hljs-attr">"value"</span> : <span class="hljs-string">"goods"</span>
+        },
+        <span class="hljs-attr">"milestones"</span> : [
+            {
+                <span class="hljs-attr">"code"</span> : <span class="hljs-string">"postpayment"</span>,
+                <span class="hljs-attr">"description"</span> : <span class="hljs-string">""</span>,
+                <span class="hljs-attr">"duration"</span> : {
+                    <span class="hljs-attr">"days"</span> : <span class="hljs-number">11</span>,
+                    <span class="hljs-attr">"type"</span> : <span class="hljs-string">"banking"</span>
+                },
+                <span class="hljs-attr">"id"</span> : <span class="hljs-string">"65ed3f2aec55436db8961d83c959a25f"</span>,
+                <span class="hljs-attr">"percentage"</span> : <span class="hljs-number">100.0</span>,
+                <span class="hljs-attr">"relatedLot"</span> : <span class="hljs-string">"085b6869a27545c2a0281e79563863b3"</span>,
+                <span class="hljs-attr">"sequenceNumber"</span> : <span class="hljs-number">0</span>,
+                <span class="hljs-attr">"title"</span> : <span class="hljs-string">"executionOfWorks"</span>,
+                <span class="hljs-attr">"type"</span> : <span class="hljs-string">"financing"</span>
+            }
+        ]
+      },
+      <span class="hljs-attr">"cabinet_url"</span>: <span class="hljs-string">"https://my.zakupki.prom.ua/cabinet/purchases/state_purchase_lot/view/208066"</span>
+   },
+   <span class="hljs-string">"errors"</span> : [],
+   <span class="hljs-string">"status"</span> : <span class="hljs-string">"ok"</span>,
+   <span class="hljs-string">"system"</span> : <span class="hljs-string">""</span>
+}</code></pre>    </article>
+  </body>
+</html>

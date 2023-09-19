@@ -1,0 +1,864 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimal-ui">
+    <title>Статические данные</title>
+    <link type="text/css" rel="stylesheet" href="assets/css/github-markdown.css">
+    <link type="text/css" rel="stylesheet" href="assets/css/pilcrow.css">
+    <link type="text/css" rel="stylesheet" href="assets/css/hljs-github.min.css"/>
+  </head>
+  <body>
+    <article class="markdown-body"><h1 id="статические-данные"><a class="header-link" href="#статические-данные"></a>Статические данные</h1>
+<p><strong>GET remote/api/v1/static_data</strong></p>
+<p><strong>GET remote/api/v2/static_data</strong></p>
+<blockquote>
+<p>возвращает список доступных типов закупок, областей и прочее,
+что использутеся для фильтров поиска</p>
+</blockquote>
+<p><strong>UPDATE 2018-05-11</strong></p>
+<blockquote>
+<p>entity_type added in v2</p>
+</blockquote>
+<p>request headers:</p>
+<ul class="list">
+<li><em>Api-Agent</em> - type: string, required</li>
+</ul>
+<p>possible response fields:</p>
+<ul class="list">
+<li><em>status</em> - type: str, values: ok/error</li>
+<li><em>errors</em> - type: array of objects, validation errors</li>
+<li><em>data</em> - type: object</li>
+<li><em>system</em> - type: str, system error messages</li>
+</ul>
+<p>possible response data fields:</p>
+<ul class="list">
+<li><em>status</em> - type: array of <strong>status</strong> objects, described below</li>
+<li><em>locations</em> - type: array of <em>location</em> objects, described below</li>
+<li><em>method_type</em> - type: array of <strong>method_type</strong> objects, described below</li>
+<li><em>units</em> - type: array of <strong>unit</strong> objects, described below</li>
+<li><em>timeline_status</em> - type: array of <strong>timeline_status</strong> objects or empty, described below</li>
+<li><em>qualification_status</em> - type: array of <strong>qualification_status</strong> objects, described below</li>
+<li><em>offer_status</em> - type: array of <strong>offer_status</strong> objects, described below</li>
+<li><em>pre_qualification_status</em> - type: array of <strong>pre_qualification_status</strong> objects, described below</li>
+<li><em>lot_status</em> - type: array of <strong>lot_status</strong> objects, described below</li>
+<li><em>contract_status</em> - type: array of <strong>contract_status</strong> objects, described below</li>
+<li><em>entity_type</em> - type: array of <strong>entity_type</strong> objects, described below <strong>only in v2</strong></li>
+<li><em>cashflow_types</em> - type: array if <strong>cashflow_types</strong> objects, described below, <strong>only in v2</strong></li>
+<li><em>main_procurement_category</em> - type: array of <strong>main_procurement_category</strong> objects, described below, <strong>only in v2</strong></li>
+<li><em>lot_participate_status</em> - type: array of <strong>lot_participate_status</strong> objects, described below, <strong>only in v2</strong></li>
+</ul>
+<p>qualification status object fields:</p>
+<ul class="list">
+<li><em>value_label</em> - type: str</li>
+<li><em>value</em> - type: int</li>
+<li><em>label</em> - type: str</li>
+</ul>
+<p>offer status object fields:</p>
+<ul class="list">
+<li><em>value_label</em> - type: str</li>
+<li><em>value</em> - type: int</li>
+<li><em>label</em> - type: str</li>
+</ul>
+<p>prequalification status object fields:</p>
+<ul class="list">
+<li><em>value_label</em> - type: str</li>
+<li><em>value</em> - type: int</li>
+<li><em>label</em> - type: str</li>
+</ul>
+<p>lot status object fields:</p>
+<ul class="list">
+<li><em>value_label</em> - type: str</li>
+<li><em>value</em> - type: int</li>
+<li><em>label</em> - type: str</li>
+</ul>
+<p>contract status object fields:</p>
+<ul class="list">
+<li><em>value_label</em> - type: str</li>
+<li><em>value</em> - type: int</li>
+<li><em>label</em> - type: str</li>
+</ul>
+<p>status object fields:</p>
+<ul class="list">
+<li><em>value</em> - type: int</li>
+<li><em>label</em> - type: str</li>
+<li><em>is_public</em> - type: bool, based on this value show/hide for status filter</li>
+<li><em>timeline_status</em> - type: str, used for time line mapping</li>
+<li><em>value_label</em> - type: str</li>
+</ul>
+<p>location object fields:</p>
+<ul class="list">
+<li><em>id</em> - type: int</li>
+<li><em>value</em> - type: str</li>
+<li><em>label</em> - type: str</li>
+</ul>
+<p>unit object fields:</p>
+<ul class="list">
+<li><em>id</em> - type: int</li>
+<li><em>value</em> - type: str</li>
+<li><em>label</em> - type: str</li>
+</ul>
+<p>method_type object fields:</p>
+<ul class="list">
+<li><em>value</em> - type: int</li>
+<li><em>value_label</em> - type: str</li>
+<li><em>label</em> - type: str</li>
+</ul>
+<p>entity_type object fields:</p>
+<ul class="list">
+<li><em>value</em> - type: int</li>
+<li><em>value_label</em> - type: str</li>
+<li><em>label</em> - type: str</li>
+</ul>
+<p>timeline_status object fields:</p>
+<ul class="list">
+<li><em>value</em> - type: int</li>
+<li><em>key</em> - type: str</li>
+</ul>
+<p>cashflow_type object fields:</p>
+<ul class="list">
+<li><em>value</em> - type: int</li>
+<li><em>label</em> - type: str</li>
+</ul>
+<p>main_procurement_category fields:</p>
+<ul class="list">
+<li><em>value</em> - type: str</li>
+<li><em>label</em> - type: str</li>
+</ul>
+<p>lot_participate_status fields:</p>
+<ul class="list">
+<li><em>value</em> - type: int</li>
+<li><em>label</em> - type: str</li>
+</ul>
+<p>request example:</p>
+<pre class="hljs"><code>curl -X GET <span class="hljs-string">"http://my.example.com:5001/remote/api/v1/static_data"</span></code></pre><p>response example:</p>
+<pre class="hljs"><code>{
+    <span class="hljs-attr">"status"</span>: <span class="hljs-string">"ok"</span>,
+    <span class="hljs-attr">"errors"</span>: [],
+    <span class="hljs-attr">"data"</span>: {
+        <span class="hljs-attr">"status"</span>: [
+            {
+                <span class="hljs-attr">"is_public"</span>: <span class="hljs-literal">true</span>,
+                <span class="hljs-attr">"value_label"</span>: <span class="hljs-string">"enquiries"</span>,
+                <span class="hljs-attr">"timeline_status"</span>: <span class="hljs-string">"active_enquiries"</span>,
+                <span class="hljs-attr">"value"</span>: <span class="hljs-number">0</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"період уточнень"</span>
+            },
+            {
+                <span class="hljs-attr">"is_public"</span>: <span class="hljs-literal">true</span>,
+                <span class="hljs-attr">"value_label"</span>: <span class="hljs-string">"cancelled"</span>,
+                <span class="hljs-attr">"timeline_status"</span>: <span class="hljs-string">"cancelled"</span>,
+                <span class="hljs-attr">"value"</span>: <span class="hljs-number">1</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"скасована"</span>
+            },
+            {
+                <span class="hljs-attr">"is_public"</span>: <span class="hljs-literal">true</span>,
+                <span class="hljs-attr">"value_label"</span>: <span class="hljs-string">"tendering"</span>,
+                <span class="hljs-attr">"timeline_status"</span>: <span class="hljs-string">"active_tendering"</span>,
+                <span class="hljs-attr">"value"</span>: <span class="hljs-number">2</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"прийом пропозицій"</span>
+            },
+            {
+                <span class="hljs-attr">"is_public"</span>: <span class="hljs-literal">true</span>,
+                <span class="hljs-attr">"value_label"</span>: <span class="hljs-string">"auction"</span>,
+                <span class="hljs-attr">"timeline_status"</span>: <span class="hljs-string">"active_auction"</span>,
+                <span class="hljs-attr">"value"</span>: <span class="hljs-number">3</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"аукціон"</span>
+            },
+            {
+                <span class="hljs-attr">"is_public"</span>: <span class="hljs-literal">true</span>,
+                <span class="hljs-attr">"value_label"</span>: <span class="hljs-string">"qualification"</span>,
+                <span class="hljs-attr">"timeline_status"</span>: <span class="hljs-string">"active_qualification"</span>,
+                <span class="hljs-attr">"value"</span>: <span class="hljs-number">4</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"кваліфікація"</span>
+            },
+            {
+                <span class="hljs-attr">"is_public"</span>: <span class="hljs-literal">true</span>,
+                <span class="hljs-attr">"value_label"</span>: <span class="hljs-string">"awarded"</span>,
+                <span class="hljs-attr">"timeline_status"</span>: <span class="hljs-string">"active_awarded"</span>,
+                <span class="hljs-attr">"value"</span>: <span class="hljs-number">5</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"пропозиції розглянуті"</span>
+            },
+            {
+                <span class="hljs-attr">"is_public"</span>: <span class="hljs-literal">true</span>,
+                <span class="hljs-attr">"value_label"</span>: <span class="hljs-string">"complete"</span>,
+                <span class="hljs-attr">"timeline_status"</span>: <span class="hljs-string">"complete"</span>,
+                <span class="hljs-attr">"value"</span>: <span class="hljs-number">6</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"завершено"</span>
+            },
+            {
+                <span class="hljs-attr">"is_public"</span>: <span class="hljs-literal">true</span>,
+                <span class="hljs-attr">"value_label"</span>: <span class="hljs-string">"unsuccessful"</span>,
+                <span class="hljs-attr">"timeline_status"</span>: <span class="hljs-string">"unsuccessful"</span>,
+                <span class="hljs-attr">"value"</span>: <span class="hljs-number">7</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"закупівля не відбулась"</span>
+            },
+            {
+                <span class="hljs-attr">"is_public"</span>: <span class="hljs-literal">false</span>,
+                <span class="hljs-attr">"value_label"</span>: <span class="hljs-string">"local_draft"</span>,
+                <span class="hljs-attr">"timeline_status"</span>: <span class="hljs-string">""</span>,
+                <span class="hljs-attr">"value"</span>: <span class="hljs-number">8</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"чернетка"</span>
+            },
+            {
+                <span class="hljs-attr">"is_public"</span>: <span class="hljs-literal">false</span>,
+                <span class="hljs-attr">"value_label"</span>: <span class="hljs-string">"planned"</span>,
+                <span class="hljs-attr">"timeline_status"</span>: <span class="hljs-string">""</span>,
+                <span class="hljs-attr">"value"</span>: <span class="hljs-number">9</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"запланований"</span>
+            },
+            {
+                <span class="hljs-attr">"is_public"</span>: <span class="hljs-literal">true</span>,
+                <span class="hljs-attr">"value_label"</span>: <span class="hljs-string">"prequalification"</span>,
+                <span class="hljs-attr">"timeline_status"</span>: <span class="hljs-string">"active_pre_qualification"</span>,
+                <span class="hljs-attr">"value"</span>: <span class="hljs-number">10</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"прекваліфікація"</span>
+            },
+            {
+                <span class="hljs-attr">"is_public"</span>: <span class="hljs-literal">false</span>,
+                <span class="hljs-attr">"value_label"</span>: <span class="hljs-string">"active"</span>,
+                <span class="hljs-attr">"timeline_status"</span>: <span class="hljs-string">"active"</span>,
+                <span class="hljs-attr">"value"</span>: <span class="hljs-number">11</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"активна"</span>
+            },
+            {
+                <span class="hljs-attr">"is_public"</span>: <span class="hljs-literal">true</span>,
+                <span class="hljs-attr">"value_label"</span>: <span class="hljs-string">"prequalification_stand_still"</span>,
+                <span class="hljs-attr">"timeline_status"</span>: <span class="hljs-string">"active_pre_qualification_stand_still"</span>,
+                <span class="hljs-attr">"value"</span>: <span class="hljs-number">12</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"прекваліфікація: період оскарження"</span>
+            },
+            {
+                <span class="hljs-attr">"is_public"</span>: <span class="hljs-literal">false</span>,
+                <span class="hljs-attr">"value_label"</span>: <span class="hljs-string">"draft"</span>,
+                <span class="hljs-attr">"timeline_status"</span>: <span class="hljs-string">"draft"</span>,
+                <span class="hljs-attr">"value"</span>: <span class="hljs-number">13</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"відправляється на ЦБД"</span>
+            },
+            {
+                <span class="hljs-attr">"is_public"</span>: <span class="hljs-literal">false</span>,
+                <span class="hljs-attr">"value_label"</span>: <span class="hljs-string">"active_stage2_pending"</span>,
+                <span class="hljs-attr">"timeline_status"</span>: <span class="hljs-string">""</span>,
+                <span class="hljs-attr">"value"</span>: <span class="hljs-number">14</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"очікує оголошення другого етапу"</span>
+            },
+            {
+                <span class="hljs-attr">"is_public"</span>: <span class="hljs-literal">false</span>,
+                <span class="hljs-attr">"value_label"</span>: <span class="hljs-string">"active_stage2_waiting"</span>,
+                <span class="hljs-attr">"timeline_status"</span>: <span class="hljs-string">"active_stage2_waiting"</span>,
+                <span class="hljs-attr">"value"</span>: <span class="hljs-number">15</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"завершення першого етапу"</span>
+            },
+            {
+                <span class="hljs-attr">"is_public"</span>: <span class="hljs-literal">false</span>,
+                <span class="hljs-attr">"value_label"</span>: <span class="hljs-string">"draft_stage2"</span>,
+                <span class="hljs-attr">"timeline_status"</span>: <span class="hljs-string">"draft_stage2"</span>,
+                <span class="hljs-attr">"value"</span>: <span class="hljs-number">16</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"створення другого етапу"</span>
+            },
+            {
+                <span class="hljs-attr">"is_public"</span>: <span class="hljs-literal">false</span>,
+                <span class="hljs-attr">"value_label"</span>: <span class="hljs-string">"pending_activation"</span>,
+                <span class="hljs-attr">"timeline_status"</span>: <span class="hljs-string">"pending_activation"</span>,
+                <span class="hljs-attr">"value"</span>: <span class="hljs-number">17</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"Прийняття заяв на участь"</span>
+            },
+            {
+                <span class="hljs-attr">"is_public"</span>: <span class="hljs-literal">false</span>,
+                <span class="hljs-attr">"value_label"</span>: <span class="hljs-string">"rectification"</span>,
+                <span class="hljs-attr">"timeline_status"</span>: <span class="hljs-string">"active_rectification"</span>,
+                <span class="hljs-attr">"value"</span>: <span class="hljs-number">18</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"Період редагування"</span>
+            }
+        ],
+        <span class="hljs-attr">"offer_status"</span>: [
+            {
+                <span class="hljs-attr">"value_label"</span>: <span class="hljs-string">"active"</span>,
+                <span class="hljs-attr">"value"</span>: <span class="hljs-number">0</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"активно"</span>
+            },
+            {
+                <span class="hljs-attr">"value_label"</span>: <span class="hljs-string">"deleted"</span>,
+                <span class="hljs-attr">"value"</span>: <span class="hljs-number">1</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"видалене"</span>
+            },
+            {
+                <span class="hljs-attr">"value_label"</span>: <span class="hljs-string">"invalid"</span>,
+                <span class="hljs-attr">"value"</span>: <span class="hljs-number">2</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"неактивно"</span>
+            },
+            {
+                <span class="hljs-attr">"value_label"</span>: <span class="hljs-string">"pending"</span>,
+                <span class="hljs-attr">"value"</span>: <span class="hljs-number">3</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"очікує розгляду"</span>
+            },
+            {
+                <span class="hljs-attr">"value_label"</span>: <span class="hljs-string">"unsuccessful"</span>,
+                <span class="hljs-attr">"value"</span>: <span class="hljs-number">4</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"дискваліфіковано"</span>
+            },
+            {
+                <span class="hljs-attr">"value_label"</span>: <span class="hljs-string">"draft"</span>,
+                <span class="hljs-attr">"value"</span>: <span class="hljs-number">5</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"відправляється на ЦБД"</span>
+            },
+            {
+                <span class="hljs-attr">"value_label"</span>: <span class="hljs-string">"invalid_prequalification"</span>,
+                <span class="hljs-attr">"value"</span>: <span class="hljs-number">6</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"неактивно"</span>
+            },
+            {
+                <span class="hljs-attr">"value_label"</span>: <span class="hljs-string">"local_draft"</span>,
+                <span class="hljs-attr">"value"</span>: <span class="hljs-number">7</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"локальна чернетка"</span>
+            }
+        ],
+        <span class="hljs-attr">"method_type"</span>: [
+            {
+                <span class="hljs-attr">"value_label"</span>: <span class="hljs-string">"belowThreshold"</span>,
+                <span class="hljs-attr">"value"</span>: <span class="hljs-number">0</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"Допорогові державні та прості комерційні"</span>
+            },
+            {
+                <span class="hljs-attr">"value_label"</span>: <span class="hljs-string">"aboveThresholdUA"</span>,
+                <span class="hljs-attr">"value"</span>: <span class="hljs-number">1</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"Відкриті торги"</span>
+            },
+            {
+                <span class="hljs-attr">"value_label"</span>: <span class="hljs-string">"aboveThresholdEU"</span>,
+                <span class="hljs-attr">"value"</span>: <span class="hljs-number">2</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"Відкриті торги з публікацією англійською мовою"</span>
+            },
+            {
+                <span class="hljs-attr">"value_label"</span>: <span class="hljs-string">"aboveThresholdUA_defense"</span>,
+                <span class="hljs-attr">"value"</span>: <span class="hljs-number">7</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"Переговорна процедура для потреб оборони"</span>
+            },
+            {
+                <span class="hljs-attr">"value_label"</span>: <span class="hljs-string">"reporting"</span>,
+                <span class="hljs-attr">"value"</span>: <span class="hljs-number">3</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"Звіт про укладений договір"</span>
+            },
+            {
+                <span class="hljs-attr">"value_label"</span>: <span class="hljs-string">"negotiation"</span>,
+                <span class="hljs-attr">"value"</span>: <span class="hljs-number">4</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"Переговорна процедура"</span>
+            },
+            {
+                <span class="hljs-attr">"value_label"</span>: <span class="hljs-string">"negotiation_quick"</span>,
+                <span class="hljs-attr">"value"</span>: <span class="hljs-number">5</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"Переговорна процедура, скорочена"</span>
+            },
+            {
+                <span class="hljs-attr">"value_label"</span>: <span class="hljs-string">"competitiveDialogueUA"</span>,
+                <span class="hljs-attr">"value"</span>: <span class="hljs-number">8</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"Конкурентний діалог"</span>
+            },
+            {
+                <span class="hljs-attr">"value_label"</span>: <span class="hljs-string">"competitiveDialogueEU"</span>,
+                <span class="hljs-attr">"value"</span>: <span class="hljs-number">9</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"Конкурентний діалог з публікацією англійською мовою"</span>
+            },
+            {
+                <span class="hljs-attr">"value_label"</span>: <span class="hljs-string">"aboveThresholdTS"</span>,
+                <span class="hljs-attr">"value"</span>: <span class="hljs-number">14</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"Двоетапний тендер"</span>
+            },
+            {
+                <span class="hljs-attr">"value_label"</span>: <span class="hljs-string">"belowThresholdRFP"</span>,
+                <span class="hljs-attr">"value"</span>: <span class="hljs-number">16</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"Запит цінових пропозицій"</span>
+            }
+        ],
+        <span class="hljs-attr">"pre_qualification_status"</span>: [
+            {
+                <span class="hljs-attr">"value_label"</span>: <span class="hljs-string">"pending"</span>,
+                <span class="hljs-attr">"value"</span>: <span class="hljs-number">0</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"очікує рішення"</span>
+            },
+            {
+                <span class="hljs-attr">"value_label"</span>: <span class="hljs-string">"unsuccessful"</span>,
+                <span class="hljs-attr">"value"</span>: <span class="hljs-number">1</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"дискваліфіковано"</span>
+            },
+            {
+                <span class="hljs-attr">"value_label"</span>: <span class="hljs-string">"active"</span>,
+                <span class="hljs-attr">"value"</span>: <span class="hljs-number">2</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"підтверджений"</span>
+            },
+            {
+                <span class="hljs-attr">"value_label"</span>: <span class="hljs-string">"cancelled"</span>,
+                <span class="hljs-attr">"value"</span>: <span class="hljs-number">3</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"відмінено"</span>
+            }
+        ],
+        <span class="hljs-attr">"entity_type"</span>: [
+            {
+                <span class="hljs-attr">"value_label"</span>: <span class="hljs-string">"general"</span>,
+                <span class="hljs-attr">"value"</span>: <span class="hljs-number">0</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"Державний тендер"</span>
+            },
+            {
+                <span class="hljs-attr">"value_label"</span>: <span class="hljs-string">"com"</span>,
+                <span class="hljs-attr">"value"</span>: <span class="hljs-number">2</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"Комерційний тендер"</span>
+            }
+        ],
+        <span class="hljs-attr">"lot_status"</span>: [
+            {
+                <span class="hljs-attr">"value_label"</span>: <span class="hljs-string">"active"</span>,
+                <span class="hljs-attr">"value"</span>: <span class="hljs-number">0</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"активний"</span>
+            },
+            {
+                <span class="hljs-attr">"value_label"</span>: <span class="hljs-string">"cancelled"</span>,
+                <span class="hljs-attr">"value"</span>: <span class="hljs-number">1</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"скасована"</span>
+            },
+            {
+                <span class="hljs-attr">"value_label"</span>: <span class="hljs-string">"complete"</span>,
+                <span class="hljs-attr">"value"</span>: <span class="hljs-number">2</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"завершено"</span>
+            },
+            {
+                <span class="hljs-attr">"value_label"</span>: <span class="hljs-string">"unsuccessful"</span>,
+                <span class="hljs-attr">"value"</span>: <span class="hljs-number">3</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"закупівля не відбулась"</span>
+            }
+        ],
+        <span class="hljs-attr">"locations"</span>: [
+            {
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">25</span>,
+                <span class="hljs-attr">"value"</span>: <span class="hljs-string">"95-98"</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"АР Крим"</span>
+            },
+            {
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">2</span>,
+                <span class="hljs-attr">"value"</span>: <span class="hljs-string">"21-24"</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"Вінницька область"</span>
+            },
+            {
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">1</span>,
+                <span class="hljs-attr">"value"</span>: <span class="hljs-string">"43-45"</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"Волинська область"</span>
+            },
+            {
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">3</span>,
+                <span class="hljs-attr">"value"</span>: <span class="hljs-string">"49-53"</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"Дніпропетровська область"</span>
+            },
+            {
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">4</span>,
+                <span class="hljs-attr">"value"</span>: <span class="hljs-string">"83-87"</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"Донецька область"</span>
+            },
+            {
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">5</span>,
+                <span class="hljs-attr">"value"</span>: <span class="hljs-string">"10-13"</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"Житомирська область"</span>
+            },
+            {
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">6</span>,
+                <span class="hljs-attr">"value"</span>: <span class="hljs-string">"88-90"</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"Закарпатська область"</span>
+            },
+            {
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">7</span>,
+                <span class="hljs-attr">"value"</span>: <span class="hljs-string">"69-72"</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"Запорізька область"</span>
+            },
+            {
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">8</span>,
+                <span class="hljs-attr">"value"</span>: <span class="hljs-string">"76-78"</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"Івано-Франківська область"</span>
+            },
+            {
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">26</span>,
+                <span class="hljs-attr">"value"</span>: <span class="hljs-string">"01-06"</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"Київ"</span>
+            },
+            {
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">9</span>,
+                <span class="hljs-attr">"value"</span>: <span class="hljs-string">"07-09"</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"Київська область"</span>
+            },
+            {
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">10</span>,
+                <span class="hljs-attr">"value"</span>: <span class="hljs-string">"25-28"</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"Кіровоградська область"</span>
+            },
+            {
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">11</span>,
+                <span class="hljs-attr">"value"</span>: <span class="hljs-string">"91-94"</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"Луганська область"</span>
+            },
+            {
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">12</span>,
+                <span class="hljs-attr">"value"</span>: <span class="hljs-string">"79-82"</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"Львівська область"</span>
+            },
+            {
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">13</span>,
+                <span class="hljs-attr">"value"</span>: <span class="hljs-string">"54-57"</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"Миколаївська область"</span>
+            },
+            {
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">14</span>,
+                <span class="hljs-attr">"value"</span>: <span class="hljs-string">"65-68"</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"Одеська область"</span>
+            },
+            {
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">15</span>,
+                <span class="hljs-attr">"value"</span>: <span class="hljs-string">"36-39"</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"Полтавська область"</span>
+            },
+            {
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">16</span>,
+                <span class="hljs-attr">"value"</span>: <span class="hljs-string">"33-35"</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"Рівненська облас\u0442ь"</span>
+            },
+            {
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">27</span>,
+                <span class="hljs-attr">"value"</span>: <span class="hljs-string">"99"</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"Севастополь"</span>
+            },
+            {
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">17</span>,
+                <span class="hljs-attr">"value"</span>: <span class="hljs-string">"40-42"</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"Сумська область"</span>
+            },
+            {
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">18</span>,
+                <span class="hljs-attr">"value"</span>: <span class="hljs-string">"46-48"</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"Тернопільська область"</span>
+            },
+            {
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">19</span>,
+                <span class="hljs-attr">"value"</span>: <span class="hljs-string">"61-64"</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"Харківська область"</span>
+            },
+            {
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">20</span>,
+                <span class="hljs-attr">"value"</span>: <span class="hljs-string">"73-75"</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"Херсонська область"</span>
+            },
+            {
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">21</span>,
+                <span class="hljs-attr">"value"</span>: <span class="hljs-string">"29-32"</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"Хмельницька область"</span>
+            },
+            {
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">22</span>,
+                <span class="hljs-attr">"value"</span>: <span class="hljs-string">"18-20"</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"Черкаська область"</span>
+            },
+            {
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">23</span>,
+                <span class="hljs-attr">"value"</span>: <span class="hljs-string">"14-17"</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"Чернігівська область"</span>
+            },
+            {
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">24</span>,
+                <span class="hljs-attr">"value"</span>: <span class="hljs-string">"58-60"</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"Чернівецька область"</span>
+            }
+        ],
+        <span class="hljs-attr">"units"</span>: [
+            {
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">80</span>,
+                <span class="hljs-attr">"value"</span>: <span class="hljs-string">"RM"</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"пачка"</span>
+            },
+            {
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">157</span>,
+                <span class="hljs-attr">"value"</span>: <span class="hljs-string">"CMT"</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"сантиметры"</span>
+            },
+            {
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">119</span>,
+                <span class="hljs-attr">"value"</span>: <span class="hljs-string">"GRM"</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"граммы"</span>
+            },
+            {
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">82</span>,
+                <span class="hljs-attr">"value"</span>: <span class="hljs-string">"HAR"</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"гектар"</span>
+            },
+            {
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">5</span>,
+                <span class="hljs-attr">"value"</span>: <span class="hljs-string">"LTR"</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"літр"</span>
+            },
+            {
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">77</span>,
+                <span class="hljs-attr">"value"</span>: <span class="hljs-string">"LO"</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"лот"</span>
+            },
+            {
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">78</span>,
+                <span class="hljs-attr">"value"</span>: <span class="hljs-string">"E48"</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"послуга"</span>
+            },
+            {
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">79</span>,
+                <span class="hljs-attr">"value"</span>: <span class="hljs-string">"E54"</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"рейс"</span>
+            },
+            {
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">84</span>,
+                <span class="hljs-attr">"value"</span>: <span class="hljs-string">"D64"</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"блок"</span>
+            },
+            {
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">83</span>,
+                <span class="hljs-attr">"value"</span>: <span class="hljs-string">"BX"</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"ящик"</span>
+            },
+            {
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">81</span>,
+                <span class="hljs-attr">"value"</span>: <span class="hljs-string">"PK"</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"упаковка"</span>
+            },
+            {
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">74</span>,
+                <span class="hljs-attr">"value"</span>: <span class="hljs-string">"PR"</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"пара"</span>
+            },
+            {
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">6</span>,
+                <span class="hljs-attr">"value"</span>: <span class="hljs-string">"H87"</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"штука"</span>
+            },
+            {
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">29</span>,
+                <span class="hljs-attr">"value"</span>: <span class="hljs-string">"MON"</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"місяць"</span>
+            },
+            {
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">7</span>,
+                <span class="hljs-attr">"value"</span>: <span class="hljs-string">"RO"</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"рулон"</span>
+            },
+            {
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">41</span>,
+                <span class="hljs-attr">"value"</span>: <span class="hljs-string">"TNE"</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"тони"</span>
+            },
+            {
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">1</span>,
+                <span class="hljs-attr">"value"</span>: <span class="hljs-string">"KGM"</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"килограммы"</span>
+            },
+            {
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">37</span>,
+                <span class="hljs-attr">"value"</span>: <span class="hljs-string">"KMT"</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"километры"</span>
+            },
+            {
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">166</span>,
+                <span class="hljs-attr">"value"</span>: <span class="hljs-string">"TKM"</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"тона-кілометр"</span>
+            },
+            {
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">10</span>,
+                <span class="hljs-attr">"value"</span>: <span class="hljs-string">"MTQ"</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"метры кубические"</span>
+            },
+            {
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">4</span>,
+                <span class="hljs-attr">"value"</span>: <span class="hljs-string">"MTK"</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"метры квадратные"</span>
+            },
+            {
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">3</span>,
+                <span class="hljs-attr">"value"</span>: <span class="hljs-string">"MTR"</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"метры"</span>
+            },
+            {
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">9</span>,
+                <span class="hljs-attr">"value"</span>: <span class="hljs-string">"4A"</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"бобіна"</span>
+            },
+            {
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">118</span>,
+                <span class="hljs-attr">"value"</span>: <span class="hljs-string">"T3"</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"тисяч штук"</span>
+            },
+            {
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">162</span>,
+                <span class="hljs-attr">"value"</span>: <span class="hljs-string">"E51"</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"роботи"</span>
+            },
+            {
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">174</span>,
+                <span class="hljs-attr">"value"</span>: <span class="hljs-string">"CMK"</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"сантиметры квадратные"</span>
+            },
+            {
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">159</span>,
+                <span class="hljs-attr">"value"</span>: <span class="hljs-string">"KT"</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"комплект"</span>
+            },
+            {
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">75</span>,
+                <span class="hljs-attr">"value"</span>: <span class="hljs-string">"SET"</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"набір"</span>
+            },
+            {
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">211</span>,
+                <span class="hljs-attr">"value"</span>: <span class="hljs-string">"E50"</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"одиниць"</span>
+            },
+            {
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">236</span>,
+                <span class="hljs-attr">"value"</span>: <span class="hljs-string">"VI"</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"флакон"</span>
+            },
+            {
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">158</span>,
+                <span class="hljs-attr">"value"</span>: <span class="hljs-string">"R9"</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"тисяча кубічних метрів"</span>
+            },
+            {
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">172</span>,
+                <span class="hljs-attr">"value"</span>: <span class="hljs-string">"LM"</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"метры по\u0433онные"</span>
+            },
+            {
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">168</span>,
+                <span class="hljs-attr">"value"</span>: <span class="hljs-string">"CMQ"</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"сантиметры кубические"</span>
+            },
+            {
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">156</span>,
+                <span class="hljs-attr">"value"</span>: <span class="hljs-string">"KWH"</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"кіловат-година"</span>
+            },
+            {
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">153</span>,
+                <span class="hljs-attr">"value"</span>: <span class="hljs-string">"KVR"</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"кіловар"</span>
+            },
+            {
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">155</span>,
+                <span class="hljs-attr">"value"</span>: <span class="hljs-string">"E11"</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"гігакалорія"</span>
+            },
+            {
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">161</span>,
+                <span class="hljs-attr">"value"</span>: <span class="hljs-string">"IE"</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"людей"</span>
+            },
+            {
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">85</span>,
+                <span class="hljs-attr">"value"</span>: <span class="hljs-string">"RH"</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"людино-година"</span>
+            },
+            {
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">167</span>,
+                <span class="hljs-attr">"value"</span>: <span class="hljs-string">"E49"</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"рабочие дни"</span>
+            },
+            {
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">212</span>,
+                <span class="hljs-attr">"value"</span>: <span class="hljs-string">"K3"</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"кіловар-година"</span>
+            },
+            {
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">210</span>,
+                <span class="hljs-attr">"value"</span>: <span class="hljs-string">"E27"</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"порція"</span>
+            },
+            {
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">247</span>,
+                <span class="hljs-attr">"value"</span>: <span class="hljs-string">"P1"</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"pct"</span>
+            }
+        ],
+        <span class="hljs-attr">"timeline_status"</span>: [
+            {
+                <span class="hljs-attr">"value"</span>: <span class="hljs-number">1</span>,
+                <span class="hljs-attr">"key"</span>: <span class="hljs-string">"past"</span>
+            },
+            {
+                <span class="hljs-attr">"value"</span>: <span class="hljs-number">2</span>,
+                <span class="hljs-attr">"key"</span>: <span class="hljs-string">"current"</span>
+            },
+            {
+                <span class="hljs-attr">"value"</span>: <span class="hljs-number">3</span>,
+                <span class="hljs-attr">"key"</span>: <span class="hljs-string">"blocked"</span>
+            },
+            {
+                <span class="hljs-attr">"value"</span>: <span class="hljs-number">4</span>,
+                <span class="hljs-attr">"key"</span>: <span class="hljs-string">"future"</span>
+            },
+            {
+                <span class="hljs-attr">"value"</span>: <span class="hljs-number">5</span>,
+                <span class="hljs-attr">"key"</span>: <span class="hljs-string">"cancelled"</span>
+            }
+        ],
+        <span class="hljs-attr">"qualification_status"</span>: [
+            {
+                <span class="hljs-attr">"value_label"</span>: <span class="hljs-string">"pending"</span>,
+                <span class="hljs-attr">"value"</span>: <span class="hljs-number">0</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"очікує рішення"</span>
+            },
+            {
+                <span class="hljs-attr">"value_label"</span>: <span class="hljs-string">"unsuccessful"</span>,
+                <span class="hljs-attr">"value"</span>: <span class="hljs-number">1</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"дискваліфіковано"</span>
+            },
+            {
+                <span class="hljs-attr">"value_label"</span>: <span class="hljs-string">"active"</span>,
+                <span class="hljs-attr">"value"</span>: <span class="hljs-number">2</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"визнаний переможцем"</span>
+            },
+            {
+                <span class="hljs-attr">"value_label"</span>: <span class="hljs-string">"cancelled"</span>,
+                <span class="hljs-attr">"value"</span>: <span class="hljs-number">3</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"відмінено"</span>
+            }
+        ],
+        <span class="hljs-attr">"cashflow_types"</span>: [
+            {
+                <span class="hljs-attr">"value"</span>: <span class="hljs-number">0</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"Списання"</span>
+            },
+            {
+                <span class="hljs-attr">"value"</span>: <span class="hljs-number">1</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"Поповнення"</span>
+            }
+        ],
+        <span class="hljs-attr">"main_procurement_category"</span>: [
+            {
+                <span class="hljs-attr">"value"</span>: <span class="hljs-string">"goods"</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"товари"</span>
+            },
+            {
+                <span class="hljs-attr">"value"</span>: <span class="hljs-string">"services"</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"послуги"</span>
+            },
+            {
+                <span class="hljs-attr">"value"</span>: <span class="hljs-string">"works"</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"роботи"</span>
+            }
+        ],
+        <span class="hljs-attr">"lot_participate_status"</span>: [
+            {
+                <span class="hljs-attr">"value"</span>: <span class="hljs-number">0</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"не бере участь"</span>
+            },
+            {
+                <span class="hljs-attr">"value"</span>: <span class="hljs-number">1</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"бере участь"</span>
+            },
+            {
+                <span class="hljs-attr">"value"</span>: <span class="hljs-number">2</span>,
+                <span class="hljs-attr">"label"</span>: <span class="hljs-string">"переміг"</span>
+            }
+        ],
+    },
+    <span class="hljs-attr">"system"</span>: <span class="hljs-string">""</span>
+}</code></pre>    </article>
+  </body>
+</html>

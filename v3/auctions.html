@@ -1,0 +1,90 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimal-ui">
+    <title>Auction for dates in range</title>
+    <link type="text/css" rel="stylesheet" href="../assets/css/github-markdown.css">
+    <link type="text/css" rel="stylesheet" href="../assets/css/pilcrow.css">
+    <link type="text/css" rel="stylesheet" href="../assets/css/hljs-github.min.css"/>
+  </head>
+  <body>
+    <article class="markdown-body"><h1 id="auction-for-dates-in-range"><a class="header-link" href="#auction-for-dates-in-range"></a>Auction for dates in range</h1>
+<p><strong>GET remote/api/v3/auctions_in_range?p={page}&amp;df={date from}&amp;dt={date to}</strong></p>
+<p>request headers:</p>
+<ul class="list">
+<li><em>Api-Agent</em> - type: string, required</li>
+<li><em>Acc-Token</em> - type: string, required</li>
+</ul>
+<p>request params:</p>
+<ul class="list">
+<li><em>p</em> - type: int, page number, default 1</li>
+<li><em>df</em> - type: str, date string in <strong>YYYY-MM-DD</strong> format</li>
+<li><em>dt</em> - type: str, date to in <strong>YYYY-MM-DD</strong> format</li>
+</ul>
+<p>possible response fields:</p>
+<ul class="list">
+<li><em>status</em> - type: str</li>
+<li><em>errors</em> - type: array of objects, validation errors</li>
+<li><em>data</em> - type: object</li>
+<li><em>system</em> - type: str, system error messages</li>
+</ul>
+<p>possible response data fields:</p>
+<ul class="list">
+<li><em>next_page</em> - type: int or NoneType,</li>
+<li><em>total</em> - type: int or NoneType,</li>
+<li><em>total_by_days</em> - type: object, keys: str in format <strong>YYYY-MM-DD</strong>, values: int,</li>
+<li><em>auctions</em> - type: list of objects</li>
+</ul>
+<p>response auctions fields:</p>
+<ul class="list">
+<li><em>lot_id</em> - type: str or null</li>
+<li><em>purchase_title</em> - type: str</li>
+<li><em>auction_state</em> - type: int, one of [0, 1, 2, 3], described below</li>
+<li><em>auction_dt</em> - type: str if format **YYYY-MM-DDTHH:MM:SS&#39;,</li>
+<li><em>auction_url</em> - type: str or null</li>
+<li><em>id</em> - type: str</li>
+</ul>
+<p>auctionState values:</p>
+<ul class="list">
+<li><em>0</em> - type: int, - auction will take place in the future,</li>
+<li><em>1</em> - type: int, - auction is happening now</li>
+<li><em>2</em> - type: int, - auction has already taken place</li>
+<li><em>3</em> - type: int, - auction fail (purchase in unsuccessful status)</li>
+</ul>
+<h3 id="example"><a class="header-link" href="#example"></a>Example</h3>
+<p>request:</p>
+<pre class="hljs"><code>clear &amp;&amp; curl -X GET <span class="hljs-string">"http://my.example.com:5001/remote/api/v3/auctions_in_range?df=2019-05-02&amp;dt=2019-05-19"</span> --header <span class="hljs-string">"Acc-Token: 43b06b921e3df14a66cb9a38be51e71dabde5856"</span> --header <span class="hljs-string">"Api-Agent: zk_ios"</span> | json_pp</code></pre><p>response:</p>
+<pre class="hljs"><code>{
+   <span class="hljs-attr">"data"</span> : {
+      <span class="hljs-attr">"auctions"</span> : [
+         {
+            <span class="hljs-attr">"auction_dt"</span> : <span class="hljs-string">"2019-05-02T15:45:16"</span>,
+            <span class="hljs-attr">"auction_state"</span> : <span class="hljs-number">2</span>,
+            <span class="hljs-attr">"auction_url"</span> : <span class="hljs-string">"http://zimmer.example.com:8002/auction/424ab37405344a2cb59ce7203c0af076/view?token=1aa1d72311aa460ca1b401f02c91ef3a&amp;return_url=http://my.example.com:5001/cabinet/purchases/dashboard/supplier"</span>,
+            <span class="hljs-attr">"id"</span> : <span class="hljs-string">"424ab37405344a2cb59ce7203c0af076"</span>,
+            <span class="hljs-attr">"lot_id"</span> : <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"purchase_title"</span> : <span class="hljs-string">"asdfasdf"</span>
+         },
+         {
+            <span class="hljs-attr">"auction_dt"</span> : <span class="hljs-string">"2019-05-13T10:55:00"</span>,
+            <span class="hljs-attr">"auction_state"</span> : <span class="hljs-number">2</span>,
+            <span class="hljs-attr">"auction_url"</span> : <span class="hljs-string">"http://zimmer.example.com:8002/auction/98c45516a6c34a5cb5cc0471836999d4/view?token=f5518b70b8eb473db3ff1b89531555a4&amp;return_url=http://my.example.com:5001/cabinet/purchases/dashboard/supplier"</span>,
+            <span class="hljs-attr">"id"</span> : <span class="hljs-string">"98c45516a6c34a5cb5cc0471836999d4"</span>,
+            <span class="hljs-attr">"lot_id"</span> : <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"purchase_title"</span> : <span class="hljs-string">"asdfasdf"</span>
+         }
+      ],
+      <span class="hljs-attr">"next_page"</span> : <span class="hljs-literal">null</span>,
+      <span class="hljs-attr">"total"</span> : <span class="hljs-number">2</span>,
+      <span class="hljs-attr">"total_by_days"</span> : {
+         <span class="hljs-attr">"2019-05-02"</span> : <span class="hljs-number">1</span>,
+         <span class="hljs-attr">"2019-05-13"</span> : <span class="hljs-number">1</span>
+      }
+   },
+   <span class="hljs-attr">"errors"</span> : [],
+   <span class="hljs-attr">"status"</span> : <span class="hljs-string">"ok"</span>,
+   <span class="hljs-attr">"system"</span> : <span class="hljs-string">""</span>
+}</code></pre>    </article>
+  </body>
+</html>

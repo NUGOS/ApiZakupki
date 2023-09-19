@@ -1,0 +1,121 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimal-ui">
+    <title>FCM token registration</title>
+    <link type="text/css" rel="stylesheet" href="../assets/css/github-markdown.css">
+    <link type="text/css" rel="stylesheet" href="../assets/css/pilcrow.css">
+    <link type="text/css" rel="stylesheet" href="../assets/css/hljs-github.min.css"/>
+  </head>
+  <body>
+    <article class="markdown-body"><h1 id="fcm-token-registration"><a class="header-link" href="#fcm-token-registration"></a>FCM token registration</h1>
+<p><strong>POST /remote/api/v3/fcm</strong></p>
+<p>request headers:</p>
+<ul class="list">
+<li><strong>Api-Agent</strong> - type: string, reuqired</li>
+<li><strong>Acc-Token</strong> - type: string, required</li>
+</ul>
+<p>possible request data params:</p>
+<ul class="list">
+<li><strong>fcm_token</strong> - type: string, required</li>
+<li><strong>device_uuid</strong> - type: string, required</li>
+<li><strong>device</strong> - type: <strong>device object</strong>, optional, described below</li>
+</ul>
+<p>device object fields:</p>
+<ul class="list">
+<li><strong>uuid</strong> - type: string, required</li>
+<li><strong>client_platform</strong> - type: string, required</li>
+<li><strong>client_install_key</strong> - type: string, required</li>
+<li><strong>app_version</strong> - type: string, required</li>
+<li><strong>device_type</strong> - type: string, required</li>
+<li><strong>device_model</strong> - type: string, required</li>
+</ul>
+<p>possible response fields:</p>
+<ul class="list">
+<li><strong>status</strong> - type: str, values: ok/error</li>
+<li><strong>errors</strong> - type: array of objects, validation errors</li>
+<li><strong>data</strong> - type: object</li>
+<li><strong>system</strong> - type: str, system error messages</li>
+</ul>
+<p>successful request always returns empty &quot;ok&quot; response</p>
+<p>Examples:</p>
+<p>request:</p>
+<pre class="hljs"><code>curl -X POST <span class="hljs-string">"http://my.example.com:5000/remote/api/v3/fcm"</span> --header <span class="hljs-string">"Acc-Token: 652f63055958c44387e78b5f96b33ad5b3217ba1"</span> --header <span class="hljs-string">"Api-Agent: zk_ios"</span> --header <span class="hljs-string">"Content-Type: application/json"</span> --data <span class="hljs-string">'{"o": "o"}'</span></code></pre><p>response:</p>
+<pre class="hljs"><code>{
+   <span class="hljs-attr">"errors"</span> : [
+      {
+         <span class="hljs-attr">"field"</span> : <span class="hljs-string">"fcm_token"</span>,
+         <span class="hljs-attr">"messages"</span> : <span class="hljs-string">"Це поле є обов`язковим"</span>
+      },
+      {
+         <span class="hljs-attr">"field"</span> : <span class="hljs-string">"device_uuid"</span>,
+         <span class="hljs-attr">"messages"</span> : <span class="hljs-string">"Це поле є обов`язковим"</span>
+      }
+   ],
+   <span class="hljs-attr">"status"</span> : <span class="hljs-string">"error"</span>,
+   <span class="hljs-attr">"system"</span> : <span class="hljs-string">""</span>
+}</code></pre><p>request:</p>
+<pre class="hljs"><code>curl -X POST <span class="hljs-string">"http://my.example.com:5000/remote/api/v3/fcm"</span> -H <span class="hljs-string">"Acc-Token: 652f63055958c44387e78b5f96b33ad5b3217ba1"</span> -H <span class="hljs-string">"Api-Agent: zk_ios"</span> -H <span class="hljs-string">"Content-Type: application/json"</span> <span class="hljs-_">-d</span>\
+<span class="hljs-string">'{"fcm_token": "tkn", "device_uuid": "id", "device": { "client_platform": 123, "client_install_key": "str", "app_version": "str", "device_type": "str", "device_model": "str"}}'</span></code></pre><p>response:</p>
+<pre class="hljs"><code>{
+    <span class="hljs-attr">"errors"</span>: [
+        {
+            <span class="hljs-attr">"field"</span>: <span class="hljs-string">"device.client_platform"</span>,
+            <span class="hljs-attr">"messages"</span>: <span class="hljs-string">"${val} is not a string"</span>
+        },
+        {
+            <span class="hljs-attr">"field"</span>: <span class="hljs-string">"device.uuid"</span>,
+            <span class="hljs-attr">"messages"</span>: <span class="hljs-string">"Це поле є обов`язковим"</span>
+        }
+  ],
+  <span class="hljs-attr">"status"</span>: <span class="hljs-string">"error"</span>,
+  <span class="hljs-attr">"system"</span>: <span class="hljs-string">""</span>
+}</code></pre><p>request:</p>
+<pre class="hljs"><code>curl -X POST <span class="hljs-string">"http://my.example.com:5000/remote/api/v3/fcm"</span> --header <span class="hljs-string">"Acc-Token: 652f63055958c44387e78b5f96b33ad5b3217ba1"</span> --header <span class="hljs-string">"Api-Agent: zk_ios"</span> --header <span class="hljs-string">"Content-Type: application/json"</span> --data <span class="hljs-string">'{"fcm_token": "fcm_token_11111_222_3333", "device_uuid": "device_uuid"}'</span></code></pre><p>response:</p>
+<pre class="hljs"><code>{
+   <span class="hljs-attr">"data"</span> : {},
+   <span class="hljs-attr">"errors"</span> : [],
+   <span class="hljs-attr">"status"</span> : <span class="hljs-string">"ok"</span>,
+   <span class="hljs-attr">"system"</span> : <span class="hljs-string">""</span>
+}</code></pre><h1 id="fcm-token-drop"><a class="header-link" href="#fcm-token-drop"></a>FCM token drop</h1>
+<p><strong>POST /remote/api/v3/fcm_drop</strong></p>
+<p>request headers:</p>
+<ul class="list">
+<li><strong>Api-Agent</strong> - type: string, reuqired</li>
+<li><strong>Acc-Token</strong> - type: string, required</li>
+</ul>
+<p>possible request data params:</p>
+<ul class="list">
+<li><strong>device_uuid</strong> - type: string, required</li>
+</ul>
+<p>possible response fields:</p>
+<ul class="list">
+<li><strong>status</strong> - type: str, values: ok/error</li>
+<li><strong>errors</strong> - type: array of objects, validation errors</li>
+<li><strong>data</strong> - type: object</li>
+<li><strong>system</strong> - type: str, system error messages</li>
+</ul>
+<p>successful request always returns empty &quot;ok&quot; response</p>
+<p>Examples:</p>
+<p>request:</p>
+<pre class="hljs"><code>curl -X POST <span class="hljs-string">"http://my.example.com:5000/remote/api/v3/fcm_drop"</span>\ --header <span class="hljs-string">"Acc-Token: 652f63055958c44387e78b5f96b33ad5b3217ba1"</span> --header <span class="hljs-string">"Api-Agent: zk_ios"</span> --header <span class="hljs-string">"Content-Type: application/json"</span> --data <span class="hljs-string">'{"o": "o"}'</span></code></pre><p>response:</p>
+<pre class="hljs"><code>{
+   <span class="hljs-attr">"errors"</span> : [
+      {
+         <span class="hljs-attr">"field"</span> : <span class="hljs-string">"device_uuid"</span>,
+         <span class="hljs-attr">"messages"</span> : <span class="hljs-string">"Це поле є обов`язковим"</span>
+      }
+   ],
+   <span class="hljs-attr">"status"</span> : <span class="hljs-string">"error"</span>,
+   <span class="hljs-attr">"system"</span> : <span class="hljs-string">""</span>
+}</code></pre><p>request:</p>
+<pre class="hljs"><code>curl -X POST <span class="hljs-string">"http://my.example.com:5000/remote/api/v3/fcm_drop"</span> --header <span class="hljs-string">"Acc-Token: 652f63055958c44387e78b5f96b33ad5b3217ba1"</span> --header <span class="hljs-string">"Api-Agent: zk_ios"</span> --header <span class="hljs-string">"Content-Type: application/json"</span> --data <span class="hljs-string">'{"device_uuid": "device_uuid"}'</span></code></pre><p>response:</p>
+<pre class="hljs"><code>{
+   <span class="hljs-attr">"data"</span> : {},
+   <span class="hljs-attr">"errors"</span> : [],
+   <span class="hljs-attr">"status"</span> : <span class="hljs-string">"ok"</span>,
+   <span class="hljs-attr">"system"</span> : <span class="hljs-string">""</span>
+}</code></pre>    </article>
+  </body>
+</html>

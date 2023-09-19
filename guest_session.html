@@ -1,0 +1,46 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimal-ui">
+    <title>Guest session support</title>
+    <link type="text/css" rel="stylesheet" href="assets/css/github-markdown.css">
+    <link type="text/css" rel="stylesheet" href="assets/css/pilcrow.css">
+    <link type="text/css" rel="stylesheet" href="assets/css/hljs-github.min.css"/>
+  </head>
+  <body>
+    <article class="markdown-body"><h1 id="guest-session-support"><a class="header-link" href="#guest-session-support"></a>Guest session support</h1>
+<p>The guest session is implemented through a fake user.</p>
+<p>For production it&#39;s - <a href="mailto:*mobile_user@zakupki.prom.ua">*mobile_user@zakupki.prom.ua</a><em> with password: </em>5Hfms&amp;6v*</p>
+<p>For testing purpose please use this credentials:</p>
+<ul class="list">
+<li>email: <a href="mailto:*mobileapiguest@mobileapiguest.guest">*mobileapiguest@mobileapiguest.guest</a>*</li>
+<li>password: <em>123123123</em></li>
+</ul>
+<p>request headers:</p>
+<ul class="list">
+<li><em>Api-Agent</em> - type: string, reuqired</li>
+</ul>
+<p>Methods allowed for guest session:</p>
+<ul class="list">
+<li><a href="./entity_list.html">Purchases list and search</a></li>
+<li><a href="./view_entity.html">View purchase</a></li>
+<li><a href="./view_entity_lot.html">View purchase lot</a></li>
+<li><a href="./search_results_count.html">Search results count</a></li>
+<li><a href="./merchant_suggester.html">Merchant suggester</a></li>
+<li><a href="./time_line.html">Time line</a></li>
+<li><a href="./fcm_token.html">Firebase token registration</a></li>
+<li><a href="./portal_entity_redirect.html">Portal entity redirect</a></li>
+<li><a href="./complaint_view.html">Complaint view</a></li>
+<li><a href="./question_view.html">Question view</a></li>
+</ul>
+<p>For forbidden methods api will return a special system error:</p>
+<p>request:</p>
+<pre class="hljs"><code>curl --header <span class="hljs-string">"Acc-Token: bb0c58422451cad2ffb952f8ae363b6312b8c96f"</span> -X POST <span class="hljs-string">"http://my.example.com:5001/remote/api/v1/notifications"</span></code></pre><p>response:</p>
+<pre class="hljs"><code>{
+    <span class="hljs-attr">"status"</span>: <span class="hljs-string">"error"</span>,
+    <span class="hljs-attr">"errors"</span>: [],
+    <span class="hljs-attr">"system"</span>: <span class="hljs-string">"blocked for guest session"</span>
+}</code></pre>    </article>
+  </body>
+</html>

@@ -1,0 +1,56 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimal-ui">
+    <title>Assign/unassign employee(manager) to tender</title>
+    <link type="text/css" rel="stylesheet" href="../assets/css/github-markdown.css">
+    <link type="text/css" rel="stylesheet" href="../assets/css/pilcrow.css">
+    <link type="text/css" rel="stylesheet" href="../assets/css/hljs-github.min.css"/>
+  </head>
+  <body>
+    <article class="markdown-body"><h1 id="assign/unassign-employee(manager)-to-tender"><a class="header-link" href="#assign/unassign-employee(manager)-to-tender"></a>Assign/unassign employee(manager) to tender</h1>
+<h2 id="assing"><a class="header-link" href="#assing"></a>Assing</h2>
+<p><strong>POST remote/api/v3/assign</strong></p>
+<p>request headers:</p>
+<ul class="list">
+<li><em>Api-Agent</em> - type: string, required</li>
+<li><em>Acc-Token</em> - type: string, required</li>
+</ul>
+<p>possible request arguments:</p>
+<ul class="list">
+<li><em>state_purchase_uid</em> - type: str</li>
+<li><em>assignee_employee_id</em> - type: int, possible values - one of users from <a href="../user_profile.html">assignment_data</a></li>
+</ul>
+<p>possible response fields:</p>
+<ul class="list">
+<li><em>status</em> - type: str, values: ok/error</li>
+</ul>
+<h3 id="example"><a class="header-link" href="#example"></a>Example</h3>
+<p>request:</p>
+<pre class="hljs"><code>clear &amp;&amp; curl -X POST <span class="hljs-string">"http://my.example.com:5001/remote/api/v3/assign"</span> --header <span class="hljs-string">"Acc-Token: 43b06b921e3df14a66cb9a38be51e71dabde5856"</span> --header <span class="hljs-string">"Api-Agent: zk_ios"</span> --header <span class="hljs-string">"Content-Type: application/json"</span> --data <span class="hljs-string">'{"state_purchase_uid": "c7d96eba9e1c49a29e5ad1f3cf4f4fd4", "assignee_employee_id": 61471}'</span> | json_pp</code></pre><p>response:</p>
+<pre class="hljs"><code>{
+   <span class="hljs-attr">"status"</span> : <span class="hljs-string">"ok"</span>
+}</code></pre><h2 id="unassign"><a class="header-link" href="#unassign"></a>Unassign</h2>
+<p><strong>POST remote/api/v3/unassign</strong></p>
+<p>request headers:</p>
+<ul class="list">
+<li><em>Api-Agent</em> - type: string, required</li>
+<li><em>Acc-Token</em> - type: string, required</li>
+</ul>
+<p>possible request arguments:</p>
+<ul class="list">
+<li><em>state_purchase_uid</em> - type: str</li>
+</ul>
+<p>possible response fields:</p>
+<ul class="list">
+<li><em>status</em> - type: str, values: ok/error</li>
+</ul>
+<h3 id="example-1"><a class="header-link" href="#example-1"></a>Example</h3>
+<p>request:</p>
+<pre class="hljs"><code>clear &amp;&amp; curl -X POST <span class="hljs-string">"http://my.example.com:5001/remote/api/v3/unassign"</span> --header <span class="hljs-string">"Acc-Token: 43b06b921e3df14a66cb9a38be51e71dabde5856"</span> --header <span class="hljs-string">"Api-Agent: zk_ios"</span> --header <span class="hljs-string">"Content-Type: application/json"</span> --data <span class="hljs-string">'{"state_purchase_uid": "c7d96eba9e1c49a29e5ad1f3cf4f4fd4"}'</span> | json_pp</code></pre><p>response:</p>
+<pre class="hljs"><code>{
+   <span class="hljs-attr">"status"</span> : <span class="hljs-string">"ok"</span>
+}</code></pre>    </article>
+  </body>
+</html>

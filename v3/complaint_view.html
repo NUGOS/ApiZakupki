@@ -1,0 +1,141 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimal-ui">
+    <title>View detailed complaint data</title>
+    <link type="text/css" rel="stylesheet" href="../assets/css/github-markdown.css">
+    <link type="text/css" rel="stylesheet" href="../assets/css/pilcrow.css">
+    <link type="text/css" rel="stylesheet" href="../assets/css/hljs-github.min.css"/>
+  </head>
+  <body>
+    <article class="markdown-body"><h1 id="view-detailed-complaint-data"><a class="header-link" href="#view-detailed-complaint-data"></a>View detailed complaint data</h1>
+<p><strong>GET remote/api/v3/complaints/{puid}/{cuid}</strong></p>
+<blockquote>
+<p>cid - complaint id from <a href="./complaints_list.html">complaints list</a> page or
+<a href="./view.html">view purchase</a> or <a href="./view_lot.html">view lot</a></p>
+<p>puid - purchase id or uid uid from <a href="./view.html">view purchase</a> or <a href="./view_lot.html">view lot</a></p>
+</blockquote>
+<p>request headers:</p>
+<ul class="list">
+<li><em>Api-Agent</em> - type: string, reuqired</li>
+<li><em>Acc-Token</em> - type: string, required</li>
+</ul>
+<p>possible response fields:</p>
+<ul class="list">
+<li><em>status</em> - type: str, values: ok/error</li>
+<li><em>errors</em> - type: array of objects, validation errors</li>
+<li><em>data</em> - type: object</li>
+<li><em>system</em> - type: str, system error messages</li>
+</ul>
+<p>possible response data fields:</p>
+<ul class="list">
+<li><em>author</em> - type: <strong>procuring entity</strong> object or <strong>null</strong>, see <a href="./view.html">view purchase</a></li>
+<li><em>cancellation_reason</em> - type: str or null</li>
+<li><em>date_accepted</em> - type: date str or null, format <strong>yyyy-mm-ddTHH:MM:SS.fZ</strong></li>
+<li><em>date_answered</em> - type: date str or null, format <strong>yyyy-mm-ddTHH:MM:SS.fZ</strong></li>
+<li><em>date_decision</em> - type: date str or null, format <strong>yyyy-mm-ddTHH:MM:SS.fZ</strong></li>
+<li><em>date_escalated</em> - type: date str or null, format <strong>yyyy-mm-ddTHH:MM:SS.fZ</strong></li>
+<li><em>date_submitted</em> - type: date str or null, format <strong>yyyy-mm-ddTHH:MM:SS.fZ</strong></li>
+<li><em>description</em> - type: str</li>
+<li><em>files</em> - type: <strong>complaint files</strong> object, described below</li>
+<li><em>id</em> - type: str</li>
+<li><em>permissions</em> - type: object or null</li>
+<li><em>purchase_title</em>: type: str or null</li>
+<li><em>resolution</em> - type: str or null</li>
+<li><em>resolution_type</em> - type: str or null</li>
+<li><em>satisfied</em> - type: bool</li>
+<li><em>status</em> - type: int</li>
+<li><em>status_text</em> - type: str</li>
+<li><em>tenderer_action</em> - type: str or null</li>
+<li><em>title</em> - type: str</li>
+<li><em>tuid</em> - type: str or null</li>
+<li><em>type_title</em> - type: str</li>
+<li><em>visible_name</em> - type: str or null</li>
+<li><em>winner</em> - type: str or null</li>
+</ul>
+<p>complaint files fields:</p>
+<ul class="list">
+<li><em>purchase_owner_files</em> - type: array of <a href="./view.html">document instatnces</a> or empty</li>
+<li><em>reviewer_above_owner_files</em> - type: array of <a href="./view.html">document instatnces</a> or empty</li>
+<li><em>complaint_owner_files</em> - type: array of <a href="./view.html">document instatnces</a> or empty</li>
+<li><em>reviewer_owner_files</em> - type: array of <a href="./view.html">document instatnces</a> or empty</li>
+</ul>
+<p>permission object data fields</p>
+<ul class="list">
+<li><em>can_cancel</em> - type: bool</li>
+</ul>
+<p>Example:</p>
+<p>request:</p>
+<pre class="hljs"><code>clear &amp;&amp; curl -X GET --header <span class="hljs-string">"Acc-Token: 5a119647c3fa191ab60d41ed9fabf784453999d4"</span> --header <span class="hljs-string">"Api-Agent: zk_ios"</span> <span class="hljs-string">"http://my.example.com:5000/remote/api/v3/complaint/7599270bdc0d4716a3aa6c00d9405736/13b1218b59164abdabfe499e6c20eef8"</span> | json_pp</code></pre><p>response:</p>
+<pre class="hljs"><code>{
+   <span class="hljs-attr">"data"</span> : {
+      <span class="hljs-attr">"author"</span> : {
+         <span class="hljs-attr">"address"</span> : {
+            <span class="hljs-attr">"countryName"</span> : <span class="hljs-string">"Україна"</span>,
+            <span class="hljs-attr">"locality"</span> : <span class="hljs-string">"кмев"</span>,
+            <span class="hljs-attr">"postalCode"</span> : <span class="hljs-string">"40000"</span>,
+            <span class="hljs-attr">"region"</span> : <span class="hljs-string">"АР Крим"</span>,
+            <span class="hljs-attr">"streetAddress"</span> : <span class="hljs-string">"уаыуаыуа"</span>
+         },
+         <span class="hljs-attr">"contactPoint"</span> : {
+            <span class="hljs-attr">"email"</span> : <span class="hljs-string">"v.shepelenko@smartweb.com.ua"</span>,
+            <span class="hljs-attr">"name"</span> : <span class="hljs-string">"Владислав Шепеленко"</span>,
+            <span class="hljs-attr">"telephone"</span> : <span class="hljs-string">"+380992805957"</span>
+         },
+         <span class="hljs-attr">"identifier"</span> : {
+            <span class="hljs-attr">"id"</span> : <span class="hljs-string">"125496387"</span>,
+            <span class="hljs-attr">"legalName"</span> : <span class="hljs-string">"ФОП \"Новенький-готовенький \""</span>,
+            <span class="hljs-attr">"scheme"</span> : <span class="hljs-string">"UA-EDR"</span>
+         },
+         <span class="hljs-attr">"name"</span> : <span class="hljs-string">"ФОП \"Новенький-готовенький \""</span>
+      },
+      <span class="hljs-attr">"cancellation_reason"</span> : <span class="hljs-string">"Swdadwawd"</span>,
+      <span class="hljs-attr">"date_accepted"</span> : <span class="hljs-literal">null</span>,
+      <span class="hljs-attr">"date_answered"</span> : <span class="hljs-literal">null</span>,
+      <span class="hljs-attr">"date_decision"</span> : <span class="hljs-string">"2019-08-30T13:54:16"</span>,
+      <span class="hljs-attr">"date_escalated"</span> : <span class="hljs-literal">null</span>,
+      <span class="hljs-attr">"date_submitted"</span> : <span class="hljs-string">"2019-08-30T13:47:44"</span>,
+      <span class="hljs-attr">"description"</span> : <span class="hljs-string">"awdawdawd"</span>,
+      <span class="hljs-attr">"files"</span> : {
+         <span class="hljs-attr">"complaint_owner_files"</span> : [
+            {
+               <span class="hljs-attr">"confidentiality"</span> : <span class="hljs-string">"public"</span>,
+               <span class="hljs-attr">"dateModified"</span> : <span class="hljs-string">"2019-08-30T13:47:44"</span>,
+               <span class="hljs-attr">"datePublished"</span> : <span class="hljs-string">"2019-08-30T13:47:44"</span>,
+               <span class="hljs-attr">"history"</span> : [],
+               <span class="hljs-attr">"id"</span> : <span class="hljs-string">"296d1d3963374f56b686ae9351842d87"</span>,
+               <span class="hljs-attr">"mimetype"</span> : <span class="hljs-string">"image/jpeg"</span>,
+               <span class="hljs-attr">"title"</span> : <span class="hljs-string">"650x499.jpg"</span>,
+               <span class="hljs-attr">"url"</span> : <span class="hljs-string">"http://my.example.com:5001/media/files/4618863_650x499.jpg"</span>
+            }
+         ],
+         <span class="hljs-attr">"purchase_owner_files"</span> : [],
+         <span class="hljs-attr">"reviewer_above_owner_files"</span> : [],
+         <span class="hljs-attr">"reviewer_owner_files"</span> : []
+      },
+      <span class="hljs-attr">"id"</span> : <span class="hljs-string">"a76caf775c024999a29ed5dfe2e3d005"</span>,
+      <span class="hljs-attr">"permissions"</span> : {
+         <span class="hljs-attr">"can_cancel"</span> : <span class="hljs-literal">false</span>
+      },
+      <span class="hljs-attr">"purchase_title"</span> : <span class="hljs-string">"Обобщённое название закупки\n\n"</span>,
+      <span class="hljs-attr">"resolution"</span> : <span class="hljs-literal">null</span>,
+      <span class="hljs-attr">"resolution_type"</span> : <span class="hljs-literal">null</span>,
+      <span class="hljs-attr">"satisfied"</span> : <span class="hljs-literal">false</span>,
+      <span class="hljs-attr">"status"</span> : <span class="hljs-number">11</span>,
+      <span class="hljs-attr">"status_text"</span> : <span class="hljs-string">"Скарга відкликана"</span>,
+      <span class="hljs-attr">"tenderer_action"</span> : <span class="hljs-literal">null</span>,
+      <span class="hljs-attr">"title"</span> : <span class="hljs-string">"adawdawd"</span>,
+      <span class="hljs-attr">"tuid"</span> : <span class="hljs-string">"UA-2019-08-30-000048-a.a5"</span>,
+      <span class="hljs-attr">"type_title"</span> : <span class="hljs-string">"Оскарження визначення переможця"</span>,
+      <span class="hljs-attr">"visible_name"</span> : <span class="hljs-string">"Скарга"</span>,
+      <span class="hljs-attr">"winner"</span> : <span class="hljs-string">"ПАТ \"\"ШИНИ ДЛЯ МАШИНИ\"\""</span>,
+      <span class="hljs-attr">"purchase_uid"</span>: <span class="hljs-string">"7599270bdc0d4716a3aa6c00d9405736"</span>,
+      <span class="hljs-attr">"lot_uid"</span>: <span class="hljs-string">"13b1218b59164abdabfe499e6c20eef8"</span>
+   },
+   <span class="hljs-attr">"errors"</span> : [],
+   <span class="hljs-attr">"status"</span> : <span class="hljs-string">"ok"</span>,
+   <span class="hljs-attr">"system"</span> : <span class="hljs-string">""</span>
+}</code></pre>    </article>
+  </body>
+</html>

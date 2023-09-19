@@ -1,0 +1,110 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimal-ui">
+    <title>Claims creation</title>
+    <link type="text/css" rel="stylesheet" href="../assets/css/github-markdown.css">
+    <link type="text/css" rel="stylesheet" href="../assets/css/pilcrow.css">
+    <link type="text/css" rel="stylesheet" href="../assets/css/hljs-github.min.css"/>
+  </head>
+  <body>
+    <article class="markdown-body"><h1 id="claims-creation"><a class="header-link" href="#claims-creation"></a>Claims creation</h1>
+<p><strong>POST remote/api/v3/add/claim</strong></p>
+<p>request headers:</p>
+<ul class="list">
+<li><em>Api-Agent</em> - type: string, reuqired</li>
+<li><em>Acc-Token</em> - type: string, required</li>
+</ul>
+<p>possible response fields:</p>
+<ul class="list">
+<li><em>status</em> - type: str, values: ok/error</li>
+<li><em>errors</em> - type: array of objects, validation errors</li>
+<li><em>data</em> - type: object</li>
+<li><em>system</em> - type: str, system error messages</li>
+</ul>
+<p>possible request fields:</p>
+<ul class="list">
+<li><em>name</em> - type: str, required</li>
+<li><em>description</em> - type: str, required</li>
+<li><em>files</em> - type: array of int, optional, array must contain valid file ids from <a href="../files_upload.html">files upload response</a></li>
+<li><em>awardId</em> - type: str, optional</li>
+<li><em>qualificationId</em> - type: str, optional</li>
+<li><em>purchase</em> - type: str, required</li>
+<li><em>purchase_lot</em> - type: str, optional if <strong>purchase</strong> passed</li>
+</ul>
+<p>possible response data fields:</p>
+<ul class="list">
+<li><em>author</em> - type: <strong>complaint author</strong> object or empty object, see <a href="./complaint_view.html">complaint view</a></li>
+<li><em>cancellation_reason</em> - type: str or null</li>
+<li><em>date_accepted</em> - type: date str or null, format <strong>yyyy-mm-ddTHH:MM:SS.fZ</strong></li>
+<li><em>date_answered</em> - type: date str or null, format <strong>yyyy-mm-ddTHH:MM:SS.fZ</strong></li>
+<li><em>date_decision</em> - type: date str or null, format <strong>yyyy-mm-ddTHH:MM:SS.fZ</strong></li>
+<li><em>date_escalated</em> - type: date str or null, format <strong>yyyy-mm-ddTHH:MM:SS.fZ</strong></li>
+<li><em>date_submitted</em> - type: date str or null, format <strong>yyyy-mm-ddTHH:MM:SS.fZ</strong></li>
+<li><em>description</em> - type: str</li>
+<li><em>files</em> - type: <strong>complaint files</strong> object, see <a href="./complaint_view.html">complaint view</a></li>
+<li><em>id</em> - type: str</li>
+<li><em>permissions</em> - type: object or null, see <a href="./complaint_view.html">complaint view</a></li>
+<li><em>resolution</em> - type: str or null</li>
+<li><em>resolution_type</em> - type: str or null</li>
+<li><em>satisfied</em> - type: bool</li>
+<li><em>status</em> - type: int</li>
+<li><em>status_text</em> - type: str</li>
+<li><em>tenderer_action</em> - type: str or null</li>
+<li><em>title</em> - type: str</li>
+<li><em>tuid</em> - type: str or null</li>
+<li><em>type_title</em> - type: str</li>
+<li><em>visible_name</em> - type: str or null</li>
+<li><em>winner</em> - type: str or null</li>
+</ul>
+<blockquote>
+<p>by default success response will contain not full info about claim, 
+it&#39;s because of async sending data, so it&#39;s recommended -
+after you receive &quot;ok&quot; response - make request to <a href="./claim_view.html">claims endpoint</a>
+to get more detailed info about created claim
+claim can be find by <strong>date_submitted</strong> </p>
+</blockquote>
+<p>Examples:</p>
+<p>request:</p>
+<pre class="hljs"><code>clear &amp;&amp; curl -X POST --header <span class="hljs-string">"Acc-Token: 5a119647c3fa191ab60d41ed9fabf784453999d4"</span> --header <span class="hljs-string">"Api-Agent: zk_ios"</span> <span class="hljs-string">"http://my.example.com:5001/remote/api/v3/add/claim"</span> --header <span class="hljs-string">"Content-Type: application/json"</span> --data <span class="hljs-string">'{}'</span> | json_pp</code></pre><p>response:</p>
+<pre class="hljs"><code>{
+   <span class="hljs-attr">"errors"</span> : [],
+   <span class="hljs-attr">"status"</span> : <span class="hljs-string">"error"</span>,
+   <span class="hljs-attr">"system"</span> : <span class="hljs-string">"invalid request"</span>
+}</code></pre><p>request:</p>
+<pre class="hljs"><code>clear &amp;&amp; curl -X POST --header <span class="hljs-string">"Acc-Token: 5a119647c3fa191ab60d41ed9fabf784453999d4"</span> --header <span class="hljs-string">"Api-Agent: zk_ios"</span> <span class="hljs-string">"http://my.example.com:5001/remote/api/v3/add/claim"</span> --header <span class="hljs-string">"Content-Type: application/json"</span> --data <span class="hljs-string">'{"purchase": "a52355634a0544d1821c7761ff2c075e", "name": "name", "description": "description"}'</span> | json_pp</code></pre><p>response:</p>
+<pre class="hljs"><code>{
+   <span class="hljs-attr">"data"</span> : {
+      <span class="hljs-attr">"author"</span> : {},
+      <span class="hljs-attr">"cancellation_reason"</span> : <span class="hljs-literal">null</span>,
+      <span class="hljs-attr">"date_accepted"</span> : <span class="hljs-literal">null</span>,
+      <span class="hljs-attr">"date_answered"</span> : <span class="hljs-literal">null</span>,
+      <span class="hljs-attr">"date_decision"</span> : <span class="hljs-literal">null</span>,
+      <span class="hljs-attr">"date_escalated"</span> : <span class="hljs-literal">null</span>,
+      <span class="hljs-attr">"date_submitted"</span> : <span class="hljs-string">"2019-08-02T17:15:31"</span>,
+      <span class="hljs-attr">"description"</span> : <span class="hljs-string">"description"</span>,
+      <span class="hljs-attr">"files"</span> : {
+         <span class="hljs-attr">"complaintOwnerFiles"</span> : [],
+         <span class="hljs-attr">"purchaseOwnerFiles"</span> : [],
+         <span class="hljs-attr">"reviewerAboveOwnerFiles"</span> : [],
+         <span class="hljs-attr">"reviewerOwnerFiles"</span> : []
+      },
+      <span class="hljs-attr">"id"</span> : <span class="hljs-literal">null</span>,
+      <span class="hljs-attr">"resolution"</span> : <span class="hljs-literal">null</span>,
+      <span class="hljs-attr">"resolution_type"</span> : <span class="hljs-literal">null</span>,
+      <span class="hljs-attr">"satisfied"</span> : <span class="hljs-literal">false</span>,
+      <span class="hljs-attr">"status"</span> : <span class="hljs-number">6</span>,
+      <span class="hljs-attr">"status_text"</span> : <span class="hljs-string">"розглядається замовником"</span>,
+      <span class="hljs-attr">"tenderer_action"</span> : <span class="hljs-literal">null</span>,
+      <span class="hljs-attr">"title"</span> : <span class="hljs-string">"name"</span>,
+      <span class="hljs-attr">"tuid"</span> : <span class="hljs-literal">null</span>,
+      <span class="hljs-attr">"type_title"</span> : <span class="hljs-string">"Оскарження умов тендеру"</span>,
+      <span class="hljs-attr">"visible_name"</span> : <span class="hljs-string">"Вимога"</span>
+   },
+   <span class="hljs-attr">"errors"</span> : [],
+   <span class="hljs-attr">"status"</span> : <span class="hljs-string">"ok"</span>,
+   <span class="hljs-attr">"system"</span> : <span class="hljs-string">""</span>
+}</code></pre>    </article>
+  </body>
+</html>

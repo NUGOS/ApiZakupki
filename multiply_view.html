@@ -1,0 +1,422 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimal-ui">
+    <title>Запрос нескольких закупок</title>
+    <link type="text/css" rel="stylesheet" href="assets/css/github-markdown.css">
+    <link type="text/css" rel="stylesheet" href="assets/css/pilcrow.css">
+    <link type="text/css" rel="stylesheet" href="assets/css/hljs-github.min.css"/>
+  </head>
+  <body>
+    <article class="markdown-body"><h1 id="запрос-нескольких-закупок"><a class="header-link" href="#запрос-нескольких-закупок"></a>Запрос нескольких закупок</h1>
+<p><strong>GET remote/api/v2/multiply_view[?uid={purchase_uid}&amp;uid={purchase_uid}...</strong></p>
+<blockquote>
+<p>purchase_uid - uid <a href="./view_entity.html">закупки</a></p>
+<p>максимальное кол-во закупок за один запрос - 20, при передаче &gt; 20 uid-в 2N будут отброшены</p>
+</blockquote>
+<p>request headers:</p>
+<ul class="list">
+<li><em>Api-Agent</em> - type: string, required</li>
+<li><em>Acc-Token</em> - type: string, required</li>
+</ul>
+<p>possible response fields:</p>
+<ul class="list">
+<li><em>status</em> - type: str, values: ok/error</li>
+<li><em>errors</em> - type: array of objects, validation errors</li>
+<li><em>data</em> - type: object</li>
+<li><em>system</em> - type: str, system error messages</li>
+</ul>
+<p>possible response data fields:</p>
+<ul class="list">
+<li><em>purchases</em> - type: array of purchases, more detail and format <a href="./view_entity.html">here</a></li>
+<li><em>ignored_uids</em> - type: array of str, uids that was ignored</li>
+</ul>
+<h2 id="examples"><a class="header-link" href="#examples"></a>Examples</h2>
+<p>request:</p>
+<pre class="hljs"><code>curl --header <span class="hljs-string">"Acc-Token: eyJlbXBsb3llZSI6NjEyNjEsIm1lcmNoYW50Ijo1NTEzOH0.C-RgqA.iwxHPKJq2KHCj8Qe6BvcvJlSNss"</span> -X GET <span class="hljs-string">"http://my.example.com:5001/remote/api/v2/multiply_view"</span></code></pre><p>response:</p>
+<pre class="hljs"><code>{
+    <span class="hljs-attr">"status"</span>: <span class="hljs-string">"error"</span>,
+    <span class="hljs-attr">"errors"</span>: [],
+    <span class="hljs-attr">"system"</span>: <span class="hljs-string">"uids is empty"</span>
+}</code></pre><p>request:</p>
+<pre class="hljs"><code>curl --header <span class="hljs-string">"Acc-Token: eyJlbXBsb3llZSI6NjEyNjEsIm1lcmNoYW50Ijo1NTEzOH0.C-RgqA.iwxHPKJq2KHCj8Qe6BvcvJlSNss"</span> -X GET <span class="hljs-string">"http://my.example.com:5001/remote/api/v2/multiply_view?uid=a3b2ca0cb2d24a6c9c7ad6cde255b3d7"</span></code></pre><p>response:</p>
+<pre class="hljs"><code>{
+    <span class="hljs-attr">"status"</span>: <span class="hljs-string">"ok"</span>,
+    <span class="hljs-attr">"errors"</span>: [],
+    <span class="hljs-attr">"data"</span>: {
+        <span class="hljs-attr">"purchases"</span>: [
+            {
+                <span class="hljs-attr">"stage1_id"</span>: <span class="hljs-literal">null</span>,
+                <span class="hljs-attr">"has_lots"</span>: <span class="hljs-literal">false</span>,
+                <span class="hljs-attr">"method_type"</span>: <span class="hljs-number">0</span>,
+                <span class="hljs-attr">"tendering_period"</span>: {
+                    <span class="hljs-attr">"start"</span>: <span class="hljs-string">"2019-02-20T09:54:00"</span>,
+                    <span class="hljs-attr">"end"</span>: <span class="hljs-string">"2019-02-22T17:00:00"</span>
+                },
+                <span class="hljs-attr">"tuid"</span>: <span class="hljs-string">"R-UA-2019-02-19-101115-z"</span>,
+                <span class="hljs-attr">"date"</span>: <span class="hljs-literal">null</span>,
+                <span class="hljs-attr">"is_favorite"</span>: <span class="hljs-literal">false</span>,
+                <span class="hljs-attr">"assignee_supplier_employee"</span>: <span class="hljs-literal">null</span>,
+                <span class="hljs-attr">"method_type_text"</span>: <span class="hljs-string">"Простий тендер"</span>,
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">274298</span>,
+                <span class="hljs-attr">"features"</span>: [],
+                <span class="hljs-attr">"documents"</span>: {
+                    <span class="hljs-attr">"tender"</span>: []
+                },
+                <span class="hljs-attr">"title"</span>: <span class="hljs-string">"aa11"</span>,
+                <span class="hljs-attr">"lots"</span>: [],
+                <span class="hljs-attr">"enquiry_period"</span>: {
+                    <span class="hljs-attr">"start"</span>: <span class="hljs-string">"2019-02-19T09:54:54"</span>,
+                    <span class="hljs-attr">"end"</span>: <span class="hljs-string">"2019-02-20T09:54:00"</span>
+                },
+                <span class="hljs-attr">"amount"</span>: {
+                    <span class="hljs-attr">"amount"</span>: <span class="hljs-number">100000000.0</span>,
+                    <span class="hljs-attr">"currency_iso_code"</span>: <span class="hljs-string">"UAH"</span>,
+                    <span class="hljs-attr">"tax_included"</span>: <span class="hljs-literal">false</span>
+                },
+                <span class="hljs-attr">"complaints_count"</span>: <span class="hljs-number">0</span>,
+                <span class="hljs-attr">"offers"</span>: [],
+                <span class="hljs-attr">"guarantee"</span>: {
+                    <span class="hljs-attr">"guarantee_amount"</span>: <span class="hljs-number">0.0</span>,
+                    <span class="hljs-attr">"currency_iso_code"</span>: <span class="hljs-string">"UAH"</span>
+                },
+                <span class="hljs-attr">"plan_to_participate"</span>: <span class="hljs-literal">false</span>,
+                <span class="hljs-attr">"procuring_entity"</span>: {
+                    <span class="hljs-attr">"name"</span>: <span class="hljs-string">"adsfasdf"</span>,
+                    <span class="hljs-attr">"contacts"</span>: {
+                        <span class="hljs-attr">"main"</span>: {
+                            <span class="hljs-attr">"phones"</span>: [
+                                <span class="hljs-string">"123123123"</span>
+                            ],
+                            <span class="hljs-attr">"name_en"</span>: <span class="hljs-string">""</span>,
+                            <span class="hljs-attr">"name"</span>: <span class="hljs-string">"adsfasdf gasdf"</span>,
+                            <span class="hljs-attr">"language"</span>: <span class="hljs-string">"українська"</span>,
+                            <span class="hljs-attr">"email"</span>: <span class="hljs-string">"some2@mailinator.com"</span>
+                        },
+                        <span class="hljs-attr">"additional"</span>: []
+                    },
+                    <span class="hljs-attr">"url"</span>: <span class="hljs-string">""</span>,
+                    <span class="hljs-attr">"srn"</span>: <span class="hljs-string">"234234"</span>,
+                    <span class="hljs-attr">"address"</span>: <span class="hljs-string">"asdfasdf, adfadsf, Донецкая область, Украина, 12312"</span>,
+                    <span class="hljs-attr">"id"</span>: <span class="hljs-number">56944</span>
+                },
+                <span class="hljs-attr">"is_participate"</span>: <span class="hljs-literal">false</span>,
+                <span class="hljs-attr">"pre_qualification"</span>: [],
+                <span class="hljs-attr">"entity_type"</span>: <span class="hljs-number">2</span>,
+                <span class="hljs-attr">"main_procurement_category"</span>: <span class="hljs-literal">null</span>,
+                <span class="hljs-attr">"status"</span>: <span class="hljs-number">0</span>,
+                <span class="hljs-attr">"public_link_tender"</span>: <span class="hljs-string">"http://zakupki.example.com:5001/gov/tenders/R-UA-2019-02-19-101115-z"</span>,
+                <span class="hljs-attr">"owner_name"</span>: <span class="hljs-literal">null</span>,
+                <span class="hljs-attr">"desc_en"</span>: <span class="hljs-literal">null</span>,
+                <span class="hljs-attr">"claims_count"</span>: <span class="hljs-number">0</span>,
+                <span class="hljs-attr">"title_en"</span>: <span class="hljs-literal">null</span>,
+                <span class="hljs-attr">"step"</span>: <span class="hljs-number">123123.0</span>,
+                <span class="hljs-attr">"stage2_id"</span>: <span class="hljs-literal">null</span>,
+                <span class="hljs-attr">"is_blocked"</span>: <span class="hljs-literal">false</span>,
+                <span class="hljs-attr">"uid"</span>: <span class="hljs-string">"a3b2ca0cb2d24a6c9c7ad6cde255b3d7"</span>,
+                <span class="hljs-attr">"desc"</span>: <span class="hljs-string">"aa11"</span>,
+                <span class="hljs-attr">"items"</span>: [
+                    {
+                        <span class="hljs-attr">"status"</span>: <span class="hljs-number">0</span>,
+                        <span class="hljs-attr">"unit_name"</span>: <span class="hljs-string">"кіловар"</span>,
+                        <span class="hljs-attr">"uid"</span>: <span class="hljs-string">"e680a68dad564df49a1f4ca9c18f72b6"</span>,
+                        <span class="hljs-attr">"primary_classifier"</span>: {
+                            <span class="hljs-attr">"code"</span>: <span class="hljs-string">"22000000-0"</span>,
+                            <span class="hljs-attr">"type"</span>: <span class="hljs-string">"CPV"</span>,
+                            <span class="hljs-attr">"id"</span>: <span class="hljs-number">13838</span>,
+                            <span class="hljs-attr">"name_with_code"</span>: <span class="hljs-string">"22000000-0 Друкована та супутня продукція"</span>
+                        },
+                        <span class="hljs-attr">"id"</span>: <span class="hljs-number">5219431</span>,
+                        <span class="hljs-attr">"features"</span>: [],
+                        <span class="hljs-attr">"delivery_address"</span>: {
+                            <span class="hljs-attr">"zip"</span>: <span class="hljs-string">"12123"</span>,
+                            <span class="hljs-attr">"locality"</span>: <span class="hljs-string">"asdf"</span>,
+                            <span class="hljs-attr">"is_all_ukraine"</span>: <span class="hljs-literal">false</span>,
+                            <span class="hljs-attr">"region"</span>: <span class="hljs-string">"Дніпропетровська область"</span>,
+                            <span class="hljs-attr">"country_name"</span>: <span class="hljs-string">"Україна"</span>,
+                            <span class="hljs-attr">"street_address"</span>: <span class="hljs-string">"asd"</span>
+                        },
+                        <span class="hljs-attr">"delivery_period"</span>: {
+                            <span class="hljs-attr">"start"</span>: <span class="hljs-literal">null</span>,
+                            <span class="hljs-attr">"end"</span>: <span class="hljs-string">"2019-03-03T00:00:00"</span>
+                        },
+                        <span class="hljs-attr">"descr"</span>: <span class="hljs-string">"aa11"</span>,
+                        <span class="hljs-attr">"unit_id"</span>: <span class="hljs-number">153</span>,
+                        <span class="hljs-attr">"classifiers"</span>: [],
+                        <span class="hljs-attr">"descr_en"</span>: <span class="hljs-literal">null</span>,
+                        <span class="hljs-attr">"quantity"</span>: <span class="hljs-number">123123.0</span>
+                    }
+                ],
+                <span class="hljs-attr">"auction_period"</span>: {
+                    <span class="hljs-attr">"start"</span>: <span class="hljs-literal">null</span>,
+                    <span class="hljs-attr">"end"</span>: <span class="hljs-literal">null</span>
+                },
+                <span class="hljs-attr">"user_offer"</span>: {},
+                <span class="hljs-attr">"cancellations"</span>: [],
+                <span class="hljs-attr">"questions_count"</span>: <span class="hljs-number">0</span>,
+                <span class="hljs-attr">"auction_url"</span>: <span class="hljs-literal">null</span>,
+                <span class="hljs-attr">"qualification"</span>: [],
+                <span class="hljs-attr">"status_text"</span>: <span class="hljs-string">"період уточнень"</span>
+            }
+        ]
+    },
+    <span class="hljs-attr">"system"</span>: <span class="hljs-string">""</span>
+}</code></pre><p>request:</p>
+<pre class="hljs"><code>curl --header <span class="hljs-string">"Acc-Token: eyJlbXBsb3llZSI6NjEyNjEsIm1lcmNoYW50Ijo1NTEzOH0.C-RgqA.iwxHPKJq2KHCj8Qe6BvcvJlSNss"</span> -X GET <span class="hljs-string">"http://my.example.com:5001/remote/api/v2/multiply_view?uid=a3b2ca0cb2d24a6c9c7ad6cde255b3d7&amp;uid=059f2535b1ab45aa8912298c8160f659&amp;uid=bec12c586cb24e99833ad44a89025711&amp;uid=bbcaab7e3942404abaaff1a9f7867278&amp;uid=88abc7152bdd4d16a018cdf29fd0c1d7&amp;uid=893060a997094456a8c90f91f808c759&amp;uid=7827767deb084ed4907b242d802f18d4&amp;uid=bdcaab7d73a44ab4b73f038271e08866&amp;uid=38b8b3cfc2a94092b019e633849e72ad&amp;uid=4091e07652124d148955533469d99714&amp;uid=e4b696918b444be7910d21267dcff5b0&amp;uid=85f561e93fea4903a2036311e8f3832b&amp;uid=674b295375264ffd8d2f53fcfe468de3&amp;uid=51aaa55b93fd4f249bf6816935290d18&amp;uid=9429ea88cb31409397fedf273c98efac&amp;uid=d84f01db8cf74876a9467e307f33da6d&amp;uid=3caee8e6d8024c92a37acb3021f6cb80&amp;uid=e367c045b21b401883fe0b8fb110f29f&amp;uid=83e80383f8984df28e2777e448ce6575&amp;uid=f885f95438054571b791abc07fdc6295&amp;uid=536dab7671d04983b71c38d69de52c44&amp;uid=f22c9c37c12f4d65ac9cf1738a349574&amp;uid=622f547dbf6d4f9c894632706238a200&amp;uid=f719a7a4c2144472b7c66140bdd21429&amp;uid=bff8a98a8cf24a1bbd784fa23e9e389d&amp;uid=ecd916952b6d4cac9f101976fe9a1a93&amp;uid=a45c031dc76046f7aa80b82e71a649aa&amp;uid=81f45c8f1d1547e5a4250a3bf387788b&amp;uid=4344540a2be44ecfa6560f621ba60344&amp;uid=22d25fe26c5d42919860b30e8f31af61&amp;uid="</span></code></pre><p>response:</p>
+<pre class="hljs"><code>{
+    <span class="hljs-attr">"status"</span>: <span class="hljs-string">"ok"</span>,
+    <span class="hljs-attr">"errors"</span>: [],
+    <span class="hljs-attr">"data"</span>: {
+        <span class="hljs-attr">"purchases"</span>: [
+            ...
+            {
+                <span class="hljs-attr">"stage1_id"</span>: <span class="hljs-literal">null</span>,
+                <span class="hljs-attr">"has_lots"</span>: <span class="hljs-literal">false</span>,
+                <span class="hljs-attr">"method_type"</span>: <span class="hljs-number">1</span>,
+                <span class="hljs-attr">"tendering_period"</span>: {
+                    <span class="hljs-attr">"start"</span>: <span class="hljs-string">"2019-02-03T10:49:18"</span>,
+                    <span class="hljs-attr">"end"</span>: <span class="hljs-string">"2019-02-10T10:48:00"</span>
+                },
+                <span class="hljs-attr">"tuid"</span>: <span class="hljs-string">"UA-2019-02-03-000048-c"</span>,
+                <span class="hljs-attr">"date"</span>: <span class="hljs-string">"2019-02-03T10:49:20"</span>,
+                <span class="hljs-attr">"is_favorite"</span>: <span class="hljs-literal">false</span>,
+                <span class="hljs-attr">"assignee_supplier_employee"</span>: <span class="hljs-literal">null</span>,
+                <span class="hljs-attr">"method_type_text"</span>: <span class="hljs-string">"Відкриті торги"</span>,
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">274255</span>,
+                <span class="hljs-attr">"features"</span>: [],
+                <span class="hljs-attr">"documents"</span>: {
+                    <span class="hljs-attr">"tender"</span>: []
+                },
+                <span class="hljs-attr">"title"</span>: <span class="hljs-string">"asdfasdf"</span>,
+                <span class="hljs-attr">"lots"</span>: [],
+                <span class="hljs-attr">"enquiry_period"</span>: {
+                    <span class="hljs-attr">"start"</span>: <span class="hljs-string">"2019-02-03T10:49:18"</span>,
+                    <span class="hljs-attr">"end"</span>: <span class="hljs-string">"2019-02-10T10:38:00"</span>
+                },
+                <span class="hljs-attr">"amount"</span>: {
+                    <span class="hljs-attr">"amount"</span>: <span class="hljs-number">12312.0</span>,
+                    <span class="hljs-attr">"currency_iso_code"</span>: <span class="hljs-string">"UAH"</span>,
+                    <span class="hljs-attr">"tax_included"</span>: <span class="hljs-literal">false</span>
+                },
+                <span class="hljs-attr">"complaints_count"</span>: <span class="hljs-number">0</span>,
+                <span class="hljs-attr">"offers"</span>: [],
+                <span class="hljs-attr">"guarantee"</span>: {
+                    <span class="hljs-attr">"guarantee_amount"</span>: <span class="hljs-number">0.0</span>,
+                    <span class="hljs-attr">"currency_iso_code"</span>: <span class="hljs-string">"UAH"</span>
+                },
+                <span class="hljs-attr">"plan_to_participate"</span>: <span class="hljs-literal">false</span>,
+                <span class="hljs-attr">"procuring_entity"</span>: {
+                    <span class="hljs-attr">"name"</span>: <span class="hljs-string">"some1@mailinator.com"</span>,
+                    <span class="hljs-attr">"contacts"</span>: {
+                        <span class="hljs-attr">"main"</span>: {
+                            <span class="hljs-attr">"phones"</span>: [
+                                <span class="hljs-string">"123123123"</span>,
+                                <span class="hljs-string">"+380234234234"</span>,
+                                <span class="hljs-string">"+380345345345"</span>,
+                                <span class="hljs-string">"+380456456456"</span>,
+                                <span class="hljs-string">"+380567567567"</span>
+                            ],
+                            <span class="hljs-attr">"name_en"</span>: <span class="hljs-string">""</span>,
+                            <span class="hljs-attr">"name"</span>: <span class="hljs-string">"some some"</span>,
+                            <span class="hljs-attr">"language"</span>: <span class="hljs-string">"українська"</span>,
+                            <span class="hljs-attr">"email"</span>: <span class="hljs-string">"some1@mailinator.com"</span>
+                        },
+                        <span class="hljs-attr">"additional"</span>: []
+                    },
+                    <span class="hljs-attr">"url"</span>: <span class="hljs-string">"http://localhost"</span>,
+                    <span class="hljs-attr">"srn"</span>: <span class="hljs-string">"123123"</span>,
+                    <span class="hljs-attr">"address"</span>: <span class="hljs-string">"hell, mariupol, Донецкая область, Украина, 87553"</span>,
+                    <span class="hljs-attr">"id"</span>: <span class="hljs-number">56638</span>
+                },
+                <span class="hljs-attr">"is_participate"</span>: <span class="hljs-literal">false</span>,
+                <span class="hljs-attr">"pre_qualification"</span>: [],
+                <span class="hljs-attr">"entity_type"</span>: <span class="hljs-number">0</span>,
+                <span class="hljs-attr">"main_procurement_category"</span>: <span class="hljs-literal">null</span>,
+                <span class="hljs-attr">"status"</span>: <span class="hljs-number">2</span>,
+                <span class="hljs-attr">"public_link_tender"</span>: <span class="hljs-string">"http://zakupki.example.com:5001/gov/tenders/UA-2019-02-03-000048-c"</span>,
+                <span class="hljs-attr">"owner_name"</span>: <span class="hljs-string">"prom.ua"</span>,
+                <span class="hljs-attr">"desc_en"</span>: <span class="hljs-literal">null</span>,
+                <span class="hljs-attr">"claims_count"</span>: <span class="hljs-number">0</span>,
+                <span class="hljs-attr">"title_en"</span>: <span class="hljs-literal">null</span>,
+                <span class="hljs-attr">"step"</span>: <span class="hljs-number">123.0</span>,
+                <span class="hljs-attr">"stage2_id"</span>: <span class="hljs-literal">null</span>,
+                <span class="hljs-attr">"is_blocked"</span>: <span class="hljs-literal">false</span>,
+                <span class="hljs-attr">"uid"</span>: <span class="hljs-string">"e4b696918b444be7910d21267dcff5b0"</span>,
+                <span class="hljs-attr">"desc"</span>: <span class="hljs-string">"asdfasdf"</span>,
+                <span class="hljs-attr">"items"</span>: [
+                    {
+                        <span class="hljs-attr">"status"</span>: <span class="hljs-number">0</span>,
+                        <span class="hljs-attr">"unit_name"</span>: <span class="hljs-string">"кіловар-година"</span>,
+                        <span class="hljs-attr">"uid"</span>: <span class="hljs-string">"bbd760a6431b4966a1d58a86dd17baed"</span>,
+                        <span class="hljs-attr">"primary_classifier"</span>: {
+                            <span class="hljs-attr">"code"</span>: <span class="hljs-string">"03000000-1"</span>,
+                            <span class="hljs-attr">"type"</span>: <span class="hljs-string">"ДК 021"</span>,
+                            <span class="hljs-attr">"id"</span>: <span class="hljs-number">58776</span>,
+                            <span class="hljs-attr">"name_with_code"</span>: <span class="hljs-string">"03000000-1 Сільськогосподарська, фермерська продукція, продукція рибальства, лісівництва та супутня продукція"</span>
+                        },
+                        <span class="hljs-attr">"id"</span>: <span class="hljs-number">5219390</span>,
+                        <span class="hljs-attr">"features"</span>: [],
+                        <span class="hljs-attr">"delivery_address"</span>: {
+                            <span class="hljs-attr">"zip"</span>: <span class="hljs-literal">null</span>,
+                            <span class="hljs-attr">"locality"</span>: <span class="hljs-literal">null</span>,
+                            <span class="hljs-attr">"is_all_ukraine"</span>: <span class="hljs-literal">true</span>,
+                            <span class="hljs-attr">"region"</span>: <span class="hljs-string">"Відповідно до документації"</span>,
+                            <span class="hljs-attr">"country_name"</span>: <span class="hljs-string">"Україна"</span>,
+                            <span class="hljs-attr">"street_address"</span>: <span class="hljs-literal">null</span>
+                        },
+                        <span class="hljs-attr">"delivery_period"</span>: {
+                            <span class="hljs-attr">"start"</span>: <span class="hljs-literal">null</span>,
+                            <span class="hljs-attr">"end"</span>: <span class="hljs-string">"2019-03-03T00:00:00"</span>
+                        },
+                        <span class="hljs-attr">"descr"</span>: <span class="hljs-string">"asdfasdf"</span>,
+                        <span class="hljs-attr">"unit_id"</span>: <span class="hljs-number">212</span>,
+                        <span class="hljs-attr">"classifiers"</span>: [],
+                        <span class="hljs-attr">"descr_en"</span>: <span class="hljs-literal">null</span>,
+                        <span class="hljs-attr">"quantity"</span>: <span class="hljs-number">123123.0</span>
+                    }
+                ],
+                <span class="hljs-attr">"auction_period"</span>: {
+                    <span class="hljs-attr">"start"</span>: <span class="hljs-literal">null</span>,
+                    <span class="hljs-attr">"end"</span>: <span class="hljs-literal">null</span>
+                },
+                <span class="hljs-attr">"user_offer"</span>: {},
+                <span class="hljs-attr">"cancellations"</span>: [],
+                <span class="hljs-attr">"questions_count"</span>: <span class="hljs-number">0</span>,
+                <span class="hljs-attr">"auction_url"</span>: <span class="hljs-literal">null</span>,
+                <span class="hljs-attr">"qualification"</span>: [],
+                <span class="hljs-attr">"status_text"</span>: <span class="hljs-string">"прийом пропозицій"</span>
+            },
+            {
+                <span class="hljs-attr">"stage1_id"</span>: <span class="hljs-literal">null</span>,
+                <span class="hljs-attr">"has_lots"</span>: <span class="hljs-literal">false</span>,
+                <span class="hljs-attr">"method_type"</span>: <span class="hljs-number">14</span>,
+                <span class="hljs-attr">"tendering_period"</span>: {
+                    <span class="hljs-attr">"start"</span>: <span class="hljs-string">"2019-01-30T18:54:31"</span>,
+                    <span class="hljs-attr">"end"</span>: <span class="hljs-string">"2019-01-30T19:25:00"</span>
+                },
+                <span class="hljs-attr">"tuid"</span>: <span class="hljs-string">"R-UA-2019-01-30-000002-z"</span>,
+                <span class="hljs-attr">"date"</span>: <span class="hljs-literal">null</span>,
+                <span class="hljs-attr">"is_favorite"</span>: <span class="hljs-literal">false</span>,
+                <span class="hljs-attr">"assignee_supplier_employee"</span>: <span class="hljs-literal">null</span>,
+                <span class="hljs-attr">"method_type_text"</span>: <span class="hljs-string">"Двоетапний тендер"</span>,
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">274245</span>,
+                <span class="hljs-attr">"features"</span>: [],
+                <span class="hljs-attr">"documents"</span>: {
+                    <span class="hljs-attr">"tender"</span>: []
+                },
+                <span class="hljs-attr">"title"</span>: <span class="hljs-string">"dsfasdf"</span>,
+                <span class="hljs-attr">"lots"</span>: [],
+                <span class="hljs-attr">"enquiry_period"</span>: {
+                    <span class="hljs-attr">"start"</span>: <span class="hljs-string">"2019-01-30T18:54:31"</span>,
+                    <span class="hljs-attr">"end"</span>: <span class="hljs-string">"2019-01-30T19:25:00"</span>
+                },
+                <span class="hljs-attr">"amount"</span>: {
+                    <span class="hljs-attr">"amount"</span>: <span class="hljs-literal">null</span>,
+                    <span class="hljs-attr">"currency_iso_code"</span>: <span class="hljs-string">"UAH"</span>,
+                    <span class="hljs-attr">"tax_included"</span>: <span class="hljs-literal">false</span>
+                },
+                <span class="hljs-attr">"complaints_count"</span>: <span class="hljs-number">0</span>,
+                <span class="hljs-attr">"offers"</span>: [],
+                <span class="hljs-attr">"guarantee"</span>: {
+                    <span class="hljs-attr">"guarantee_amount"</span>: <span class="hljs-number">0.0</span>,
+                    <span class="hljs-attr">"currency_iso_code"</span>: <span class="hljs-string">"UAH"</span>
+                },
+                <span class="hljs-attr">"plan_to_participate"</span>: <span class="hljs-literal">false</span>,
+                <span class="hljs-attr">"procuring_entity"</span>: {
+                    <span class="hljs-attr">"name"</span>: <span class="hljs-string">"adsfasdf"</span>,
+                    <span class="hljs-attr">"contacts"</span>: {
+                        <span class="hljs-attr">"main"</span>: {
+                            <span class="hljs-attr">"phones"</span>: [
+                                <span class="hljs-string">"123123123"</span>
+                            ],
+                            <span class="hljs-attr">"name_en"</span>: <span class="hljs-string">""</span>,
+                            <span class="hljs-attr">"name"</span>: <span class="hljs-string">"adsfasdf gasdf"</span>,
+                            <span class="hljs-attr">"language"</span>: <span class="hljs-string">"українська"</span>,
+                            <span class="hljs-attr">"email"</span>: <span class="hljs-string">"some2@mailinator.com"</span>
+                        },
+                        <span class="hljs-attr">"additional"</span>: []
+                    },
+                    <span class="hljs-attr">"url"</span>: <span class="hljs-string">""</span>,
+                    <span class="hljs-attr">"srn"</span>: <span class="hljs-string">"234234"</span>,
+                    <span class="hljs-attr">"address"</span>: <span class="hljs-string">"asdfasdf, adfadsf, Донецкая область, Украина, 12312"</span>,
+                    <span class="hljs-attr">"id"</span>: <span class="hljs-number">56944</span>
+                },
+                <span class="hljs-attr">"is_participate"</span>: <span class="hljs-literal">false</span>,
+                <span class="hljs-attr">"pre_qualification"</span>: [],
+                <span class="hljs-attr">"entity_type"</span>: <span class="hljs-number">2</span>,
+                <span class="hljs-attr">"main_procurement_category"</span>: <span class="hljs-literal">null</span>,
+                <span class="hljs-attr">"status"</span>: <span class="hljs-number">7</span>,
+                <span class="hljs-attr">"public_link_tender"</span>: <span class="hljs-string">"http://zakupki.example.com:5001/gov/tenders/R-UA-2019-01-30-000002-z"</span>,
+                <span class="hljs-attr">"owner_name"</span>: <span class="hljs-literal">null</span>,
+                <span class="hljs-attr">"desc_en"</span>: <span class="hljs-string">""</span>,
+                <span class="hljs-attr">"claims_count"</span>: <span class="hljs-number">0</span>,
+                <span class="hljs-attr">"title_en"</span>: <span class="hljs-string">""</span>,
+                <span class="hljs-attr">"step"</span>: <span class="hljs-number">123123.0</span>,
+                <span class="hljs-attr">"stage2_id"</span>: <span class="hljs-literal">null</span>,
+                <span class="hljs-attr">"is_blocked"</span>: <span class="hljs-literal">false</span>,
+                <span class="hljs-attr">"uid"</span>: <span class="hljs-string">"f885f95438054571b791abc07fdc6295"</span>,
+                <span class="hljs-attr">"desc"</span>: <span class="hljs-string">"asdfasdf"</span>,
+                <span class="hljs-attr">"items"</span>: [
+                    {
+                        <span class="hljs-attr">"status"</span>: <span class="hljs-number">0</span>,
+                        <span class="hljs-attr">"unit_name"</span>: <span class="hljs-string">"кіловар-година"</span>,
+                        <span class="hljs-attr">"uid"</span>: <span class="hljs-string">"2e84a4791c8f4b79b192b7bc84a891e6"</span>,
+                        <span class="hljs-attr">"primary_classifier"</span>: {
+                            <span class="hljs-attr">"code"</span>: <span class="hljs-string">"03000000-1"</span>,
+                            <span class="hljs-attr">"type"</span>: <span class="hljs-string">"CPV"</span>,
+                            <span class="hljs-attr">"id"</span>: <span class="hljs-number">16662</span>,
+                            <span class="hljs-attr">"name_with_code"</span>: <span class="hljs-string">"03000000-1 Сільськогосподарська, фермерська продукція, продукція рибальства, лісівни\u0446тва та супутня продукція"</span>
+                        },
+                        <span class="hljs-attr">"id"</span>: <span class="hljs-number">5219380</span>,
+                        <span class="hljs-attr">"features"</span>: [],
+                        <span class="hljs-attr">"delivery_address"</span>: {
+                            <span class="hljs-attr">"zip"</span>: <span class="hljs-string">"-"</span>,
+                            <span class="hljs-attr">"locality"</span>: <span class="hljs-string">"-"</span>,
+                            <span class="hljs-attr">"is_all_ukraine"</span>: <span class="hljs-literal">true</span>,
+                            <span class="hljs-attr">"region"</span>: <span class="hljs-string">"Відповідно до документації"</span>,
+                            <span class="hljs-attr">"country_name"</span>: <span class="hljs-string">"Україна"</span>,
+                            <span class="hljs-attr">"street_address"</span>: <span class="hljs-string">"-"</span>
+                        },
+                        <span class="hljs-attr">"delivery_period"</span>: {
+                            <span class="hljs-attr">"start"</span>: <span class="hljs-literal">null</span>,
+                            <span class="hljs-attr">"end"</span>: <span class="hljs-string">"2019-02-03T00:00:00"</span>
+                        },
+                        <span class="hljs-attr">"descr"</span>: <span class="hljs-string">"asdfasdf"</span>,
+                        <span class="hljs-attr">"unit_id"</span>: <span class="hljs-number">212</span>,
+                        <span class="hljs-attr">"classifiers"</span>: [],
+                        <span class="hljs-attr">"descr_en"</span>: <span class="hljs-string">""</span>,
+                        <span class="hljs-attr">"quantity"</span>: <span class="hljs-number">123123.0</span>
+                    }
+                ],
+                <span class="hljs-attr">"auction_period"</span>: {
+                    <span class="hljs-attr">"start"</span>: <span class="hljs-literal">null</span>,
+                    <span class="hljs-attr">"end"</span>: <span class="hljs-literal">null</span>
+                },
+                <span class="hljs-attr">"user_offer"</span>: {},
+                <span class="hljs-attr">"cancellations"</span>: [],
+                <span class="hljs-attr">"questions_count"</span>: <span class="hljs-number">0</span>,
+                <span class="hljs-attr">"auction_url"</span>: <span class="hljs-literal">null</span>,
+                <span class="hljs-attr">"qualification"</span>: [],
+                <span class="hljs-attr">"status_text"</span>: <span class="hljs-string">"закупівля не відбулась"</span>
+            }
+            ...
+        ],
+        <span class="hljs-attr">"ignored_uids"</span>: [
+            <span class="hljs-string">"536dab7671d04983b71c38d69de52c44"</span>,
+            <span class="hljs-string">"f22c9c37c12f4d65ac9cf1738a349574"</span>,
+            <span class="hljs-string">"622f547dbf6d4f9c894632706238a200"</span>,
+            <span class="hljs-string">"f719a7a4c2144472b7c66140bdd21429"</span>,
+            <span class="hljs-string">"bff8a98a8cf24a1bbd784fa23e9e389d"</span>,
+            <span class="hljs-string">"ecd916952b6d4cac9f101976fe9a1a93"</span>,
+            <span class="hljs-string">"a45c031dc76046f7aa80b82e71a649aa"</span>,
+            <span class="hljs-string">"81f45c8f1d1547e5a4250a3bf387788b"</span>,
+            <span class="hljs-string">"4344540a2be44ecfa6560f621ba60344"</span>,
+            <span class="hljs-string">"22d25fe26c5d42919860b30e8f31af61"</span>,
+            <span class="hljs-string">""</span>
+        ]
+    },
+    <span class="hljs-attr">"system"</span>: <span class="hljs-string">""</span>
+}</code></pre>    </article>
+  </body>
+</html>

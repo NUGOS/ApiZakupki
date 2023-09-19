@@ -1,0 +1,96 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimal-ui">
+    <title>Add/remove from planned or favorites</title>
+    <link type="text/css" rel="stylesheet" href="../assets/css/github-markdown.css">
+    <link type="text/css" rel="stylesheet" href="../assets/css/pilcrow.css">
+    <link type="text/css" rel="stylesheet" href="../assets/css/hljs-github.min.css"/>
+  </head>
+  <body>
+    <article class="markdown-body"><h1 id="add/remove-from-planned-or-favorites"><a class="header-link" href="#add/remove-from-planned-or-favorites"></a>Add/remove from planned or favorites</h1>
+<h2 id="favorite"><a class="header-link" href="#favorite"></a>favorite</h2>
+<p><strong>POST remote/api/v3/favorite/{uid}</strong></p>
+<blockquote>
+<p>uid - uid of purchase from <a href="./search.html">search</a> or from <a href="./view.html">view</a></p>
+</blockquote>
+<p>request headers:</p>
+<ul class="list">
+<li><em>Api-Agent</em> - type: string, reuqired</li>
+<li><em>Acc-Token</em> - type: string, required</li>
+</ul>
+<p>possible request fields:</p>
+<ul class="list">
+<li><strong>action</strong> - type: bool, optional. If true/false already exists do nothing, else do toggle</li>
+</ul>
+<p>possible response fields:</p>
+<ul class="list">
+<li><em>status</em> - type: str, values: ok/error</li>
+<li><em>errors</em> - type: array of objects, validation errors</li>
+<li><em>data</em> - type: object</li>
+<li><em>system</em> - type: str, system error messages</li>
+</ul>
+<p>possible response data fields: <strong>data response always empty object</strong></p>
+<p>Example:</p>
+<p>request:</p>
+<pre class="hljs"><code>clear &amp;&amp; curl -X POST --header <span class="hljs-string">"Acc-Token: 5a119647c3fa191ab60d41ed9fabf784453999d4"</span> --header <span class="hljs-string">"Api-Agent: zk_ios"</span> <span class="hljs-string">"http://my.example.com:5001/remote/api/v3/favorite/bd54d665335c4d45bdb26f5e9398a5ec"</span> --header <span class="hljs-string">"Content-Type: application/json"</span> --data <span class="hljs-string">'{"action": true}'</span>| json_pp</code></pre><p>response:</p>
+<pre class="hljs"><code>{
+   <span class="hljs-attr">"data"</span> : {},
+   <span class="hljs-attr">"errors"</span> : [],
+   <span class="hljs-attr">"status"</span> : <span class="hljs-string">"ok"</span>,
+   <span class="hljs-attr">"system"</span> : <span class="hljs-string">""</span>
+}</code></pre><h2 id="planned"><a class="header-link" href="#planned"></a>planned</h2>
+<p><strong>POST remote/api/v3/planned/{uid}</strong></p>
+<blockquote>
+<p>uid - uid of purchase from <a href="./search.html">search</a> or from <a href="./view.html">view</a></p>
+</blockquote>
+<p>request headers:</p>
+<ul class="list">
+<li><em>Api-Agent</em> - type: string, reuqired</li>
+<li><em>Acc-Token</em> - type: string, required</li>
+</ul>
+<p>possible request fields:</p>
+<ul class="list">
+<li><strong>action</strong> - type: bool, optional. If true/false already exists do nothing, else do toggle</li>
+</ul>
+<p>possible response fields:</p>
+<ul class="list">
+<li><em>status</em> - type: str, values: ok/error</li>
+<li><em>errors</em> - type: array of objects, validation errors</li>
+<li><em>data</em> - type: object</li>
+<li><em>system</em> - type: str, system error messages</li>
+</ul>
+<p>possible response data fields:</p>
+<ul class="list">
+<li><em>balance_info</em> - type: <strong>balance_info</strong> object, described below</li>
+</ul>
+<p>balance_info object fields:</p>
+<ul class="list">
+<li><em>recommended_amount</em> - type: float</li>
+<li><em>juridical_address</em> - type: str</li>
+<li><em>srn</em> - type: str</li>
+<li><em>name</em> - type: str</li>
+<li><em>vat_num</em> - type: str</li>
+<li><em>balance</em> - type: float</li>
+</ul>
+<p>Example:</p>
+<p>request:</p>
+<pre class="hljs"><code>clear &amp;&amp; curl -X POST --header <span class="hljs-string">"Acc-Token: 5a119647c3fa191ab60d41ed9fabf784453999d4"</span> --header <span class="hljs-string">"Api-Agent: zk_ios"</span> <span class="hljs-string">"http://my.example.com:5001/remote/api/v3/planned/bd54d665335c4d45bdb26f5e9398a5ec"</span> | json_pp</code></pre><p>response:</p>
+<pre class="hljs"><code>{
+   <span class="hljs-attr">"data"</span> : {
+       <span class="hljs-attr">"balance_info"</span>: {
+            <span class="hljs-attr">"recommended_amount"</span>: <span class="hljs-number">0</span>,
+            <span class="hljs-attr">"juridical_address"</span>: <span class="hljs-string">"Украина"</span>,
+            <span class="hljs-attr">"srn"</span>: <span class="hljs-string">""</span>,
+            <span class="hljs-attr">"name"</span>: <span class="hljs-string">"Назва моєї компанії"</span>,
+            <span class="hljs-attr">"vat_num"</span>: <span class="hljs-string">""</span>,
+            <span class="hljs-attr">"balance"</span>: <span class="hljs-number">10000.0</span> 
+        }
+   },
+   <span class="hljs-attr">"errors"</span> : [],
+   <span class="hljs-attr">"status"</span> : <span class="hljs-string">"ok"</span>,
+   <span class="hljs-attr">"system"</span> : <span class="hljs-string">""</span>
+}</code></pre>    </article>
+  </body>
+</html>

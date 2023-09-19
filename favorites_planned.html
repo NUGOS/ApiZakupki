@@ -1,0 +1,70 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimal-ui">
+    <title>Добавить/удалить избранное запланировать/отменить участие</title>
+    <link type="text/css" rel="stylesheet" href="assets/css/github-markdown.css">
+    <link type="text/css" rel="stylesheet" href="assets/css/pilcrow.css">
+    <link type="text/css" rel="stylesheet" href="assets/css/hljs-github.min.css"/>
+  </head>
+  <body>
+    <article class="markdown-body"><h1 id="добавить/удалить-избранное-запланировать/отменить-участие"><a class="header-link" href="#добавить/удалить-избранное-запланировать/отменить-участие"></a>Добавить/удалить избранное запланировать/отменить участие</h1>
+<h2 id="favorites"><a class="header-link" href="#favorites"></a>favorites</h2>
+<p><strong>POST remote/api/v1/entity/toggle_favorite/{id}</strong></p>
+<blockquote>
+<p>id - id закупки из <a href="./entity_list.html">списка закупок</a></p>
+</blockquote>
+<p>request headers:</p>
+<ul class="list">
+<li><em>Api-Agent</em> - type: string, reuqired</li>
+<li><em>Acc-Token</em> - type: string, required</li>
+</ul>
+<p>possible response fields:</p>
+<ul class="list">
+<li><em>status</em> - type: str, values: ok/error</li>
+<li><em>errors</em> - type: array of objects, validation errors</li>
+<li><em>data</em> - type: object</li>
+<li><em>system</em> - type: str, system error messages</li>
+</ul>
+<p>possible response data fields: <strong>data response always empty object</strong></p>
+<blockquote>
+<p>запрос на этот endpoint меняет значение поля <em>is_favorite</em> между <strong>true</strong> и <strong>false</strong></p>
+</blockquote>
+<p>request:</p>
+<pre class="hljs"><code>curl --header <span class="hljs-string">"Acc-Token: eyJlbXBsb3llZSI6NjEyNjEsIm1lcmNoYW50Ijo1NTEzOH0.C-RgqA.iwxHPKJq2KHCj8Qe6BvcvJlSNss"</span> -X GET <span class="hljs-string">"http://my.example.com:5001/remote/api/v1/entity/toggle_favorite/262492"</span></code></pre><p>response:</p>
+<pre class="hljs"><code>{
+    <span class="hljs-attr">"status"</span>: <span class="hljs-string">"ok"</span>,
+    <span class="hljs-attr">"errors"</span>: [],
+    <span class="hljs-attr">"data"</span>: {},
+    <span class="hljs-attr">"system"</span>: []
+}</code></pre><h2 id="plan-to-participate"><a class="header-link" href="#plan-to-participate"></a>plan to participate</h2>
+<p><strong>POST remote/api/v1/entity/toggle_planned/{id}</strong></p>
+<blockquote>
+<p>id - id закупки из <a href="./entity_list.html">списка закупок</a></p>
+</blockquote>
+<p>request headers:</p>
+<ul class="list">
+<li><em>Acc-Token</em> - type: string, required</li>
+</ul>
+<p>possible response fields:</p>
+<ul class="list">
+<li><em>status</em> - type: str, values: ok/error</li>
+<li><em>errors</em> - type: array of objects, validation errors</li>
+<li><em>data</em> - type: object</li>
+<li><em>system</em> - type: str, system error messages</li>
+</ul>
+<p>possible response data fields: <strong>data response always empty object</strong></p>
+<blockquote>
+<p>запрос на этот endpoint меняет значение поля <em>plan_to_participate</em> между <strong>true</strong> и <strong>false</strong></p>
+</blockquote>
+<p>request:</p>
+<pre class="hljs"><code>curl --header <span class="hljs-string">"Acc-Token: eyJlbXBsb3llZSI6NjEyNjEsIm1lcmNoYW50Ijo1NTEzOH0.C-RgqA.iwxHPKJq2KHCj8Qe6BvcvJlSNss"</span> -X GET <span class="hljs-string">"http://my.example.com:5001/remote/api/v1/entity/toggle_planned/262492"</span></code></pre><p>response:</p>
+<pre class="hljs"><code>{
+    <span class="hljs-attr">"status"</span>: <span class="hljs-string">"ok"</span>,
+    <span class="hljs-attr">"errors"</span>: [],
+    <span class="hljs-attr">"data"</span>: {},
+    <span class="hljs-attr">"system"</span>: []
+}</code></pre>    </article>
+  </body>
+</html>

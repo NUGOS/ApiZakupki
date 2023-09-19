@@ -1,0 +1,86 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimal-ui">
+    <title>Classifiers (DK021 aka CPV)</title>
+    <link type="text/css" rel="stylesheet" href="../assets/css/github-markdown.css">
+    <link type="text/css" rel="stylesheet" href="../assets/css/pilcrow.css">
+    <link type="text/css" rel="stylesheet" href="../assets/css/hljs-github.min.css"/>
+  </head>
+  <body>
+    <article class="markdown-body"><h1 id="classifiers-(dk021-aka-cpv)"><a class="header-link" href="#classifiers-(dk021-aka-cpv)"></a>Classifiers (DK021 aka CPV)</h1>
+<p><strong>GET remote/api/v3/classifiers?timestamp={timestamp || &#39;&#39;}</strong></p>
+<blockquote>
+<p>returns all available dk021(cpv) classifiers
+if <strong>timestamp</strong> provided - we try to find any changes since <strong>timestamp</strong> and
+return new classifiers data if any was, in other case empty response will be returned</p>
+</blockquote>
+<p>request headers:</p>
+<ul class="list">
+<li><em>Api-Agent</em> - type: string, required</li>
+</ul>
+<p>possible request arguments:</p>
+<ul class="list">
+<li><em>timestamp</em> - type: int</li>
+</ul>
+<p>possible response fields:</p>
+<ul class="list">
+<li><em>status</em> - type: str, values: ok/error</li>
+<li><em>errors</em> - type: array of objects, validation errors</li>
+<li><em>data</em> - type: object</li>
+<li><em>system</em> - type: str, system error messages</li>
+</ul>
+<p>possible response data fields:</p>
+<ul class="list">
+<li><em>primary_classifier</em> - type: array of <strong>primary_classifier</strong> objects or empty, described below</li>
+<li><em>timestamp</em> - type: int</li>
+</ul>
+<p>primary_classifier object fields:</p>
+<ul class="list">
+<li><em>full_title</em> - type: str</li>
+<li><em>code</em> - type: str</li>
+<li><em>value</em> - type: str</li>
+<li><em>title</em> - type: str</li>
+</ul>
+<p>request example:</p>
+<pre class="hljs"><code>curl -X GET <span class="hljs-string">"http://my.example.com:5001/remote/api/v3/classifiers"</span></code></pre><p>response example:</p>
+<pre class="hljs"><code>{  
+    <span class="hljs-attr">"status"</span>:<span class="hljs-string">"ok"</span>,
+    <span class="hljs-attr">"errors"</span>:[],
+    <span class="hljs-attr">"data"</span>:{  
+        <span class="hljs-attr">"primary_classifier"</span>:[  
+            {  
+                <span class="hljs-attr">"full_title"</span>:<span class="hljs-string">"33622200-8 Протигіпертонічні засоби"</span>,
+                <span class="hljs-attr">"code"</span>:<span class="hljs-string">"33622200-8"</span>,
+                <span class="hljs-attr">"value"</span>:<span class="hljs-string">"33622200-8"</span>,
+                <span class="hljs-attr">"title"</span>:<span class="hljs-string">"Протигіпертонічні засоби"</span>
+            },
+            {  
+                <span class="hljs-attr">"full_title"</span>:<span class="hljs-string">"45215215-7 Будівництво дитячих будинків-інтернатів"</span>,
+                <span class="hljs-attr">"code"</span>:<span class="hljs-string">"45215215-7"</span>,
+                <span class="hljs-attr">"value"</span>:<span class="hljs-string">"45215215-7"</span>,
+                <span class="hljs-attr">"title"</span>:<span class="hljs-string">"Будівництво дитячих будинків-інтернатів"</span>
+            },
+            {  
+                <span class="hljs-attr">"full_title"</span>:<span class="hljs-string">"99999999-9 Не визначено"</span>,
+                <span class="hljs-attr">"code"</span>:<span class="hljs-string">"99999999-9"</span>,
+                <span class="hljs-attr">"value"</span>:<span class="hljs-string">"99999999-9"</span>,
+                <span class="hljs-attr">"title"</span>:<span class="hljs-string">"Не визначено"</span>
+            }
+        ],
+        <span class="hljs-attr">"timestamp"</span>:<span class="hljs-number">1495486800</span>
+    },
+    <span class="hljs-attr">"system"</span>:[]
+}</code></pre><p>request example:</p>
+<pre class="hljs"><code>curl -X GET <span class="hljs-string">"http://my.example.com:5001/remote/api/v3/classifiers?timestamp=1495486800"</span></code></pre><pre class="hljs"><code>{
+    <span class="hljs-attr">"status"</span>: <span class="hljs-string">"ok"</span>,
+    <span class="hljs-attr">"errors"</span>: [],
+    <span class="hljs-attr">"data"</span>: {
+      <span class="hljs-attr">"primary_classifier"</span>: [],
+      <span class="hljs-attr">"timestamp"</span>: <span class="hljs-number">1495486800</span>
+    },
+    <span class="hljs-attr">"system"</span>: []
+}</code></pre>    </article>
+  </body>
+</html>

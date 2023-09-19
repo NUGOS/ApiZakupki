@@ -1,0 +1,239 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimal-ui">
+    <title>Профиль пользователя</title>
+    <link type="text/css" rel="stylesheet" href="../assets/css/github-markdown.css">
+    <link type="text/css" rel="stylesheet" href="../assets/css/pilcrow.css">
+    <link type="text/css" rel="stylesheet" href="../assets/css/hljs-github.min.css"/>
+  </head>
+  <body>
+    <article class="markdown-body"><h1 id="профиль-пользователя"><a class="header-link" href="#профиль-пользователя"></a>Профиль пользователя</h1>
+<p><strong>GET remote/api/v3/user_profile</strong></p>
+<blockquote>
+<p>возвращает данные о пользователе</p>
+</blockquote>
+<p>request headers:</p>
+<ul class="list">
+<li><em>Api-Agent</em> - type: string, required</li>
+<li><em>Acc-Token</em> - type: string, required</li>
+</ul>
+<p>possible response fields:</p>
+<ul class="list">
+<li><em>status</em> - type: str, values: ok/error</li>
+<li><em>errors</em> - type: array of objects, validation errors</li>
+<li><em>data</em> - type: object</li>
+<li><em>system</em> - type: str, system error messages</li>
+</ul>
+<p>possible response data fields:</p>
+<ul class="list">
+<li><em>saved_filters</em> - type: array of objects or empty array, see <a href="./saved_filters.html">saved_filters</a></li>
+<li><em>employee_first_name</em> - type: str</li>
+<li><em>merchant_type</em> - type: str, one of <code>[&quot;purchasing_agent&quot;,  &quot;supplier&quot;, &quot;auction_organizer&quot;, &quot;auction_participant&quot;, &quot;auction2_organizer&quot;]</code></li>
+<li><em>employee_last_name</em> - type: str</li>
+<li><em>is_state</em> - type: boolean</li>
+<li><em>is_verified</em> - type: boolean</li>
+<li><em>email</em> - type: str</li>
+<li><em>merchant_name</em> - type: str</li>
+<li><em>merchants</em> - type: array of <strong>merchant</strong> objects or empty, described below</li>
+<li><em>win_count</em> - type: int</li>
+<li><em>manager</em> - type: <strong>manager</strong> object, described below</li>
+<li><em>balance</em> - type: float</li>
+<li><em>api_role</em> - type: string, possible values one of <code>[&quot;guest&quot;, &quot;general&quot;]</code></li>
+<li><em>phones</em> - type: array of str or empty array</li>
+<li><em>assignment_data</em> - type: <strong>assignment data</strong> object, described below</li>
+<li><em>registration_from_app</em> - type: bool</li>
+<li><em>balance_info</em> - type: <strong>balance_info</strong> object, described below</li>
+<li><em>subscription_on</em> - type: bool</li>
+</ul>
+<p>assignment data fields:</p>
+<ul class="list">
+<li><em>assignment_allowed</em> - type: bool</li>
+<li><em>available_users</em> - type: array of <strong>available user</strong> objects or empty, described below</li>
+<li><em>current_user</em> - type: <strong>available user</strong> object, described below</li>
+</ul>
+<p>available user fields:</p>
+<ul class="list">
+<li><em>id</em> - type: int; id of employee</li>
+<li><em>name</em> - type: string</li>
+<li><em>departments</em> - type: array of <strong>departments</strong> objects or empty, currently unused, ignore them</li>
+<li><em>merchant_ids</em> - type: array of int or empty array</li>
+</ul>
+<p>possible merchant fields:</p>
+<ul class="list">
+<li><em>id</em> - type: int</li>
+<li><em>name</em> - type: str</li>
+<li><em>role</em> - type: str, one of <code>[&quot;manager&quot;, &quot;admin&quot;, &quot;spectator&quot;]</code>; Should be visible in mobile app as: <code>[&quot;менеджер&quot;, &quot;администратор&quot;, &quot;наблюдатель&quot;]</code></li>
+<li><em>is_current</em> - type: bool</li>
+</ul>
+<p>manager fields:</p>
+<ul class="list">
+<li><em>name_ru</em> - type: str</li>
+<li><em>name_en</em> - type: str</li>
+<li><em>name_uk</em> - type: str</li>
+<li><em>phone</em> - type: str</li>
+<li><em>email</em> - type: str</li>
+<li><em>image</em> - type: url</li>
+<li><em>phone</em> - type: array of str</li>
+</ul>
+<p>balance_info object fields:</p>
+<ul class="list">
+<li><em>recommended_amount</em> - type: float</li>
+<li><em>juridical_address</em> - type: str</li>
+<li><em>srn</em> - type: str</li>
+<li><em>name</em> - type: str</li>
+<li><em>vat_num</em> - type: str</li>
+<li><em>balance</em> - type: float</li>
+</ul>
+<p><strong>WARNING</strong></p>
+<p><em>phones</em> field type in <strong>manager</strong> object depends on <strong>ALL_PHONES_FOR_MOBILE_API</strong> flag value 
+in zk cabinet, ask some one from QA to check this flag value</p>
+<p>request example:</p>
+<pre class="hljs"><code>curl --header <span class="hljs-string">"Acc-Token: eyJlbXBsb3llZSI6NjEyNjEsIm1lcmNoYW50Ijo1NTEzOH0.C8di6Q.JPtyyp32oH7KaM7WqyjQPE0SoXA"</span> -X GET <span class="hljs-string">"http://my.example.com:5001/remote/api/v3/user_profile"</span></code></pre><p>response example:</p>
+<pre class="hljs"><code>{
+  <span class="hljs-attr">"data"</span>: {
+    <span class="hljs-attr">"api_role"</span>: <span class="hljs-string">"general"</span>,
+    <span class="hljs-attr">"assignment_data"</span>: {
+      <span class="hljs-attr">"assignment_allowed"</span>: <span class="hljs-literal">true</span>,
+      <span class="hljs-attr">"available_users"</span>: [
+        {
+          <span class="hljs-attr">"departments"</span>: [],
+          <span class="hljs-attr">"id"</span>: <span class="hljs-number">106688</span>,
+          <span class="hljs-attr">"name"</span>: <span class="hljs-string">"Артем Степанов"</span>,
+          <span class="hljs-attr">"merchant_ids"</span>: [<span class="hljs-number">40564</span>, <span class="hljs-number">40565</span>, <span class="hljs-number">40566</span>, <span class="hljs-number">40567</span>, <span class="hljs-number">40568</span>, <span class="hljs-number">40569</span>]
+        },
+        {
+          <span class="hljs-attr">"departments"</span>: [],
+          <span class="hljs-attr">"id"</span>: <span class="hljs-number">107067</span>,
+          <span class="hljs-attr">"name"</span>: <span class="hljs-string">"йццйуа йцуацйуа"</span>,
+          <span class="hljs-attr">"merchant_ids"</span>: [<span class="hljs-number">40567</span>, <span class="hljs-number">40568</span>, <span class="hljs-number">40569</span>]
+        },
+        {
+          <span class="hljs-attr">"departments"</span>: [],
+          <span class="hljs-attr">"id"</span>: <span class="hljs-number">107147</span>,
+          <span class="hljs-attr">"name"</span>: <span class="hljs-string">"qwer qewr"</span>,
+          <span class="hljs-attr">"merchant_ids"</span>: []
+        }
+      ],
+      <span class="hljs-attr">"current_user"</span>: {
+        <span class="hljs-attr">"departments"</span>: [],
+        <span class="hljs-attr">"extensionSuperAssigner"</span>: <span class="hljs-literal">false</span>,
+        <span class="hljs-attr">"id"</span>: <span class="hljs-number">106607</span>,
+        <span class="hljs-attr">"name"</span>: <span class="hljs-string">"Artem Stepanov"</span>
+      }
+    },
+    <span class="hljs-attr">"balance"</span>: <span class="hljs-number">99995800.0</span>,
+    <span class="hljs-attr">"balance_info"</span>: {
+      <span class="hljs-attr">"balance"</span>: <span class="hljs-number">99995800.0</span>,
+      <span class="hljs-attr">"juridical_address"</span>: <span class="hljs-string">"sdfasdf dsafasf, sdfas f, Винницкая область, Украина, 16600"</span>,
+      <span class="hljs-attr">"name"</span>: <span class="hljs-string">"ТОВ \"Назва моєї компанії\""</span>,
+      <span class="hljs-attr">"recommended_amount"</span>: <span class="hljs-number">0</span>,
+      <span class="hljs-attr">"srn"</span>: <span class="hljs-string">"000000"</span>,
+      <span class="hljs-attr">"vat_num"</span>: <span class="hljs-string">"12312"</span>
+    },
+    <span class="hljs-attr">"email"</span>: <span class="hljs-string">"a.stepanov@smartweb.com.ua"</span>,
+    <span class="hljs-attr">"employee_first_name"</span>: <span class="hljs-string">"Artem"</span>,
+    <span class="hljs-attr">"employee_last_name"</span>: <span class="hljs-string">"Stepanov"</span>,
+    <span class="hljs-attr">"is_state"</span>: <span class="hljs-literal">false</span>,
+    <span class="hljs-attr">"is_verified"</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">"manager"</span>: {
+      <span class="hljs-attr">"email"</span>: <span class="hljs-string">"support.zakupki@example.com"</span>,
+      <span class="hljs-attr">"image"</span>: <span class="hljs-string">"http://example.com:5000/image/no_marker.png?r=$REVISION"</span>,
+      <span class="hljs-attr">"name_en"</span>: <span class="hljs-string">"Department of care"</span>,
+      <span class="hljs-attr">"name_ru"</span>: <span class="hljs-string">"Відділ турботи"</span>,
+      <span class="hljs-attr">"name_uk"</span>: <span class="hljs-string">"Відділ турботи"</span>,
+      <span class="hljs-attr">"phone"</span>: <span class="hljs-string">"0 800 500 016"</span>,
+      <span class="hljs-attr">"phones"</span>: [
+        <span class="hljs-string">"0 800 500 016"</span>,
+        <span class="hljs-string">"+38 067 827 00 11"</span>,
+        <span class="hljs-string">"+38 050 827 00 11"</span>,
+        <span class="hljs-string">"+38 063 827 00 11"</span>
+      ]
+    },
+    <span class="hljs-attr">"merchant_name"</span>: <span class="hljs-string">"ТОВ \"Назва моєї компанії\""</span>,
+    <span class="hljs-attr">"merchant_type"</span>: <span class="hljs-string">"supplier"</span>,
+    <span class="hljs-attr">"merchants"</span>: [
+      {
+        <span class="hljs-attr">"id"</span>: <span class="hljs-number">96935</span>,
+        <span class="hljs-attr">"is_current"</span>: <span class="hljs-literal">true</span>,
+        <span class="hljs-attr">"name"</span>: <span class="hljs-string">"ТОВ \"Назва моєї компанії\""</span>,
+        <span class="hljs-attr">"role"</span>: <span class="hljs-string">"admin"</span>
+      }
+    ],
+    <span class="hljs-attr">"phones"</span>: [
+      <span class="hljs-string">"+380931649672"</span>
+    ],
+    <span class="hljs-attr">"registration_from_app"</span>: <span class="hljs-literal">false</span>,
+    <span class="hljs-attr">"saved_filters"</span>: [
+      {
+        <span class="hljs-attr">"id"</span>: <span class="hljs-number">-1</span>,
+        <span class="hljs-attr">"name"</span>: <span class="hljs-string">"Підписка по категоріям"</span>,
+        <span class="hljs-attr">"readonly"</span>: <span class="hljs-literal">true</span>,
+        <span class="hljs-attr">"selected"</span>: <span class="hljs-literal">false</span>
+      },
+      {
+        <span class="hljs-attr">"id"</span>: <span class="hljs-number">-2</span>,
+        <span class="hljs-attr">"name"</span>: <span class="hljs-string">"Підписка на замовника"</span>,
+        <span class="hljs-attr">"readonly"</span>: <span class="hljs-literal">true</span>,
+        <span class="hljs-attr">"selected"</span>: <span class="hljs-literal">false</span>
+      },
+      {
+        <span class="hljs-attr">"id"</span>: <span class="hljs-number">10256</span>,
+        <span class="hljs-attr">"name"</span>: <span class="hljs-string">"Новий фільтр 666"</span>,
+        <span class="hljs-attr">"readonly"</span>: <span class="hljs-literal">false</span>,
+        <span class="hljs-attr">"selected"</span>: <span class="hljs-literal">false</span>
+      },
+      {
+        <span class="hljs-attr">"id"</span>: <span class="hljs-number">10255</span>,
+        <span class="hljs-attr">"name"</span>: <span class="hljs-string">"Новий фільтр 123"</span>,
+        <span class="hljs-attr">"readonly"</span>: <span class="hljs-literal">false</span>,
+        <span class="hljs-attr">"selected"</span>: <span class="hljs-literal">false</span>
+      },
+      {
+        <span class="hljs-attr">"id"</span>: <span class="hljs-number">10254</span>,
+        <span class="hljs-attr">"name"</span>: <span class="hljs-string">"Новий фільтр"</span>,
+        <span class="hljs-attr">"readonly"</span>: <span class="hljs-literal">false</span>,
+        <span class="hljs-attr">"selected"</span>: <span class="hljs-literal">false</span>
+      },
+      {
+        <span class="hljs-attr">"id"</span>: <span class="hljs-number">10235</span>,
+        <span class="hljs-attr">"name"</span>: <span class="hljs-string">"new"</span>,
+        <span class="hljs-attr">"readonly"</span>: <span class="hljs-literal">false</span>,
+        <span class="hljs-attr">"selected"</span>: <span class="hljs-literal">false</span>
+      },
+      {
+        <span class="hljs-attr">"id"</span>: <span class="hljs-number">10234</span>,
+        <span class="hljs-attr">"name"</span>: <span class="hljs-string">"911"</span>,
+        <span class="hljs-attr">"readonly"</span>: <span class="hljs-literal">false</span>,
+        <span class="hljs-attr">"selected"</span>: <span class="hljs-literal">false</span>
+      },
+      {
+        <span class="hljs-attr">"id"</span>: <span class="hljs-number">10233</span>,
+        <span class="hljs-attr">"name"</span>: <span class="hljs-string">"asdads"</span>,
+        <span class="hljs-attr">"readonly"</span>: <span class="hljs-literal">false</span>,
+        <span class="hljs-attr">"selected"</span>: <span class="hljs-literal">false</span>
+      },
+      {
+        <span class="hljs-attr">"id"</span>: <span class="hljs-number">-3</span>,
+        <span class="hljs-attr">"name"</span>: <span class="hljs-string">"Рекомендовані закупівлі"</span>,
+        <span class="hljs-attr">"readonly"</span>: <span class="hljs-literal">true</span>,
+        <span class="hljs-attr">"selected"</span>: <span class="hljs-literal">true</span>
+      },
+      {
+        <span class="hljs-attr">"id"</span>: <span class="hljs-number">-4</span>,
+        <span class="hljs-attr">"name"</span>: <span class="hljs-string">"Запрошення від замовника"</span>,
+        <span class="hljs-attr">"readonly"</span>: <span class="hljs-literal">true</span>,
+        <span class="hljs-attr">"selected"</span>: <span class="hljs-literal">true</span>
+      }
+    ],
+    <span class="hljs-attr">"subscription_on"</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">"win_count"</span>: <span class="hljs-number">0</span>
+  },
+  <span class="hljs-attr">"errors"</span>: [],
+  <span class="hljs-attr">"status"</span>: <span class="hljs-string">"ok"</span>,
+  <span class="hljs-attr">"system"</span>: <span class="hljs-string">""</span>
+}
+</code></pre>    </article>
+  </body>
+</html>

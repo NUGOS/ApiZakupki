@@ -1,0 +1,93 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimal-ui">
+    <title>Переключение компании</title>
+    <link type="text/css" rel="stylesheet" href="assets/css/github-markdown.css">
+    <link type="text/css" rel="stylesheet" href="assets/css/pilcrow.css">
+    <link type="text/css" rel="stylesheet" href="assets/css/hljs-github.min.css"/>
+  </head>
+  <body>
+    <article class="markdown-body"><h1 id="переключение-компании"><a class="header-link" href="#переключение-компании"></a>Переключение компании</h1>
+<p><strong>POST remote/api/v1/switch_merchant/{merchant_id}</strong></p>
+<blockquote>
+<p><strong>IMPORTANT</strong></p>
+<p>в ответ возвращается новый acc_token, которы содержит необходимую
+информацию для работы с &quot;переключенной&quot; компанией, старый acc_token
+остается активным и может исползоваться для работы от имени компании
+которая инициировала переключение</p>
+</blockquote>
+<blockquote>
+<p>переключение между доступными для пользователя компиниями
+<strong>merchant_id</strong> один из скиска <a href="./user_profile.html"><em>merchants</em></a></p>
+</blockquote>
+<p>request headers:</p>
+<ul class="list">
+<li><em>Api-Agent</em> - type: string, required</li>
+<li><em>Acc-Token</em> - type: string, required</li>
+</ul>
+<p>possible request arguments:</p>
+<ul class="list">
+<li><em>merchant_id</em> - type: int, required</li>
+</ul>
+<p>possible response fields:</p>
+<ul class="list">
+<li><em>status</em> - type: str, values: ok/error</li>
+<li><em>acc_token</em> - type: str</li>
+<li><em>errors</em> - type: array of objects, validation errors</li>
+<li><em>data</em> - type: object</li>
+<li><em>system</em> - type: str, system error messages</li>
+</ul>
+<p>possible response data fields:</p>
+<ul class="list">
+<li><em>saved_filters</em> - type: array of objects or empty array, example <code>[{&quot;id&quot;: -1, &quot;name&quot;: &quot;filter name&quot;}]</code></li>
+<li><em>employee_first_name</em> - type: str</li>
+<li><em>merchant_type</em> - type: str, one of <code>[&quot;purchasing_agent&quot;,  &quot;supplier&quot;, &quot;auction_organizer&quot;, &quot;auction_participant&quot;, &quot;auction2_organizer&quot;]</code></li>
+<li><em>employee_last_name</em> - type: str</li>
+<li><em>is_state</em> - type: boolean</li>
+<li><em>is_verified</em> - type: boolean</li>
+<li><em>email</em> - type: str</li>
+<li><em>merchant_name</em> - type: str</li>
+<li><em>merchants</em> - type: array of <strong>merchant</strong> objects or empty, described below</li>
+</ul>
+<p>possible merchant fields:</p>
+<ul class="list">
+<li><em>id</em> - type: int</li>
+<li><em>name</em> - type: str</li>
+</ul>
+<p>request example:</p>
+<pre class="hljs"><code>curl --header <span class="hljs-string">"Acc-Token: eyJlbXBsb3llZSI6NjEyNjEsIm1lcmNoYW50Ijo1NTEzOH0.C8di6Q.JPtyyp32oH7KaM7WqyjQPE0SoXA"</span> -X POST <span class="hljs-string">"http://my.example.com:5001/remote/api/v1/switch_merchant/123"</span></code></pre><p>response example</p>
+<pre class="hljs"><code>{
+  <span class="hljs-attr">"status"</span>: <span class="hljs-string">"ok"</span>,
+  <span class="hljs-attr">"errors"</span>: [
+  ],
+  <span class="hljs-attr">"acc_token"</span>: <span class="hljs-string">"eyJlbXBsb3llZSI6NjI4NjMsIm1lcmNoYW50Ijo1NjgxN30.DBkozg.LfbhddJYFZyC92To4SCxVm2Jo-8"</span>,
+  <span class="hljs-attr">"data"</span>: {
+    <span class="hljs-attr">"saved_filters"</span>: [
+    ],
+    <span class="hljs-attr">"employee_first_name"</span>: <span class="hljs-string">"some"</span>,
+    <span class="hljs-attr">"merchant_type"</span>: <span class="hljs-string">"supplier"</span>,
+    <span class="hljs-attr">"merchants"</span>: [
+      {
+        <span class="hljs-attr">"id"</span>: <span class="hljs-number">56700</span>,
+        <span class="hljs-attr">"name"</span>: <span class="hljs-string">"t1"</span>
+      }
+    ],
+    <span class="hljs-attr">"employee_last_name"</span>: <span class="hljs-string">"some"</span>,
+    <span class="hljs-attr">"is_state"</span>: <span class="hljs-literal">false</span>,
+    <span class="hljs-attr">"is_verified"</span>: <span class="hljs-literal">false</span>,
+    <span class="hljs-attr">"email"</span>: <span class="hljs-string">"some1@mailinator.com"</span>,
+    <span class="hljs-attr">"merchant_name"</span>: <span class="hljs-string">"sup123"</span>
+  },
+  <span class="hljs-attr">"system"</span>: <span class="hljs-string">""</span>
+}</code></pre><p>error request:</p>
+<pre class="hljs"><code>curl --header <span class="hljs-string">"Acc-Token: eyJlbXBsb3llZSI6NjEyNjEsIm1lcmNoYW50Ijo1NTEzOH0.C8di6Q.JPtyyp32oH7KaM7WqyjQPE0SoXA"</span> -X POST <span class="hljs-string">"http://my.example.com:5001/remote/api/v1/switch_merchant/0"</span></code></pre><p>error response:</p>
+<pre class="hljs"><code>{
+  <span class="hljs-attr">"status"</span>: <span class="hljs-string">"error"</span>,
+  <span class="hljs-attr">"errors"</span>: [
+  ],
+  <span class="hljs-attr">"system"</span>: <span class="hljs-string">"Невозможно переключить компанию или компания не найдена"</span>
+}</code></pre>    </article>
+  </body>
+</html>

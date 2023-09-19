@@ -1,0 +1,1746 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimal-ui">
+    <title>Просмотр закупки</title>
+    <link type="text/css" rel="stylesheet" href="assets/css/github-markdown.css">
+    <link type="text/css" rel="stylesheet" href="assets/css/pilcrow.css">
+    <link type="text/css" rel="stylesheet" href="assets/css/hljs-github.min.css"/>
+  </head>
+  <body>
+    <article class="markdown-body"><h1 id="просмотр-закупки"><a class="header-link" href="#просмотр-закупки"></a>Просмотр закупки</h1>
+<p><strong>GET remote/api/v1/entity/{id}</strong></p>
+<p><strong>GET remote/api/v2/entity/{id}</strong> (see changeset below)</p>
+<blockquote>
+<p>id - id закупки из <a href="./entity_list.html">списка закупок</a></p>
+</blockquote>
+<p><strong>UPDATE for entity view in v2 2019-01-25</strong></p>
+<ul class="list">
+<li>added <strong>lot_participate_status</strong> to lot_preview object field</li>
+</ul>
+<p><strong>UPDATE for entity view in v2</strong></p>
+<ul class="list">
+<li>added <strong>main_procurement_category</strong> to tender data view fields</li>
+</ul>
+<p><strong>UPDATE for questions, claims, complaints in v2</strong></p>
+<ul class="list">
+<li>removed <strong>questions</strong> collection from data field, moved to separate endpoint (see question_list doc)</li>
+<li>removed <strong>complaints</strong> collection from data field, moved to separate endpoint (see claim_list &amp; complaint_list docs)</li>
+<li>removed <strong>claim_complaint_info</strong> from data field, moved to separate endpoint (see claim_list &amp; complaint_list docs) </li>
+<li>added <strong>questions_count</strong>, <strong>claims_count</strong>, <strong>complaints_count</strong> to tender data fields, and lot_preview object fields</li>
+</ul>
+<p><strong>UPDATE 2018-05-11</strong></p>
+<blockquote>
+<p>add entity_type</p>
+</blockquote>
+<p><strong>UPDATE 2018-05-15</strong></p>
+<blockquote>
+<p>claim_complaint_info added</p>
+</blockquote>
+<p>request headers:</p>
+<ul class="list">
+<li><em>Api-Agent</em> - type: string, required</li>
+<li><em>Acc-Token</em> - type: string, required</li>
+</ul>
+<p>possible response fields:</p>
+<ul class="list">
+<li><em>status</em> - type: str, values: ok/error</li>
+<li><em>errors</em> - type: array of objects, validation errors</li>
+<li><em>data</em> - type: object</li>
+<li><em>system</em> - type: str, system error messages</li>
+</ul>
+<p>possible response data fields:</p>
+<ul class="list">
+<li><em>has_lots</em> - type: boolean, true or false, true - if multylot purchase</li>
+<li><em>method_type</em> - type: int, - type: int, one of <code>[0, 1, 2, 7, 3, 4, 5, 8, 9, 14]</code></li>
+<li><em>tendering_period</em> - type: object, <strong>state period object</strong>, described below</li>
+<li><em>is_favorite</em> - type: boolean</li>
+<li><em>tuid</em> - type: str</li>
+<li><em>method_type_text</em> - type: str</li>
+<li><em>id</em> - type: int</li>
+<li><em>uid</em> - type: string</li>
+<li><em>guarantee</em> - type: object, <strong>guarantee</strong> description, described below</li>
+<li><em>documents</em> - type: <strong>document</strong> object, <strong>document</strong> - described below</li>
+<li><em>title</em> - type: str</li>
+<li><em>title_en</em> - type: str or null</li>
+<li><em>lots</em> - type: array of <strong>lot_preview</strong> objects or empty, <strong>lot_preview</strong> - described below</li>
+<li><em>enquiry_period</em> - type: object, <strong>state period object</strong>, described below</li>
+<li><em>offers</em> - type: array of <strong>offer</strong> objects or empty, described below</li>
+<li><em>features</em> - type: array of <strong>feature</strong> objects or empty, described below</li>
+<li><em>procuring_entity</em> - type: object, <strong>procuring_entity object</strong>, described below</li>
+<li><em>is_participate</em> - type: boolean</li>
+<li><em>status</em> - type: int, one of <code>[0, 1, 2, 10, 3, 4, 5, 6, 7, 12]</code></li>
+<li><em>auction_url</em> - type: str</li>
+<li><em>step</em> - type: float</li>
+<li><em>uid</em> - type: str</li>
+<li><em>items</em> - type: array of <strong>item</strong> objects or empty, <strong>item</strong> - described below</li>
+<li><em>auction_period</em> - type: object, <strong>state period object</strong>, described below</li>
+<li><em>user_offer</em> - type: object of <strong>offer</strong> type or empty object, depends on <em>has_lots</em>, <strong>user_offer</strong> - described below</li>
+<li><em>amount</em> - type: object of <strong>state_amount</strong> type, described below</li>
+<li><em>qualification</em> - type: array of <strong>qualification</strong> objects or empty, described below</li>
+<li><em>status_text</em> - type: str</li>
+<li><em>stage1_id</em> - type: int or null</li>
+<li><em>stage2_id</em> - type: int or null</li>
+<li><em>pre_qualification</em> - type: array of <strong>pre_qualification</strong> objects or empty, described below</li>
+<li><em>desc</em> - type: str, description</li>
+<li><em>desc_en</em> - type: str or null, description</li>
+<li><em>owner_name</em> - type: str</li>
+<li><em>cancellations</em> - type: array of <em>cancellation</em> objects of empty, described below</li>
+<li><em>is_blocked</em> - type: bool</li>
+<li><em>public_link_tender</em> - type: str</li>
+<li><em>questions</em> - type: <strong>ONLY V1</strong> object of <strong>questions</strong>, described below <strong>removed in v2</strong></li>
+<li><em>complaints</em> - type: <strong>ONLY V1</strong> object of <strong>complaints</strong>, described below <strong>removed in v2</strong></li>
+<li><em>questions_count</em> - type: int <strong>starting from v2</strong></li>
+<li><em>claims_count</em> - type: int <strong>starting from v2</strong></li>
+<li><em>complaints_count</em> - type: int <strong>starting from v2</strong></li>
+<li><em>entity_type</em> - type: int, values - one of <code>[0, 2]</code>, <a href="./static_data.html">details</a></li>
+<li><em>claim_complaint_info</em> - type: <strong>ONLY V1</strong> object or <strong>claim_complaint_info</strong>, described below</li>
+<li><em>assignee_supplier_employee</em> - type: <strong>assignee supplier</strong> object or null, described below</li>
+<li><em>date</em> - type: date str or null, format <strong>yyyy-mm-ddTHH:MM:SS</strong></li>
+<li><em>main_procurement_category</em> - type: array of <strong>main_procurement_category</strong> objects, described below, <strong>only in v2</strong></li>
+</ul>
+<p>assignee supplier object fields:</p>
+<ul class="list">
+<li><em>id</em> - type: int</li>
+<li><em>name</em> - type: str</li>
+<li><em>is_iam</em> - type: bool </li>
+</ul>
+<p>questions object fields:</p>
+<ul class="list">
+<li><em>url</em> - type: str on null</li>
+<li><em>count</em> - type: int</li>
+<li><em>lots</em> - type: array of <strong>lot_questions</strong> objects or empty, described below</li>
+<li><em>questions_data</em> - type: list of <strong>question preview</strong> objects or empty, described below</li>
+</ul>
+<p>question preview object fields:</p>
+<ul class="list">
+<li><em>date_created</em> - type: str, format: <strong>yyyy-mm-ddTHH:MM:SS.fZ</strong></li>
+<li><em>has_answer</em> - type: bool</li>
+<li><em>title</em> - type: str</li>
+<li><em>id</em> - type: int</li>
+<li><em>uid</em> - type: str</li>
+<li><em>answer</em> - type: str or null</li>
+<li><em>description</em> - type: str</li>
+</ul>
+<p>lot_questions object fields:</p>
+<ul class="list">
+<li><em>id</em> - type: int</li>
+<li><em>url</em> - type: str</li>
+<li><em>count</em> - type: int</li>
+</ul>
+<p>complaints object fields:</p>
+<ul class="list">
+<li><em>url</em> - type: str or null</li>
+<li><em>count</em> - type: int</li>
+<li><em>lots</em> - type: array of <strong>lot_complaints</strong> objects or empty, described below</li>
+<li><em>complaints_data</em> - type: array of <strong>complaint_preview</strong> objects or empty</li>
+</ul>
+<p>lot_complaints object fields:</p>
+<ul class="list">
+<li><em>id</em> - type: int</li>
+<li><em>url</em> - type: str</li>
+<li><em>count</em> - type: int</li>
+<li><em>complaints_data</em> - type: array of <strong>complaint_preview</strong> objects or empty</li>
+</ul>
+<p>complaint preview object fields:</p>
+<ul class="list">
+<li><em>visible_name</em> - type: str</li>
+<li><em>status_text</em> - type: str</li>
+<li><em>id</em> - type: int</li>
+<li><em>title</em> - type: text</li>
+</ul>
+<p>pre_qualification object fields:</p>
+<ul class="list">
+<li><em>status</em> - type: int, one of <code>[0, 1, 2, 3]</code></li>
+<li><em>merchant</em> - type: str</li>
+<li><em>documents</em> - type: <strong>document</strong> object, <strong>document</strong> - described below</li>
+<li><em>uid</em> - type: str</li>
+<li><em>title</em> - type: str on null</li>
+<li><em>self_eligible</em> - type: boolean</li>
+<li><em>status_text</em> - type: str</li>
+<li><em>id</em> - type: int</li>
+<li><em>self_qualified</em> - type: boolean</li>
+<li><em>desc</em> - type: str or null</li>
+</ul>
+<p>state period object fields:</p>
+<ul class="list">
+<li><em>start</em> - type: str or null, format: <strong>yyyy-mm-ddTHH:MM:SS.fZ</strong></li>
+<li><em>end</em> - type: str or null, format: <strong>yyyy-mm-ddTHH:MM:SS.fZ</strong></li>
+</ul>
+<p>guarantee object fields:</p>
+<ul class="list">
+<li><em>guarantee_amount</em> - type: float</li>
+<li><em>currency_iso_code</em> - type: str, one of <code>[&quot;UAH&quot;, &quot;USD&quot;, &quot;EUR&quot;, &quot;RUB&quot;, &quot;GBP&quot;]</code></li>
+</ul>
+<p>document object fields:</p>
+<ul class="list">
+<li><em>offer_lot</em> - type: array of <strong>document_instance</strong> object or empty, <strong>document_instance</strong> described below</li>
+<li><em>offer</em> - type: array of <strong>document_instance</strong> object or empty, <strong>document_instance</strong> described below</li>
+<li><em>qualification</em> - type: array of <strong>document_instance</strong> object or empty, <strong>document_instance</strong> described below</li>
+<li><em>contract</em> - type: array of <strong>document_instance</strong> object or empty, <strong>document_instance</strong> described below</li>
+<li><em>pre_qualification</em> - type: array of <strong>document_instance</strong> object or empty, <strong>document_instance</strong> described below</li>
+<li><em>lot</em> - type: array of <strong>document_instance</strong> object or empty, <strong>document_instance</strong> described below</li>
+<li><em>cancellation</em> - type: array of <strong>document_instance</strong> object or empty, <strong>document_instance</strong> described below</li>
+<li><em>tender</em> - type: array of <strong>document_instance</strong> object or empty, <strong>document_instance</strong> described below</li>
+</ul>
+<p>document_instance object fields:</p>
+<ul class="list">
+<li><em>mimetype</em> - type: str</li>
+<li><em>history</em> - type: array of <strong>document_instance</strong> objects or empty</li>
+<li><em>uid</em> - type: str</li>
+<li><em>descr</em> - type: str or null</li>
+<li><em>title</em> - type: str</li>
+<li><em>url</em> - type: str</li>
+<li><em>date_created</em> - type: date str, format *yyyy-mm-ddTHH:MM:SS.fZ**</li>
+<li><em>date_modified</em> - type: date str, format *yyyy-mm-ddTHH:MM:SS.fZ**</li>
+<li><em>id</em> - type: long</li>
+<li><em>confidentiality</em> - type: str, one of <code>[&#39;public&#39;, &#39;buyerOnly&#39;]</code></li>
+</ul>
+<p>lot_preview object fields:</p>
+<ul class="list">
+<li><em>uid</em> - type; str</li>
+<li><em>descr</em> - type: str</li>
+<li><em>title</em> - type: str</li>
+<li><em>currency_iso_code</em> - type: str, one of <code>[&quot;UAH&quot;, &quot;USD&quot;, &quot;EUR&quot;, &quot;RUB&quot;, &quot;GBP&quot;]</code></li>
+<li><em>amount</em> - type: float</li>
+<li><em>id</em> - type: long</li>
+<li><em>tax_included</em> - type: boolean</li>
+<li><em>lot_participate_status</em> - type: int, one of <code>[0, 1, 2]</code>    </li>
+</ul>
+<p>offer object fields:</p>
+<ul class="list">
+<li><em>status</em> - type: int, one of <code>[0, 1, 2, 3, 4, 5, 6]</code></li>
+<li><em>subcontracting_details</em>: type: str or null</li>
+<li><em>amount</em> - type: float</li>
+<li><em>documents</em> - type: <strong>document</strong> object, <strong>document</strong> - described below</li>
+<li><em>auction_url</em> - type: str or null</li>
+<li><em>status_text</em> - type: str</li>
+<li><em>id</em> - type: long</li>
+<li><em>auto_active</em> - type: boolean</li>
+<li><em>features</em> - type: array of <em>feature object</em> or empty</li>
+<li><em>net_present_amount</em> - type: float</li>
+<li><em>amount_weight</em> - type: float</li>
+<li><em>coefficient_of_features</em> - type: float </li>
+<li><em>currency_iso_code</em> - type: str</li>
+<li><em>tax_included</em> - type: boolean</li>
+<li><em>merchant</em> - type: text</li>
+</ul>
+<p>feature object fields:</p>
+<ul class="list">
+<li><em>code</em> - type: str</li>
+<li><em>descr</em> - type: str</li>
+<li><em>title</em> - type: str</li>
+<li><em>title_en</em> - type: str or none</li>
+<li><em>options</em> - type: array of <strong>option</strong> objects, described below</li>
+<li><em>descr_en</em> - type: str or none</li>
+<li><em>id</em> - type: long</li>
+</ul>
+<p>option object fields:</p>
+<ul class="list">
+<li><em>coefficient</em> - type: float</li>
+<li><em>title_en</em> - type: str or none</li>
+<li><em>id</em> - type: long</li>
+<li><em>weight</em> - type: int</li>
+<li><em>title</em> - type: str</li>
+</ul>
+<p>procuring_entity object fields:</p>
+<ul class="list">
+<li><em>name</em> - type: str</li>
+<li><em>contacts</em> - type: <strong>contact</strong> object, described below</li>
+<li><em>url</em> - type: str</li>
+<li><em>srn</em> - type: str</li>
+<li><em>address</em> - type: str</li>
+<li><em>id</em> - type: long</li>
+</ul>
+<p>contact object fields:</p>
+<ul class="list">
+<li><em>main</em> - type: <strong>contact_detail</strong> object, described below</li>
+<li><em>additional</em> - type: array of <strong>contact_detail</strong> objects or empty</li>
+</ul>
+<p>contact_detail object fields:</p>
+<ul class="list">
+<li><em>phones</em> - type: array of strings</li>
+<li><em>name_en</em> - type: str or none</li>
+<li><em>name</em> - type: str</li>
+<li><em>email</em> - type: str</li>
+<li><em>language</em> - type: str</li>
+</ul>
+<p>item object fields:</p>
+<ul class="list">
+<li><em>status</em> - type: int, one of <code>[0, 1]</code></li>
+<li><em>unit_name</em> - type: str</li>
+<li><em>features</em> - type: list of <strong>feature</strong> objects or empty</li>
+<li><em>primary_classifier</em> - type: object of <strong>classifier</strong> type, described below</li>
+<li><em>id</em> - type: long</li>
+<li><em>uid</em> - type: str</li>
+<li><em>delivery_address</em> - type: object of <strong>delivery_address</strong> type, described below</li>
+<li><em>delivery_period</em> - type: object, <strong>state period object</strong></li>
+<li><em>descr</em> - type: str</li>
+<li><em>descr_en</em> - type: str or null</li>
+<li><em>unit_id</em> - type: int</li>
+<li><em>classifiers</em> - type: array of <strong>classifier</strong> objects or empty</li>
+<li><em>quantity</em> - type: float</li>
+</ul>
+<p>classifier object fields:</p>
+<ul class="list">
+<li><em>code</em> - type: str</li>
+<li><em>type</em> - type: str, one of <code>[&#39;None&#39;, &#39;ДКПП&#39;, &#39;CPV&#39;, &#39;ОКДП&#39;, &#39;КЕКВ&#39;, &#39;ДК 015-97&#39;, &#39;ДК 018-2000&#39;, &#39;ДК 003-2010&#39;, &#39;CAV&#39;, &#39;removed&#39;, &#39;Специальные нормы и другое&#39;]</code></li>
+<li><em>id</em> - type: long</li>
+<li><em>name_with_code</em> - type: str</li>
+</ul>
+<p>delivery_address object fields:</p>
+<ul class="list">
+<li><em>zip</em> - type: str</li>
+<li><em>locality</em> - type: str</li>
+<li><em>is_all_ukraine</em> - type: boolean</li>
+<li><em>region</em> - type: srt</li>
+<li><em>country_name</em> - type: str</li>
+<li><em>street_address</em> - type: str</li>
+</ul>
+<p>state_amount object fields:</p>
+<ul class="list">
+<li><em>amount</em> - type: float</li>
+<li><em>currency_iso_code</em> - type: str, one of <code>[&quot;UAH&quot;, &quot;USD&quot;, &quot;EUR&quot;, &quot;RUB&quot;, &quot;GBP&quot;]</code></li>
+<li><em>tax_included</em> - type: boolean</li>
+</ul>
+<p>qualification object fields:</p>
+<ul class="list">
+<li><em>status</em> - type: int, one of <code>[0, 1, 2, 3, 4, 5, 6]</code></li>
+<li><em>merchant</em> - type: str</li>
+<li><em>documents</em> - type: <strong>document</strong> object, <strong>document</strong> - described below</li>
+<li><em>currency_iso_code</em> - type: str, one of <code>[&quot;UAH&quot;, &quot;USD&quot;, &quot;EUR&quot;, &quot;RUB&quot;, &quot;GBP&quot;]</code></li>
+<li><em>features</em> - type: array of <strong>feature</strong> objects or empty</li>
+<li><em>amount</em> - type: float</li>
+<li><em>status_text</em> - type: str</li>
+<li><em>id</em> - type: long</li>
+<li><em>net_present_amount</em> - type: float</li>
+<li><em>contract</em> - type: <strong>contract</strong> object or empty, described below</li>
+<li><em>tax_included</em> - type: bool</li>
+</ul>
+<p>contract object fields:</p>
+<ul class="list">
+<li><em>status</em> - type: int, one of <code>[0, 1, 2, 3]</code></li>
+<li><em>uid</em> - type: str</li>
+<li><em>contract_sign_date</em> - type: date str, format *yyyy-mm-ddTHH:MM:SS.fZ**</li>
+<li><em>id</em> - type: int</li>
+<li><em>description</em> - type: str or null</li>
+<li><em>documents</em> - type: <strong>document</strong> object, <strong>document</strong> - described below</li>
+<li><em>date_modified</em> - type: date str, format *yyyy-mm-ddTHH:MM:SS.fZ**</li>
+<li><em>title</em> - type: str or null</li>
+<li><em>contract_period</em> - type: object, <strong>state period object</strong></li>
+<li><em>amount</em> - type: <strong>state_amount</strong> object</li>
+<li><em>date_created</em> - type: date str, format <em>yyyy-mm-ddTHH:MM:SS.fZ</em></li>
+<li><em>status_text</em> - type: str</li>
+<li><em>contract_number</em> - type: str</li>
+</ul>
+<p>cancellation object fields:</p>
+<ul class="list">
+<li><em>status</em> - type: int, one of <code>[0, 1, 2]</code></li>
+<li><em>documents</em> - type: <strong>document</strong> object, <strong>document</strong> - described below </li>
+<li><em>uid</em> - type: str</li>
+<li><em>reason</em> - type: str</li>
+<li><em>date</em> - type: date str, format <em>yyyy-mm-ddTHH:MM:SS.fZ</em> </li>
+<li><em>status_text</em> - type: str, one of <code>[&quot;отменено&quot;, &quot;ожидает активации&quot;, &quot;удалено&quot;]</code></li>
+<li><em>id</em> - type: int</li>
+</ul>
+<p>claim_complaint_info object fields:</p>
+<ul class="list">
+<li><em>can_complaint</em> - type: bool</li>
+<li><em>can_claim</em> - type: bool</li>
+<li><em>complaint_until</em> - type: date str or null, format <em>yyyy-mm-ddTHH:MM:SS.fZ</em> </li>
+<li><em>claim_until</em> - type: date str or null, format <em>yyyy-mm-ddTHH:MM:SS.fZ</em></li>
+</ul>
+<p>main_procurement_category fields:</p>
+<ul class="list">
+<li><em>value</em> - type: str</li>
+<li><em>label</em> - type: str</li>
+</ul>
+<p>request:</p>
+<pre class="hljs"><code>curl --header <span class="hljs-string">"Acc-Token: eyJlbXBsb3llZSI6NjEyNjEsIm1lcmNoYW50Ijo1NTEzOH0.C8di6Q.JPtyyp32oH7KaM7WqyjQPE0SoXA"</span> -X GET <span class="hljs-string">"http://my.example.com:5001/remote/api/v1/entity/3423"</span></code></pre><p>success response (no lots):</p>
+<pre class="hljs"><code>{
+  <span class="hljs-attr">"status"</span>: <span class="hljs-string">"ok"</span>,
+  <span class="hljs-attr">"errors"</span>: [
+  ],
+  <span class="hljs-attr">"data"</span>: {
+    <span class="hljs-attr">"status"</span>: <span class="hljs-number">6</span>,
+    <span class="hljs-attr">"stage1_id"</span>: <span class="hljs-literal">null</span>,
+    <span class="hljs-attr">"has_lots"</span>: <span class="hljs-literal">false</span>,
+    <span class="hljs-attr">"method_type"</span>: <span class="hljs-number">0</span>,
+    <span class="hljs-attr">"tendering_period"</span>: {
+      <span class="hljs-attr">"start"</span>: <span class="hljs-string">"2017-04-07T05:55:00Z"</span>,
+      <span class="hljs-attr">"end"</span>: <span class="hljs-string">"2017-04-07T06:12:00Z"</span>
+    },
+    <span class="hljs-attr">"public_link_tender"</span>: <span class="hljs-string">"http://zakupki.example.com:5001/gov/tenders/UA-2017-04-07-000019-2"</span>,
+    <span class="hljs-attr">"enquiry_period"</span>: {
+      <span class="hljs-attr">"start"</span>: <span class="hljs-string">"2017-04-07T05:44:53.386Z"</span>,
+      <span class="hljs-attr">"end"</span>: <span class="hljs-string">"2017-04-07T05:55:00Z"</span>
+    },
+    <span class="hljs-attr">"step"</span>: <span class="hljs-number">12323.0</span>,
+    <span class="hljs-attr">"claim_complaint_info"</span>: {
+      <span class="hljs-attr">"can_complaint"</span>: <span class="hljs-literal">true</span>,
+      <span class="hljs-attr">"can_claim"</span>: <span class="hljs-literal">true</span>,
+      <span class="hljs-attr">"complaint_until"</span>: <span class="hljs-string">"2018-06-03T14:50:00"</span>,
+      <span class="hljs-attr">"claim_until"</span>: <span class="hljs-string">"2018-05-30T14:55:00"</span>
+    },
+    <span class="hljs-attr">"documents"</span>: {
+      <span class="hljs-attr">"tender"</span>: [
+        {
+          <span class="hljs-attr">"mimetype"</span>: <span class="hljs-string">"image/png"</span>,
+          <span class="hljs-attr">"history"</span>: [
+          ],
+          <span class="hljs-attr">"uid"</span>: <span class="hljs-string">"57a6fc12a0c64a4780ac33e2e86dbb08"</span>,
+          <span class="hljs-attr">"descr"</span>: <span class="hljs-literal">null</span>,
+          <span class="hljs-attr">"title"</span>: <span class="hljs-string">"test_img.png"</span>,
+          <span class="hljs-attr">"url"</span>: <span class="hljs-string">"https://public.docs-sandbox.openprocurement.org/get/4d253a2b9adc4f40b314d33a58efc7f9?KeyID=1331dc52&amp;Signature=6lh5jCJRo%252BK7HcatgNa%2FH7RKncGL0YI%252BOrQxR5oyhZNPrkS0jj7VUP8%252Bl4oJHN1DezCRpyN8oNdkQROcrP1oBQ%253D%253D"</span>,
+          <span class="hljs-attr">"date_created"</span>: <span class="hljs-string">"2017-04-07T05:45:40.006Z"</span>,
+          <span class="hljs-attr">"date_modified"</span>: <span class="hljs-string">"2017-04-07T05:45:40.006Z"</span>,
+          <span class="hljs-attr">"id"</span>: <span class="hljs-number">2916553</span>,
+          <span class="hljs-attr">"confidentiality"</span>: <span class="hljs-string">"public"</span>
+        },
+        {
+          <span class="hljs-attr">"mimetype"</span>: <span class="hljs-string">"text/plain"</span>,
+          <span class="hljs-attr">"history"</span>: [
+          ],
+          <span class="hljs-attr">"uid"</span>: <span class="hljs-string">"072a646e314a43a4b3ca186e3846fdab"</span>,
+          <span class="hljs-attr">"descr"</span>: <span class="hljs-literal">null</span>,
+          <span class="hljs-attr">"title"</span>: <span class="hljs-string">"test.txt"</span>,
+          <span class="hljs-attr">"url"</span>: <span class="hljs-string">"https://public.docs-sandbox.openprocurement.org/get/105245f278fd40a3be81673e69f0aff3?KeyID=1331dc52&amp;Signature=bsRV0XvCtTsVXbf%252BuHLLTFjYN%2F7dCAKxk%252B8CZXORCrZrV8khYzcMBoT4ecf5qqQ9TnrGlCnPiH16r34kGYEfBw%253D%253D"</span>,
+          <span class="hljs-attr">"date_created"</span>: <span class="hljs-string">"2017-04-07T05:45:42.691Z"</span>,
+          <span class="hljs-attr">"date_modified"</span>: <span class="hljs-string">"2017-04-07T05:45:42.691Z"</span>,
+          <span class="hljs-attr">"id"</span>: <span class="hljs-number">2916554</span>,
+          <span class="hljs-attr">"confidentiality"</span>: <span class="hljs-string">"public"</span>
+        },
+        {
+          <span class="hljs-attr">"mimetype"</span>: <span class="hljs-string">"text/plain"</span>,
+          <span class="hljs-attr">"history"</span>: [
+          ],
+          <span class="hljs-attr">"uid"</span>: <span class="hljs-string">"15f0f1c1279640638f8b3b79776716cb"</span>,
+          <span class="hljs-attr">"descr"</span>: <span class="hljs-literal">null</span>,
+          <span class="hljs-attr">"title"</span>: <span class="hljs-string">"test1.txt"</span>,
+          <span class="hljs-attr">"url"</span>: <span class="hljs-string">"https://public.docs-sandbox.openprocurement.org/get/fc440ccc8bd84189b26d58d25f39c23d?KeyID=1331dc52&amp;Signature=2BKPPj5Ae7ap8HxzivkBG8t8mntlUH9Af2GmHSzB%252BrOMHhdZIDHIH%2F5o8%252BY839CGnug%252BBdw1FZs5jHQA7vUMCA%253D%253D"</span>,
+          <span class="hljs-attr">"date_created"</span>: <span class="hljs-string">"2017-04-07T05:45:44.211Z"</span>,
+          <span class="hljs-attr">"date_modified"</span>: <span class="hljs-string">"2017-04-07T05:45:44.211Z"</span>,
+          <span class="hljs-attr">"id"</span>: <span class="hljs-number">2916555</span>,
+          <span class="hljs-attr">"confidentiality"</span>: <span class="hljs-string">"public"</span>
+        }
+      ]
+    },
+    <span class="hljs-attr">"main_procurement_category"</span>: {
+      <span class="hljs-attr">"value"</span>: <span class="hljs-string">"goods"</span>,
+      <span class="hljs-attr">"label"</span>: <span class="hljs-string">"товари"</span>
+    },
+    <span class="hljs-attr">"is_favorite"</span>: <span class="hljs-literal">false</span>,
+    <span class="hljs-attr">"features"</span>: [
+      {
+        <span class="hljs-attr">"code"</span>: <span class="hljs-string">"zakupki-bb9cf4c8-8808-4e3c-a6e3-f758161d9aff"</span>,
+        <span class="hljs-attr">"descr"</span>: <span class="hljs-string">"o1"</span>,
+        <span class="hljs-attr">"title"</span>: <span class="hljs-string">"o1"</span>,
+        <span class="hljs-attr">"title_en"</span>: <span class="hljs-literal">null</span>,
+        <span class="hljs-attr">"options"</span>: [
+          {
+            <span class="hljs-attr">"coefficient"</span>: <span class="hljs-number">0.03</span>,
+            <span class="hljs-attr">"title_en"</span>: <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"id"</span>: <span class="hljs-number">6265</span>,
+            <span class="hljs-attr">"weight"</span>: <span class="hljs-number">3.0</span>,
+            <span class="hljs-attr">"title"</span>: <span class="hljs-string">"o13"</span>
+          },
+          {
+            <span class="hljs-attr">"coefficient"</span>: <span class="hljs-number">0.02</span>,
+            <span class="hljs-attr">"title_en"</span>: <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"id"</span>: <span class="hljs-number">6264</span>,
+            <span class="hljs-attr">"weight"</span>: <span class="hljs-number">2.0</span>,
+            <span class="hljs-attr">"title"</span>: <span class="hljs-string">"o12"</span>
+          },
+          {
+            <span class="hljs-attr">"coefficient"</span>: <span class="hljs-number">0.0</span>,
+            <span class="hljs-attr">"title_en"</span>: <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"id"</span>: <span class="hljs-number">6263</span>,
+            <span class="hljs-attr">"weight"</span>: <span class="hljs-number">0.0</span>,
+            <span class="hljs-attr">"title"</span>: <span class="hljs-string">"o11"</span>
+          }
+        ],
+        <span class="hljs-attr">"descr_en"</span>: <span class="hljs-literal">null</span>,
+        <span class="hljs-attr">"id"</span>: <span class="hljs-number">4231</span>
+      },
+      {
+        <span class="hljs-attr">"code"</span>: <span class="hljs-string">"zakupki-9ce340e7-847f-4e62-a699-a231a1530976"</span>,
+        <span class="hljs-attr">"descr"</span>: <span class="hljs-string">"o2"</span>,
+        <span class="hljs-attr">"title"</span>: <span class="hljs-string">"o2"</span>,
+        <span class="hljs-attr">"title_en"</span>: <span class="hljs-literal">null</span>,
+        <span class="hljs-attr">"options"</span>: [
+          {
+            <span class="hljs-attr">"coefficient"</span>: <span class="hljs-number">0.03</span>,
+            <span class="hljs-attr">"title_en"</span>: <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"id"</span>: <span class="hljs-number">6268</span>,
+            <span class="hljs-attr">"weight"</span>: <span class="hljs-number">3.0</span>,
+            <span class="hljs-attr">"title"</span>: <span class="hljs-string">"o23"</span>
+          },
+          {
+            <span class="hljs-attr">"coefficient"</span>: <span class="hljs-number">0.01</span>,
+            <span class="hljs-attr">"title_en"</span>: <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"id"</span>: <span class="hljs-number">6267</span>,
+            <span class="hljs-attr">"weight"</span>: <span class="hljs-number">1.0</span>,
+            <span class="hljs-attr">"title"</span>: <span class="hljs-string">"o22"</span>
+          },
+          {
+            <span class="hljs-attr">"coefficient"</span>: <span class="hljs-number">0.0</span>,
+            <span class="hljs-attr">"title_en"</span>: <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"id"</span>: <span class="hljs-number">6266</span>,
+            <span class="hljs-attr">"weight"</span>: <span class="hljs-number">0.0</span>,
+            <span class="hljs-attr">"title"</span>: <span class="hljs-string">"o21"</span>
+          }
+        ],
+        <span class="hljs-attr">"descr_en"</span>: <span class="hljs-literal">null</span>,
+        <span class="hljs-attr">"id"</span>: <span class="hljs-number">4232</span>
+      }
+    ],
+    <span class="hljs-attr">"tuid"</span>: <span class="hljs-string">"UA-2017-04-07-000019-2"</span>,
+    <span class="hljs-attr">"method_type_text"</span>: <span class="hljs-string">"Допорогова закупівля"</span>,
+    <span class="hljs-attr">"auction_url"</span>: <span class="hljs-string">"https://auction-sandbox.openprocurement.org/tenders/60b0759299434c819fa0c125b630ef18"</span>,
+    <span class="hljs-attr">"is_blocked"</span>: <span class="hljs-literal">false</span>,
+    <span class="hljs-attr">"uid"</span>: <span class="hljs-string">"60b0759299434c819fa0c125b630ef18"</span>,
+    <span class="hljs-attr">"id"</span>: <span class="hljs-number">262485</span>,
+    <span class="hljs-attr">"desc"</span>: <span class="hljs-string">"features"</span>,
+    <span class="hljs-attr">"is_participate"</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">"owner_name"</span>: <span class="hljs-string">"prom.ua"</span>,
+    <span class="hljs-attr">"title"</span>: <span class="hljs-string">"features"</span>,
+    <span class="hljs-attr">"lots"</span>: [
+    ],
+    <span class="hljs-attr">"items"</span>: [
+      {
+        <span class="hljs-attr">"status"</span>: <span class="hljs-number">0</span>,
+        <span class="hljs-attr">"unit_name"</span>: <span class="hljs-string">"тони"</span>,
+        <span class="hljs-attr">"features"</span>: [
+        ],
+        <span class="hljs-attr">"primary_classifier"</span>: {
+          <span class="hljs-attr">"code"</span>: <span class="hljs-string">"03000000-1"</span>,
+          <span class="hljs-attr">"type"</span>: <span class="hljs-string">"CPV"</span>,
+          <span class="hljs-attr">"id"</span>: <span class="hljs-number">16662</span>,
+          <span class="hljs-attr">"name_with_code"</span>: <span class="hljs-string">"03000000-1 Сільськогосподарська, фермерська продукція, продукція рибальства, лісівництва та супутня продукція"</span>
+        },
+        <span class="hljs-attr">"id"</span>: <span class="hljs-number">5192223</span>,
+        <span class="hljs-attr">"uid"</span>: <span class="hljs-string">"4af47de23dfe4cd4984bbd936c03bc66"</span>,
+        <span class="hljs-attr">"delivery_address"</span>: {
+          <span class="hljs-attr">"zip"</span>: <span class="hljs-string">"00000"</span>,
+          <span class="hljs-attr">"locality"</span>: <span class="hljs-string">"Украина"</span>,
+          <span class="hljs-attr">"is_all_ukraine"</span>: <span class="hljs-literal">true</span>,
+          <span class="hljs-attr">"region"</span>: <span class="hljs-string">"Украина"</span>,
+          <span class="hljs-attr">"country_name"</span>: <span class="hljs-string">"Україна"</span>,
+          <span class="hljs-attr">"street_address"</span>: <span class="hljs-string">"Украина"</span>
+        },
+        <span class="hljs-attr">"delivery_period"</span>: {
+          <span class="hljs-attr">"start"</span>: <span class="hljs-literal">null</span>,
+          <span class="hljs-attr">"end"</span>: <span class="hljs-string">"2017-04-15T20:59:59.999Z"</span>
+        },
+        <span class="hljs-attr">"descr"</span>: <span class="hljs-string">"features"</span>,
+        <span class="hljs-attr">"unit_id"</span>: <span class="hljs-number">41</span>,
+        <span class="hljs-attr">"classifiers"</span>: [
+        ],
+        <span class="hljs-attr">"quantity"</span>: <span class="hljs-number">123123</span>
+      }
+    ],
+    <span class="hljs-attr">"auction_period"</span>: {
+      <span class="hljs-attr">"start"</span>: <span class="hljs-string">"2017-04-07T06:16:37.859Z"</span>,
+      <span class="hljs-attr">"end"</span>: <span class="hljs-string">"2017-04-07T06:16:37.859Z"</span>
+    },
+    <span class="hljs-attr">"user_offer"</span>: {
+      <span class="hljs-attr">"status"</span>: <span class="hljs-number">0</span>,
+      <span class="hljs-attr">"subcontracting_details"</span>: <span class="hljs-literal">null</span>,
+      <span class="hljs-attr">"amount"</span>: <span class="hljs-number">12312.0</span>,
+      <span class="hljs-attr">"documents"</span>: {
+        <span class="hljs-attr">"contract"</span>: [
+        ],
+        <span class="hljs-attr">"qualification"</span>: [
+        ],
+        <span class="hljs-attr">"offer"</span>: [
+          {
+            <span class="hljs-attr">"mimetype"</span>: <span class="hljs-string">"image/png"</span>,
+            <span class="hljs-attr">"history"</span>: [
+            ],
+            <span class="hljs-attr">"uid"</span>: <span class="hljs-string">"834c82170f2541ceb58f2f6f1523bf30"</span>,
+            <span class="hljs-attr">"descr"</span>: <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"title"</span>: <span class="hljs-string">"test_img.png"</span>,
+            <span class="hljs-attr">"url"</span>: <span class="hljs-string">"https://public.docs-sandbox.openprocurement.org/get/db5e6be73db545b78f1827b858e4b35c?KeyID=1331dc52&amp;Signature=Sn11832sUh%2FsQ%2FxKij0a26UgbgRFDMSoXgz3RJyup%252BgsLOwrbVliT%252BE%252BQatM6tAgbB1OFN989zxy5nxNt94GBQ%253D%253D"</span>,
+            <span class="hljs-attr">"date_created"</span>: <span class="hljs-string">"2017-04-07T05:57:15.983Z"</span>,
+            <span class="hljs-attr">"date_modified"</span>: <span class="hljs-string">"2017-04-07T05:57:15.983Z"</span>,
+            <span class="hljs-attr">"id"</span>: <span class="hljs-number">2916556</span>,
+            <span class="hljs-attr">"confidentiality"</span>: <span class="hljs-string">"public"</span>
+          },
+          {
+            <span class="hljs-attr">"mimetype"</span>: <span class="hljs-string">"text/plain"</span>,
+            <span class="hljs-attr">"history"</span>: [
+            ],
+            <span class="hljs-attr">"uid"</span>: <span class="hljs-string">"a989312d78a046b8b555d309c2d0fb98"</span>,
+            <span class="hljs-attr">"descr"</span>: <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"title"</span>: <span class="hljs-string">"test.txt"</span>,
+            <span class="hljs-attr">"url"</span>: <span class="hljs-string">"https://public.docs-sandbox.openprocurement.org/get/512a41a93d774c8c89b8a3db458f28e9?KeyID=1331dc52&amp;Signature=M8u4osMLpJWfI2R6WMsstSX6iGB8WrtqN%2FHmkR2%2FTnlDkQUspYpu31%2FRYFVHDQcgkzIaSkMtBR2oveiz3rUaBw%253D%253D"</span>,
+            <span class="hljs-attr">"date_created"</span>: <span class="hljs-string">"2017-04-07T05:57:17.451Z"</span>,
+            <span class="hljs-attr">"date_modified"</span>: <span class="hljs-string">"2017-04-07T05:57:17.451Z"</span>,
+            <span class="hljs-attr">"id"</span>: <span class="hljs-number">2916557</span>,
+            <span class="hljs-attr">"confidentiality"</span>: <span class="hljs-string">"public"</span>
+          },
+          {
+            <span class="hljs-attr">"mimetype"</span>: <span class="hljs-string">"text/plain"</span>,
+            <span class="hljs-attr">"history"</span>: [
+            ],
+            <span class="hljs-attr">"uid"</span>: <span class="hljs-string">"cdc22bc29e9f4eab85717b9037d0a436"</span>,
+            <span class="hljs-attr">"descr"</span>: <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"title"</span>: <span class="hljs-string">"test1.txt"</span>,
+            <span class="hljs-attr">"url"</span>: <span class="hljs-string">"https://public.docs-sandbox.openprocurement.org/get/3aa4ee5cf9914263a0f2df002c3efbb7?KeyID=1331dc52&amp;Signature=x%252BbrX%2FZE2mQJlUJREPqUrAjHz%252BzRpFvG7aGHVARQAIkoiAHbl1pIuhOtDuHQJvppkffbsxCluqwQwu5YBRkjBQ%253D%253D"</span>,
+            <span class="hljs-attr">"date_created"</span>: <span class="hljs-string">"2017-04-07T05:57:18.702Z"</span>,
+            <span class="hljs-attr">"date_modified"</span>: <span class="hljs-string">"2017-04-07T05:57:18.702Z"</span>,
+            <span class="hljs-attr">"id"</span>: <span class="hljs-number">2916558</span>,
+            <span class="hljs-attr">"confidentiality"</span>: <span class="hljs-string">"public"</span>
+          }
+        ]
+      },
+      <span class="hljs-attr">"features"</span>: [
+        {
+          <span class="hljs-attr">"code"</span>: <span class="hljs-string">"zakupki-bb9cf4c8-8808-4e3c-a6e3-f758161d9aff"</span>,
+          <span class="hljs-attr">"descr_en"</span>: <span class="hljs-literal">null</span>,
+          <span class="hljs-attr">"descr"</span>: <span class="hljs-string">"o1"</span>,
+          <span class="hljs-attr">"title"</span>: <span class="hljs-string">"o1"</span>,
+          <span class="hljs-attr">"title_en"</span>: <span class="hljs-literal">null</span>,
+          <span class="hljs-attr">"options"</span>: [
+            {
+              <span class="hljs-attr">"coefficient"</span>: <span class="hljs-number">0.02</span>,
+              <span class="hljs-attr">"title_en"</span>: <span class="hljs-literal">null</span>,
+              <span class="hljs-attr">"id"</span>: <span class="hljs-number">6264</span>,
+              <span class="hljs-attr">"weight"</span>: <span class="hljs-number">2.0</span>,
+              <span class="hljs-attr">"title"</span>: <span class="hljs-string">"o12"</span>
+            }
+          ],
+          <span class="hljs-attr">"id"</span>: <span class="hljs-number">4231</span>
+        },
+        {
+          <span class="hljs-attr">"code"</span>: <span class="hljs-string">"zakupki-9ce340e7-847f-4e62-a699-a231a1530976"</span>,
+          <span class="hljs-attr">"descr_en"</span>: <span class="hljs-literal">null</span>,
+          <span class="hljs-attr">"descr"</span>: <span class="hljs-string">"o2"</span>,
+          <span class="hljs-attr">"title"</span>: <span class="hljs-string">"o2"</span>,
+          <span class="hljs-attr">"title_en"</span>: <span class="hljs-literal">null</span>,
+          <span class="hljs-attr">"options"</span>: [
+            {
+              <span class="hljs-attr">"coefficient"</span>: <span class="hljs-number">0.03</span>,
+              <span class="hljs-attr">"title_en"</span>: <span class="hljs-literal">null</span>,
+              <span class="hljs-attr">"id"</span>: <span class="hljs-number">6268</span>,
+              <span class="hljs-attr">"weight"</span>: <span class="hljs-number">3.0</span>,
+              <span class="hljs-attr">"title"</span>: <span class="hljs-string">"o23"</span>
+            }
+          ],
+          <span class="hljs-attr">"id"</span>: <span class="hljs-number">4232</span>
+        }
+      ],
+      <span class="hljs-attr">"auction_url"</span>: <span class="hljs-string">"https://auction-sandbox.openprocurement.org/tenders/60b0759299434c819fa0c125b630ef18/login?bidder_id=a1c20ff78f2b42448ad8960bec743ba9&amp;hash=0834e923fd1e2a512005625a06ac3a1bdb31fbb4"</span>,
+      <span class="hljs-attr">"net_present_amount"</span>: <span class="hljs-number">11690.181818181818</span>,
+      <span class="hljs-attr">"status_text"</span>: <span class="hljs-string">"активно"</span>,
+      <span class="hljs-attr">"id"</span>: <span class="hljs-number">280952</span>,
+      <span class="hljs-attr">"auto_active"</span>: <span class="hljs-literal">false</span>
+    },
+    <span class="hljs-attr">"cancellations"</span>: [
+    ],
+    <span class="hljs-attr">"amount"</span>: {
+      <span class="hljs-attr">"amount"</span>: <span class="hljs-number">123123.0</span>,
+      <span class="hljs-attr">"currency_iso_code"</span>: <span class="hljs-string">"UAH"</span>,
+      <span class="hljs-attr">"tax_included"</span>: <span class="hljs-literal">false</span>
+    },
+    <span class="hljs-attr">"offers"</span>: [
+      {
+        <span class="hljs-attr">"status"</span>: <span class="hljs-number">1</span>,
+        <span class="hljs-attr">"subcontracting_details"</span>: <span class="hljs-literal">null</span>,
+        <span class="hljs-attr">"amount"</span>: <span class="hljs-number">12332.0</span>,
+        <span class="hljs-attr">"documents"</span>: {
+          <span class="hljs-attr">"contract"</span>: [
+          ],
+          <span class="hljs-attr">"qualification"</span>: [
+            {
+              <span class="hljs-attr">"mimetype"</span>: <span class="hljs-string">"image/png"</span>,
+              <span class="hljs-attr">"history"</span>: [
+              ],
+              <span class="hljs-attr">"uid"</span>: <span class="hljs-string">"7f697669682941d2b14ce8a3bae35a4b"</span>,
+              <span class="hljs-attr">"descr"</span>: <span class="hljs-literal">null</span>,
+              <span class="hljs-attr">"title"</span>: <span class="hljs-string">"test_img.png"</span>,
+              <span class="hljs-attr">"url"</span>: <span class="hljs-string">"https://public.docs-sandbox.openprocurement.org/get/64972252fa98447691c442da0d92f4a8?KeyID=1331dc52&amp;Signature=OUldwEOqxBsgMVj%252BaZSGVdTfirubg0r6u8%2FomKqT5POg7rlKmQNBOTW9OnCVsr9wH8H%252BZPQ1yuUDjqlTGT5yCA%253D%253D"</span>,
+              <span class="hljs-attr">"date_created"</span>: <span class="hljs-string">"2017-04-20T14:56:44.608Z"</span>,
+              <span class="hljs-attr">"date_modified"</span>: <span class="hljs-string">"2017-04-20T14:56:44.608Z"</span>,
+              <span class="hljs-attr">"id"</span>: <span class="hljs-number">2916562</span>,
+              <span class="hljs-attr">"confidentiality"</span>: <span class="hljs-string">"public"</span>
+            },
+            {
+              <span class="hljs-attr">"mimetype"</span>: <span class="hljs-string">"application/pkcs7-signature"</span>,
+              <span class="hljs-attr">"history"</span>: [
+              ],
+              <span class="hljs-attr">"uid"</span>: <span class="hljs-string">"025c14268d174980918f63563966d5ae"</span>,
+              <span class="hljs-attr">"descr"</span>: <span class="hljs-literal">null</span>,
+              <span class="hljs-attr">"title"</span>: <span class="hljs-string">"sign.p7s"</span>,
+              <span class="hljs-attr">"url"</span>: <span class="hljs-string">"https://public.docs-sandbox.openprocurement.org/get/1b765d3596694856b619d59e46948fe6?KeyID=1331dc52&amp;Signature=2yz5eI20fi259IOrgzWSHeZhFG5mcjWRLfcFl%252BuGYIhsPaWtYMgDa%252BGOq4izCGIPTaVWWSCYjqFZllkKYokBDQ%253D%253D"</span>,
+              <span class="hljs-attr">"date_created"</span>: <span class="hljs-string">"2017-04-21T06:23:29.198Z"</span>,
+              <span class="hljs-attr">"date_modified"</span>: <span class="hljs-string">"2017-04-21T06:23:29.198Z"</span>,
+              <span class="hljs-attr">"id"</span>: <span class="hljs-number">2916563</span>,
+              <span class="hljs-attr">"confidentiality"</span>: <span class="hljs-string">"public"</span>
+            }
+          ],
+          <span class="hljs-attr">"offer"</span>: [
+            {
+              <span class="hljs-attr">"mimetype"</span>: <span class="hljs-string">"image/png"</span>,
+              <span class="hljs-attr">"history"</span>: [
+              ],
+              <span class="hljs-attr">"uid"</span>: <span class="hljs-string">"eb40ab6c34734d8c9d9c3c2edd3e3076"</span>,
+              <span class="hljs-attr">"descr"</span>: <span class="hljs-literal">null</span>,
+              <span class="hljs-attr">"title"</span>: <span class="hljs-string">"test_img.png"</span>,
+              <span class="hljs-attr">"url"</span>: <span class="hljs-string">"https://public.docs-sandbox.openprocurement.org/get/22ea858dd0fb485eba9c1f55ea4d641b?KeyID=1331dc52&amp;Signature=ueByT1shRreVbi4pw9OEFra28s0h7JopPOynVnUvLR%2Fp5f%252Bmkg1DKRz1SsDKRBKCFKffWd3fZHVd2niL2ZtWBA%253D%253D"</span>,
+              <span class="hljs-attr">"date_created"</span>: <span class="hljs-string">"2017-04-07T05:57:57.845Z"</span>,
+              <span class="hljs-attr">"date_modified"</span>: <span class="hljs-string">"2017-04-07T05:57:57.845Z"</span>,
+              <span class="hljs-attr">"id"</span>: <span class="hljs-number">2916559</span>,
+              <span class="hljs-attr">"confidentiality"</span>: <span class="hljs-string">"public"</span>
+            },
+            {
+              <span class="hljs-attr">"mimetype"</span>: <span class="hljs-string">"text/plain"</span>,
+              <span class="hljs-attr">"history"</span>: [
+              ],
+              <span class="hljs-attr">"uid"</span>: <span class="hljs-string">"c75e4eb786914e81bdefbe7323678fcf"</span>,
+              <span class="hljs-attr">"descr"</span>: <span class="hljs-literal">null</span>,
+              <span class="hljs-attr">"title"</span>: <span class="hljs-string">"test.txt"</span>,
+              <span class="hljs-attr">"url"</span>: <span class="hljs-string">"https://public.docs-sandbox.openprocurement.org/get/d140b45d1ea1464d8226121815450013?KeyID=1331dc52&amp;Signature=b14LdwHkkTbWelpfm1rw%252BwSovHdU4kJTtRf2djl3oO0%2FTLK777L%252BxlJxAmwPCdORrWF4O6W9CwE2DPEBvsjmCQ%253D%253D"</span>,
+              <span class="hljs-attr">"date_created"</span>: <span class="hljs-string">"2017-04-07T05:57:59.382Z"</span>,
+              <span class="hljs-attr">"date_modified"</span>: <span class="hljs-string">"2017-04-07T05:57:59.382Z"</span>,
+              <span class="hljs-attr">"id"</span>: <span class="hljs-number">2916560</span>,
+              <span class="hljs-attr">"confidentiality"</span>: <span class="hljs-string">"public"</span>
+            },
+            {
+              <span class="hljs-attr">"mimetype"</span>: <span class="hljs-string">"text/plain"</span>,
+              <span class="hljs-attr">"history"</span>: [
+              ],
+              <span class="hljs-attr">"uid"</span>: <span class="hljs-string">"f5a06995d51342849aeb5512b16cc8fa"</span>,
+              <span class="hljs-attr">"descr"</span>: <span class="hljs-literal">null</span>,
+              <span class="hljs-attr">"title"</span>: <span class="hljs-string">"test1.txt"</span>,
+              <span class="hljs-attr">"url"</span>: <span class="hljs-string">"https://public.docs-sandbox.openprocurement.org/get/16801fdecdec490eba5f22ab483919dc?KeyID=1331dc52&amp;Signature=yzGTP8QTANbpYvieaX49elk2kdTdznPdwdk%2F97QIGDpduCNDJ1sqm66%252B%2FcFH1XVxpldG%252BUrLhNa9UMQQqDUoCg%253D%253D"</span>,
+              <span class="hljs-attr">"date_created"</span>: <span class="hljs-string">"2017-04-07T05:58:00.723Z"</span>,
+              <span class="hljs-attr">"date_modified"</span>: <span class="hljs-string">"2017-04-07T05:58:00.723Z"</span>,
+              <span class="hljs-attr">"id"</span>: <span class="hljs-number">2916561</span>,
+              <span class="hljs-attr">"confidentiality"</span>: <span class="hljs-string">"public"</span>
+            }
+          ]
+        },
+        <span class="hljs-attr">"features"</span>: [
+          {
+            <span class="hljs-attr">"code"</span>: <span class="hljs-string">"zakupki-bb9cf4c8-8808-4e3c-a6e3-f758161d9aff"</span>,
+            <span class="hljs-attr">"descr_en"</span>: <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"descr"</span>: <span class="hljs-string">"o1"</span>,
+            <span class="hljs-attr">"title"</span>: <span class="hljs-string">"o1"</span>,
+            <span class="hljs-attr">"title_en"</span>: <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"options"</span>: [
+              {
+                <span class="hljs-attr">"coefficient"</span>: <span class="hljs-number">0.03</span>,
+                <span class="hljs-attr">"title_en"</span>: <span class="hljs-literal">null</span>,
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">6265</span>,
+                <span class="hljs-attr">"weight"</span>: <span class="hljs-number">3.0</span>,
+                <span class="hljs-attr">"title"</span>: <span class="hljs-string">"o13"</span>
+              }
+            ],
+            <span class="hljs-attr">"id"</span>: <span class="hljs-number">4231</span>
+          },
+          {
+            <span class="hljs-attr">"code"</span>: <span class="hljs-string">"zakupki-9ce340e7-847f-4e62-a699-a231a1530976"</span>,
+            <span class="hljs-attr">"descr_en"</span>: <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"descr"</span>: <span class="hljs-string">"o2"</span>,
+            <span class="hljs-attr">"title"</span>: <span class="hljs-string">"o2"</span>,
+            <span class="hljs-attr">"title_en"</span>: <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"options"</span>: [
+              {
+                <span class="hljs-attr">"coefficient"</span>: <span class="hljs-number">0.03</span>,
+                <span class="hljs-attr">"title_en"</span>: <span class="hljs-literal">null</span>,
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">6268</span>,
+                <span class="hljs-attr">"weight"</span>: <span class="hljs-number">3.0</span>,
+                <span class="hljs-attr">"title"</span>: <span class="hljs-string">"o23"</span>
+              }
+            ],
+            <span class="hljs-attr">"id"</span>: <span class="hljs-number">4232</span>
+          }
+        ],
+        <span class="hljs-attr">"auction_url"</span>: <span class="hljs-string">"https://auction-sandbox.openprocurement.org/tenders/60b0759299434c819fa0c125b630ef18/login?bidder_id=63be4c4fff0e4df2aaab5ad5d5b458a0&amp;hash=0cdd68ee8de9a367504995f4549de0cca8c9ad51"</span>,
+        <span class="hljs-attr">"net_present_amount"</span>: <span class="hljs-number">11592.08</span>,
+        <span class="hljs-attr">"status_text"</span>: <span class="hljs-string">"дискваліфіковано"</span>,
+        <span class="hljs-attr">"id"</span>: <span class="hljs-number">280953</span>,
+        <span class="hljs-attr">"auto_active"</span>: <span class="hljs-literal">false</span>
+      },
+      {
+        <span class="hljs-attr">"status"</span>: <span class="hljs-number">2</span>,
+        <span class="hljs-attr">"subcontracting_details"</span>: <span class="hljs-literal">null</span>,
+        <span class="hljs-attr">"amount"</span>: <span class="hljs-number">12312.0</span>,
+        <span class="hljs-attr">"documents"</span>: {
+          <span class="hljs-attr">"contract"</span>: [
+            {
+              <span class="hljs-attr">"mimetype"</span>: <span class="hljs-string">"text/plain"</span>,
+              <span class="hljs-attr">"history"</span>: [
+              ],
+              <span class="hljs-attr">"uid"</span>: <span class="hljs-string">"d858e3b4d1d54acea540f3eaa7d97634"</span>,
+              <span class="hljs-attr">"descr"</span>: <span class="hljs-literal">null</span>,
+              <span class="hljs-attr">"title"</span>: <span class="hljs-string">"test1.txt"</span>,
+              <span class="hljs-attr">"url"</span>: <span class="hljs-string">"https://public.docs-sandbox.openprocurement.org/get/eba9b9a59fc6433e8308133c7460466c?KeyID=1331dc52&amp;Signature=STb07hS%252BvrbB4EHCaMCqtZKcydg4p6dpNWwEThuC1VV6pcwBST9WZHP2YIDo5WVWI90omK%252BTMNrpgXIUNy1EDg%253D%253D"</span>,
+              <span class="hljs-attr">"date_created"</span>: <span class="hljs-string">"2017-04-21T06:44:31.125Z"</span>,
+              <span class="hljs-attr">"date_modified"</span>: <span class="hljs-string">"2017-04-21T06:44:31.125Z"</span>,
+              <span class="hljs-attr">"id"</span>: <span class="hljs-number">2916566</span>,
+              <span class="hljs-attr">"confidentiality"</span>: <span class="hljs-string">"public"</span>
+            },
+            {
+              <span class="hljs-attr">"mimetype"</span>: <span class="hljs-string">"application/pkcs7-signature"</span>,
+              <span class="hljs-attr">"history"</span>: [
+              ],
+              <span class="hljs-attr">"uid"</span>: <span class="hljs-string">"b5873ac0f780421a9848200474a30bc1"</span>,
+              <span class="hljs-attr">"descr"</span>: <span class="hljs-literal">null</span>,
+              <span class="hljs-attr">"title"</span>: <span class="hljs-string">"sign.p7s"</span>,
+              <span class="hljs-attr">"url"</span>: <span class="hljs-string">"https://public.docs-sandbox.openprocurement.org/get/211a3443a2884bb7b4ef911d1e9fc943?KeyID=1331dc52&amp;Signature=sYwgLBfZzrtc3u9CpPnYBoi7CamM9gGiU0P8f4tCfw2R1jEVfq4Ljwab0gnnA76mdXE0994MAm9yjqbBqtsQCQ%253D%253D"</span>,
+              <span class="hljs-attr">"date_created"</span>: <span class="hljs-string">"2017-04-21T08:29:17.214Z"</span>,
+              <span class="hljs-attr">"date_modified"</span>: <span class="hljs-string">"2017-04-21T08:29:17.214Z"</span>,
+              <span class="hljs-attr">"id"</span>: <span class="hljs-number">2916567</span>,
+              <span class="hljs-attr">"confidentiality"</span>: <span class="hljs-string">"public"</span>
+            }
+          ],
+          <span class="hljs-attr">"qualification"</span>: [
+            {
+              <span class="hljs-attr">"mimetype"</span>: <span class="hljs-string">"image/png"</span>,
+              <span class="hljs-attr">"history"</span>: [
+              ],
+              <span class="hljs-attr">"uid"</span>: <span class="hljs-string">"4ce4b09aaae74329a262913b34f96be7"</span>,
+              <span class="hljs-attr">"descr"</span>: <span class="hljs-literal">null</span>,
+              <span class="hljs-attr">"title"</span>: <span class="hljs-string">"test_img.png"</span>,
+              <span class="hljs-attr">"url"</span>: <span class="hljs-string">"https://public.docs-sandbox.openprocurement.org/get/5a445358b2d44385b12d91afcb5ec65e?KeyID=1331dc52&amp;Signature=OIlDrVJpzIqd1efIAArxuJ8oyYXwrCdWvcD%252BJW11bNKrpIXb3cA%252BP18XFkVvUCkrJhD7GM66OPY%252BNdsZaTJNCw%253D%253D"</span>,
+              <span class="hljs-attr">"date_created"</span>: <span class="hljs-string">"2017-04-21T06:26:18.555Z"</span>,
+              <span class="hljs-attr">"date_modified"</span>: <span class="hljs-string">"2017-04-21T06:26:18.555Z"</span>,
+              <span class="hljs-attr">"id"</span>: <span class="hljs-number">2916564</span>,
+              <span class="hljs-attr">"confidentiality"</span>: <span class="hljs-string">"public"</span>
+            },
+            {
+              <span class="hljs-attr">"mimetype"</span>: <span class="hljs-string">"application/pkcs7-signature"</span>,
+              <span class="hljs-attr">"history"</span>: [
+              ],
+              <span class="hljs-attr">"uid"</span>: <span class="hljs-string">"d912866e76f14baa8587fe03f594adc0"</span>,
+              <span class="hljs-attr">"descr"</span>: <span class="hljs-literal">null</span>,
+              <span class="hljs-attr">"title"</span>: <span class="hljs-string">"sign.p7s"</span>,
+              <span class="hljs-attr">"url"</span>: <span class="hljs-string">"https://public.docs-sandbox.openprocurement.org/get/1efe154c0d11421e9650be9b785f5fbd?KeyID=1331dc52&amp;Signature=XVlEKWYjmqyEuRyzoxWB3UyW%2FZTltQBdLKNE7PrOs4yvjhHmNSa%252BjnJVTEYz14Fn0lN8fE1z5%2FTzEqbRl03RCw%253D%253D"</span>,
+              <span class="hljs-attr">"date_created"</span>: <span class="hljs-string">"2017-04-21T06:35:15.337Z"</span>,
+              <span class="hljs-attr">"date_modified"</span>: <span class="hljs-string">"2017-04-21T06:35:15.337Z"</span>,
+              <span class="hljs-attr">"id"</span>: <span class="hljs-number">2916565</span>,
+              <span class="hljs-attr">"confidentiality"</span>: <span class="hljs-string">"public"</span>
+            }
+          ],
+          <span class="hljs-attr">"offer"</span>: [
+            {
+              <span class="hljs-attr">"mimetype"</span>: <span class="hljs-string">"image/png"</span>,
+              <span class="hljs-attr">"history"</span>: [
+              ],
+              <span class="hljs-attr">"uid"</span>: <span class="hljs-string">"834c82170f2541ceb58f2f6f1523bf30"</span>,
+              <span class="hljs-attr">"descr"</span>: <span class="hljs-literal">null</span>,
+              <span class="hljs-attr">"title"</span>: <span class="hljs-string">"test_img.png"</span>,
+              <span class="hljs-attr">"url"</span>: <span class="hljs-string">"https://public.docs-sandbox.openprocurement.org/get/db5e6be73db545b78f1827b858e4b35c?KeyID=1331dc52&amp;Signature=Sn11832sUh%2FsQ%2FxKij0a26UgbgRFDMSoXgz3RJyup%252BgsLOwrbVliT%252BE%252BQatM6tAgbB1OFN989zxy5nxNt94GBQ%253D%253D"</span>,
+              <span class="hljs-attr">"date_created"</span>: <span class="hljs-string">"2017-04-07T05:57:15.983Z"</span>,
+              <span class="hljs-attr">"date_modified"</span>: <span class="hljs-string">"2017-04-07T05:57:15.983Z"</span>,
+              <span class="hljs-attr">"id"</span>: <span class="hljs-number">2916556</span>,
+              <span class="hljs-attr">"confidentiality"</span>: <span class="hljs-string">"public"</span>
+            },
+            {
+              <span class="hljs-attr">"mimetype"</span>: <span class="hljs-string">"text/plain"</span>,
+              <span class="hljs-attr">"history"</span>: [
+              ],
+              <span class="hljs-attr">"uid"</span>: <span class="hljs-string">"a989312d78a046b8b555d309c2d0fb98"</span>,
+              <span class="hljs-attr">"descr"</span>: <span class="hljs-literal">null</span>,
+              <span class="hljs-attr">"title"</span>: <span class="hljs-string">"test.txt"</span>,
+              <span class="hljs-attr">"url"</span>: <span class="hljs-string">"https://public.docs-sandbox.openprocurement.org/get/512a41a93d774c8c89b8a3db458f28e9?KeyID=1331dc52&amp;Signature=M8u4osMLpJWfI2R6WMsstSX6iGB8WrtqN%2FHmkR2%2FTnlDkQUspYpu31%2FRYFVHDQcgkzIaSkMtBR2oveiz3rUaBw%253D%253D"</span>,
+              <span class="hljs-attr">"date_created"</span>: <span class="hljs-string">"2017-04-07T05:57:17.451Z"</span>,
+              <span class="hljs-attr">"date_modified"</span>: <span class="hljs-string">"2017-04-07T05:57:17.451Z"</span>,
+              <span class="hljs-attr">"id"</span>: <span class="hljs-number">2916557</span>,
+              <span class="hljs-attr">"confidentiality"</span>: <span class="hljs-string">"public"</span>
+            },
+            {
+              <span class="hljs-attr">"mimetype"</span>: <span class="hljs-string">"text/plain"</span>,
+              <span class="hljs-attr">"history"</span>: [
+              ],
+              <span class="hljs-attr">"uid"</span>: <span class="hljs-string">"cdc22bc29e9f4eab85717b9037d0a436"</span>,
+              <span class="hljs-attr">"descr"</span>: <span class="hljs-literal">null</span>,
+              <span class="hljs-attr">"title"</span>: <span class="hljs-string">"test1.txt"</span>,
+              <span class="hljs-attr">"url"</span>: <span class="hljs-string">"https://public.docs-sandbox.openprocurement.org/get/3aa4ee5cf9914263a0f2df002c3efbb7?KeyID=1331dc52&amp;Signature=x%252BbrX%2FZE2mQJlUJREPqUrAjHz%252BzRpFvG7aGHVARQAIkoiAHbl1pIuhOtDuHQJvppkffbsxCluqwQwu5YBRkjBQ%253D%253D"</span>,
+              <span class="hljs-attr">"date_created"</span>: <span class="hljs-string">"2017-04-07T05:57:18.702Z"</span>,
+              <span class="hljs-attr">"date_modified"</span>: <span class="hljs-string">"2017-04-07T05:57:18.702Z"</span>,
+              <span class="hljs-attr">"id"</span>: <span class="hljs-number">2916558</span>,
+              <span class="hljs-attr">"confidentiality"</span>: <span class="hljs-string">"public"</span>
+            }
+          ]
+        },
+        <span class="hljs-attr">"features"</span>: [
+          {
+            <span class="hljs-attr">"code"</span>: <span class="hljs-string">"zakupki-bb9cf4c8-8808-4e3c-a6e3-f758161d9aff"</span>,
+            <span class="hljs-attr">"descr_en"</span>: <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"descr"</span>: <span class="hljs-string">"o1"</span>,
+            <span class="hljs-attr">"title"</span>: <span class="hljs-string">"o1"</span>,
+            <span class="hljs-attr">"title_en"</span>: <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"options"</span>: [
+              {
+                <span class="hljs-attr">"coefficient"</span>: <span class="hljs-number">0.02</span>,
+                <span class="hljs-attr">"title_en"</span>: <span class="hljs-literal">null</span>,
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">6264</span>,
+                <span class="hljs-attr">"weight"</span>: <span class="hljs-number">2.0</span>,
+                <span class="hljs-attr">"title"</span>: <span class="hljs-string">"o12"</span>
+              }
+            ],
+            <span class="hljs-attr">"id"</span>: <span class="hljs-number">4231</span>
+          },
+          {
+            <span class="hljs-attr">"code"</span>: <span class="hljs-string">"zakupki-9ce340e7-847f-4e62-a699-a231a1530976"</span>,
+            <span class="hljs-attr">"descr_en"</span>: <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"descr"</span>: <span class="hljs-string">"o2"</span>,
+            <span class="hljs-attr">"title"</span>: <span class="hljs-string">"o2"</span>,
+            <span class="hljs-attr">"title_en"</span>: <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"options"</span>: [
+              {
+                <span class="hljs-attr">"coefficient"</span>: <span class="hljs-number">0.03</span>,
+                <span class="hljs-attr">"title_en"</span>: <span class="hljs-literal">null</span>,
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">6268</span>,
+                <span class="hljs-attr">"weight"</span>: <span class="hljs-number">3.0</span>,
+                <span class="hljs-attr">"title"</span>: <span class="hljs-string">"o23"</span>
+              }
+            ],
+            <span class="hljs-attr">"id"</span>: <span class="hljs-number">4232</span>
+          }
+        ],
+        <span class="hljs-attr">"auction_url"</span>: <span class="hljs-string">"https://auction-sandbox.openprocurement.org/tenders/60b0759299434c819fa0c125b630ef18/login?bidder_id=a1c20ff78f2b42448ad8960bec743ba9&amp;hash=0834e923fd1e2a512005625a06ac3a1bdb31fbb4"</span>,
+        <span class="hljs-attr">"net_present_amount"</span>: <span class="hljs-number">11690.181818181818</span>,
+        <span class="hljs-attr">"status_text"</span>: <span class="hljs-string">"переможець"</span>,
+        <span class="hljs-attr">"id"</span>: <span class="hljs-number">280952</span>,
+        <span class="hljs-attr">"auto_active"</span>: <span class="hljs-literal">false</span>
+      }
+    ],
+    <span class="hljs-attr">"guarantee"</span>: {
+      <span class="hljs-attr">"guarantee_amount"</span>: <span class="hljs-number">0.0</span>,
+      <span class="hljs-attr">"currency_iso_code"</span>: <span class="hljs-string">"UAH"</span>
+    },
+    <span class="hljs-attr">"qualification"</span>: [
+      {
+        <span class="hljs-attr">"status"</span>: <span class="hljs-number">2</span>,
+        <span class="hljs-attr">"merchant"</span>: <span class="hljs-string">"ТОВ \"some76\""</span>,
+        <span class="hljs-attr">"amount"</span>: <span class="hljs-number">12312.0</span>,
+        <span class="hljs-attr">"documents"</span>: {
+          <span class="hljs-attr">"offer_lot"</span>: [
+          ],
+          <span class="hljs-attr">"contract"</span>: [
+            {
+              <span class="hljs-attr">"mimetype"</span>: <span class="hljs-string">"text/plain"</span>,
+              <span class="hljs-attr">"history"</span>: [
+              ],
+              <span class="hljs-attr">"uid"</span>: <span class="hljs-string">"d858e3b4d1d54acea540f3eaa7d97634"</span>,
+              <span class="hljs-attr">"descr"</span>: <span class="hljs-literal">null</span>,
+              <span class="hljs-attr">"title"</span>: <span class="hljs-string">"test1.txt"</span>,
+              <span class="hljs-attr">"url"</span>: <span class="hljs-string">"https://public.docs-sandbox.openprocurement.org/get/eba9b9a59fc6433e8308133c7460466c?KeyID=1331dc52&amp;Signature=STb07hS%252BvrbB4EHCaMCqtZKcydg4p6dpNWwEThuC1VV6pcwBST9WZHP2YIDo5WVWI90omK%252BTMNrpgXIUNy1EDg%253D%253D"</span>,
+              <span class="hljs-attr">"date_created"</span>: <span class="hljs-string">"2017-04-21T06:44:31.125Z"</span>,
+              <span class="hljs-attr">"date_modified"</span>: <span class="hljs-string">"2017-04-21T06:44:31.125Z"</span>,
+              <span class="hljs-attr">"id"</span>: <span class="hljs-number">2916566</span>,
+              <span class="hljs-attr">"confidentiality"</span>: <span class="hljs-string">"public"</span>
+            },
+            {
+              <span class="hljs-attr">"mimetype"</span>: <span class="hljs-string">"application/pkcs7-signature"</span>,
+              <span class="hljs-attr">"history"</span>: [
+              ],
+              <span class="hljs-attr">"uid"</span>: <span class="hljs-string">"b5873ac0f780421a9848200474a30bc1"</span>,
+              <span class="hljs-attr">"descr"</span>: <span class="hljs-literal">null</span>,
+              <span class="hljs-attr">"title"</span>: <span class="hljs-string">"sign.p7s"</span>,
+              <span class="hljs-attr">"url"</span>: <span class="hljs-string">"https://public.docs-sandbox.openprocurement.org/get/211a3443a2884bb7b4ef911d1e9fc943?KeyID=1331dc52&amp;Signature=sYwgLBfZzrtc3u9CpPnYBoi7CamM9gGiU0P8f4tCfw2R1jEVfq4Ljwab0gnnA76mdXE0994MAm9yjqbBqtsQCQ%253D%253D"</span>,
+              <span class="hljs-attr">"date_created"</span>: <span class="hljs-string">"2017-04-21T08:29:17.214Z"</span>,
+              <span class="hljs-attr">"date_modified"</span>: <span class="hljs-string">"2017-04-21T08:29:17.214Z"</span>,
+              <span class="hljs-attr">"id"</span>: <span class="hljs-number">2916567</span>,
+              <span class="hljs-attr">"confidentiality"</span>: <span class="hljs-string">"public"</span>
+            }
+          ],
+          <span class="hljs-attr">"qualification"</span>: [
+            {
+              <span class="hljs-attr">"mimetype"</span>: <span class="hljs-string">"image/png"</span>,
+              <span class="hljs-attr">"history"</span>: [
+              ],
+              <span class="hljs-attr">"uid"</span>: <span class="hljs-string">"4ce4b09aaae74329a262913b34f96be7"</span>,
+              <span class="hljs-attr">"descr"</span>: <span class="hljs-literal">null</span>,
+              <span class="hljs-attr">"title"</span>: <span class="hljs-string">"test_img.png"</span>,
+              <span class="hljs-attr">"url"</span>: <span class="hljs-string">"https://public.docs-sandbox.openprocurement.org/get/5a445358b2d44385b12d91afcb5ec65e?KeyID=1331dc52&amp;Signature=OIlDrVJpzIqd1efIAArxuJ8oyYXwrCdWvcD%252BJW11bNKrpIXb3cA%252BP18XFkVvUCkrJhD7GM66OPY%252BNdsZaTJNCw%253D%253D"</span>,
+              <span class="hljs-attr">"date_created"</span>: <span class="hljs-string">"2017-04-21T06:26:18.555Z"</span>,
+              <span class="hljs-attr">"date_modified"</span>: <span class="hljs-string">"2017-04-21T06:26:18.555Z"</span>,
+              <span class="hljs-attr">"id"</span>: <span class="hljs-number">2916564</span>,
+              <span class="hljs-attr">"confidentiality"</span>: <span class="hljs-string">"public"</span>
+            },
+            {
+              <span class="hljs-attr">"mimetype"</span>: <span class="hljs-string">"application/pkcs7-signature"</span>,
+              <span class="hljs-attr">"history"</span>: [
+              ],
+              <span class="hljs-attr">"uid"</span>: <span class="hljs-string">"d912866e76f14baa8587fe03f594adc0"</span>,
+              <span class="hljs-attr">"descr"</span>: <span class="hljs-literal">null</span>,
+              <span class="hljs-attr">"title"</span>: <span class="hljs-string">"sign.p7s"</span>,
+              <span class="hljs-attr">"url"</span>: <span class="hljs-string">"https://public.docs-sandbox.openprocurement.org/get/1efe154c0d11421e9650be9b785f5fbd?KeyID=1331dc52&amp;Signature=XVlEKWYjmqyEuRyzoxWB3UyW%2FZTltQBdLKNE7PrOs4yvjhHmNSa%252BjnJVTEYz14Fn0lN8fE1z5%2FTzEqbRl03RCw%253D%253D"</span>,
+              <span class="hljs-attr">"date_created"</span>: <span class="hljs-string">"2017-04-21T06:35:15.337Z"</span>,
+              <span class="hljs-attr">"date_modified"</span>: <span class="hljs-string">"2017-04-21T06:35:15.337Z"</span>,
+              <span class="hljs-attr">"id"</span>: <span class="hljs-number">2916565</span>,
+              <span class="hljs-attr">"confidentiality"</span>: <span class="hljs-string">"public"</span>
+            }
+          ],
+          <span class="hljs-attr">"offer"</span>: [
+            {
+              <span class="hljs-attr">"mimetype"</span>: <span class="hljs-string">"image/png"</span>,
+              <span class="hljs-attr">"history"</span>: [
+              ],
+              <span class="hljs-attr">"uid"</span>: <span class="hljs-string">"834c82170f2541ceb58f2f6f1523bf30"</span>,
+              <span class="hljs-attr">"descr"</span>: <span class="hljs-literal">null</span>,
+              <span class="hljs-attr">"title"</span>: <span class="hljs-string">"test_img.png"</span>,
+              <span class="hljs-attr">"url"</span>: <span class="hljs-string">"https://public.docs-sandbox.openprocurement.org/get/db5e6be73db545b78f1827b858e4b35c?KeyID=1331dc52&amp;Signature=Sn11832sUh%2FsQ%2FxKij0a26UgbgRFDMSoXgz3RJyup%252BgsLOwrbVliT%252BE%252BQatM6tAgbB1OFN989zxy5nxNt94GBQ%253D%253D"</span>,
+              <span class="hljs-attr">"date_created"</span>: <span class="hljs-string">"2017-04-07T05:57:15.983Z"</span>,
+              <span class="hljs-attr">"date_modified"</span>: <span class="hljs-string">"2017-04-07T05:57:15.983Z"</span>,
+              <span class="hljs-attr">"id"</span>: <span class="hljs-number">2916556</span>,
+              <span class="hljs-attr">"confidentiality"</span>: <span class="hljs-string">"public"</span>
+            },
+            {
+              <span class="hljs-attr">"mimetype"</span>: <span class="hljs-string">"text/plain"</span>,
+              <span class="hljs-attr">"history"</span>: [
+              ],
+              <span class="hljs-attr">"uid"</span>: <span class="hljs-string">"a989312d78a046b8b555d309c2d0fb98"</span>,
+              <span class="hljs-attr">"descr"</span>: <span class="hljs-literal">null</span>,
+              <span class="hljs-attr">"title"</span>: <span class="hljs-string">"test.txt"</span>,
+              <span class="hljs-attr">"url"</span>: <span class="hljs-string">"https://public.docs-sandbox.openprocurement.org/get/512a41a93d774c8c89b8a3db458f28e9?KeyID=1331dc52&amp;Signature=M8u4osMLpJWfI2R6WMsstSX6iGB8WrtqN%2FHmkR2%2FTnlDkQUspYpu31%2FRYFVHDQcgkzIaSkMtBR2oveiz3rUaBw%253D%253D"</span>,
+              <span class="hljs-attr">"date_created"</span>: <span class="hljs-string">"2017-04-07T05:57:17.451Z"</span>,
+              <span class="hljs-attr">"date_modified"</span>: <span class="hljs-string">"2017-04-07T05:57:17.451Z"</span>,
+              <span class="hljs-attr">"id"</span>: <span class="hljs-number">2916557</span>,
+              <span class="hljs-attr">"confidentiality"</span>: <span class="hljs-string">"public"</span>
+            },
+            {
+              <span class="hljs-attr">"mimetype"</span>: <span class="hljs-string">"text/plain"</span>,
+              <span class="hljs-attr">"history"</span>: [
+              ],
+              <span class="hljs-attr">"uid"</span>: <span class="hljs-string">"cdc22bc29e9f4eab85717b9037d0a436"</span>,
+              <span class="hljs-attr">"descr"</span>: <span class="hljs-literal">null</span>,
+              <span class="hljs-attr">"title"</span>: <span class="hljs-string">"test1.txt"</span>,
+              <span class="hljs-attr">"url"</span>: <span class="hljs-string">"https://public.docs-sandbox.openprocurement.org/get/3aa4ee5cf9914263a0f2df002c3efbb7?KeyID=1331dc52&amp;Signature=x%252BbrX%2FZE2mQJlUJREPqUrAjHz%252BzRpFvG7aGHVARQAIkoiAHbl1pIuhOtDuHQJvppkffbsxCluqwQwu5YBRkjBQ%253D%253D"</span>,
+              <span class="hljs-attr">"date_created"</span>: <span class="hljs-string">"2017-04-07T05:57:18.702Z"</span>,
+              <span class="hljs-attr">"date_modified"</span>: <span class="hljs-string">"2017-04-07T05:57:18.702Z"</span>,
+              <span class="hljs-attr">"id"</span>: <span class="hljs-number">2916558</span>,
+              <span class="hljs-attr">"confidentiality"</span>: <span class="hljs-string">"public"</span>
+            }
+          ]
+        },
+        <span class="hljs-attr">"features"</span>: [
+          {
+            <span class="hljs-attr">"code"</span>: <span class="hljs-string">"zakupki-bb9cf4c8-8808-4e3c-a6e3-f758161d9aff"</span>,
+            <span class="hljs-attr">"descr_en"</span>: <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"descr"</span>: <span class="hljs-string">"o1"</span>,
+            <span class="hljs-attr">"title"</span>: <span class="hljs-string">"o1"</span>,
+            <span class="hljs-attr">"title_en"</span>: <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"options"</span>: [
+              {
+                <span class="hljs-attr">"coefficient"</span>: <span class="hljs-number">0.02</span>,
+                <span class="hljs-attr">"title_en"</span>: <span class="hljs-literal">null</span>,
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">6264</span>,
+                <span class="hljs-attr">"weight"</span>: <span class="hljs-number">2.0</span>,
+                <span class="hljs-attr">"title"</span>: <span class="hljs-string">"o12"</span>
+              }
+            ],
+            <span class="hljs-attr">"id"</span>: <span class="hljs-number">4231</span>
+          },
+          {
+            <span class="hljs-attr">"code"</span>: <span class="hljs-string">"zakupki-9ce340e7-847f-4e62-a699-a231a1530976"</span>,
+            <span class="hljs-attr">"descr_en"</span>: <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"descr"</span>: <span class="hljs-string">"o2"</span>,
+            <span class="hljs-attr">"title"</span>: <span class="hljs-string">"o2"</span>,
+            <span class="hljs-attr">"title_en"</span>: <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"options"</span>: [
+              {
+                <span class="hljs-attr">"coefficient"</span>: <span class="hljs-number">0.03</span>,
+                <span class="hljs-attr">"title_en"</span>: <span class="hljs-literal">null</span>,
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">6268</span>,
+                <span class="hljs-attr">"weight"</span>: <span class="hljs-number">3.0</span>,
+                <span class="hljs-attr">"title"</span>: <span class="hljs-string">"o23"</span>
+              }
+            ],
+            <span class="hljs-attr">"id"</span>: <span class="hljs-number">4232</span>
+          }
+        ],
+        <span class="hljs-attr">"net_present_amount"</span>: <span class="hljs-number">11690.181818181818</span>,
+        <span class="hljs-attr">"status_text"</span>: <span class="hljs-string">"переможець"</span>,
+        <span class="hljs-attr">"currency_iso_code"</span>: <span class="hljs-string">"UAH"</span>,
+        <span class="hljs-attr">"id"</span>: <span class="hljs-number">143254</span>,
+        <span class="hljs-attr">"contract"</span>: {
+          <span class="hljs-attr">"status"</span>: <span class="hljs-number">1</span>,
+          <span class="hljs-attr">"uid"</span>: <span class="hljs-string">"494d0b6e605742c88b62be24ba3f6689"</span>,
+          <span class="hljs-attr">"contract_sign_date"</span>: <span class="hljs-string">"2017-04-21T06:43:00Z"</span>,
+          <span class="hljs-attr">"id"</span>: <span class="hljs-number">96666</span>,
+          <span class="hljs-attr">"description"</span>: <span class="hljs-literal">null</span>,
+          <span class="hljs-attr">"documents"</span>: {
+            <span class="hljs-attr">"contract"</span>: [
+              {
+                <span class="hljs-attr">"mimetype"</span>: <span class="hljs-string">"text/plain"</span>,
+                <span class="hljs-attr">"history"</span>: [
+                ],
+                <span class="hljs-attr">"uid"</span>: <span class="hljs-string">"d858e3b4d1d54acea540f3eaa7d97634"</span>,
+                <span class="hljs-attr">"descr"</span>: <span class="hljs-literal">null</span>,
+                <span class="hljs-attr">"title"</span>: <span class="hljs-string">"test1.txt"</span>,
+                <span class="hljs-attr">"url"</span>: <span class="hljs-string">"https://public.docs-sandbox.openprocurement.org/get/eba9b9a59fc6433e8308133c7460466c?KeyID=1331dc52&amp;Signature=STb07hS%252BvrbB4EHCaMCqtZKcydg4p6dpNWwEThuC1VV6pcwBST9WZHP2YIDo5WVWI90omK%252BTMNrpgXIUNy1EDg%253D%253D"</span>,
+                <span class="hljs-attr">"date_created"</span>: <span class="hljs-string">"2017-04-21T06:44:31.125Z"</span>,
+                <span class="hljs-attr">"date_modified"</span>: <span class="hljs-string">"2017-04-21T06:44:31.125Z"</span>,
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">2916566</span>,
+                <span class="hljs-attr">"confidentiality"</span>: <span class="hljs-string">"public"</span>
+              },
+              {
+                <span class="hljs-attr">"mimetype"</span>: <span class="hljs-string">"application/pkcs7-signature"</span>,
+                <span class="hljs-attr">"history"</span>: [
+                ],
+                <span class="hljs-attr">"uid"</span>: <span class="hljs-string">"b5873ac0f780421a9848200474a30bc1"</span>,
+                <span class="hljs-attr">"descr"</span>: <span class="hljs-literal">null</span>,
+                <span class="hljs-attr">"title"</span>: <span class="hljs-string">"sign.p7s"</span>,
+                <span class="hljs-attr">"url"</span>: <span class="hljs-string">"https://public.docs-sandbox.openprocurement.org/get/211a3443a2884bb7b4ef911d1e9fc943?KeyID=1331dc52&amp;Signature=sYwgLBfZzrtc3u9CpPnYBoi7CamM9gGiU0P8f4tCfw2R1jEVfq4Ljwab0gnnA76mdXE0994MAm9yjqbBqtsQCQ%253D%253D"</span>,
+                <span class="hljs-attr">"date_created"</span>: <span class="hljs-string">"2017-04-21T08:29:17.214Z"</span>,
+                <span class="hljs-attr">"date_modified"</span>: <span class="hljs-string">"2017-04-21T08:29:17.214Z"</span>,
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">2916567</span>,
+                <span class="hljs-attr">"confidentiality"</span>: <span class="hljs-string">"public"</span>
+              }
+            ]
+          },
+          <span class="hljs-attr">"date_modified"</span>: <span class="hljs-string">"2017-04-21T08:31:34.127Z"</span>,
+          <span class="hljs-attr">"title"</span>: <span class="hljs-literal">null</span>,
+          <span class="hljs-attr">"contract_period"</span>: {
+            <span class="hljs-attr">"start"</span>: <span class="hljs-string">"2017-04-21T21:00:00Z"</span>,
+            <span class="hljs-attr">"end"</span>: <span class="hljs-string">"2017-04-29T21:00:00Z"</span>
+          },
+          <span class="hljs-attr">"amount"</span>: {
+            <span class="hljs-attr">"amount"</span>: <span class="hljs-number">12312.0</span>,
+            <span class="hljs-attr">"currency_iso_code"</span>: <span class="hljs-string">"UAH"</span>,
+            <span class="hljs-attr">"tax_included"</span>: <span class="hljs-literal">false</span>
+          },
+          <span class="hljs-attr">"date_created"</span>: <span class="hljs-string">"2017-04-21T06:35:16.768Z"</span>,
+          <span class="hljs-attr">"status_text"</span>: <span class="hljs-string">"підписано"</span>,
+          <span class="hljs-attr">"contract_number"</span>: <span class="hljs-string">"134"</span>
+        }
+      },
+      {
+        <span class="hljs-attr">"status"</span>: <span class="hljs-number">1</span>,
+        <span class="hljs-attr">"merchant"</span>: <span class="hljs-string">"sup_one"</span>,
+        <span class="hljs-attr">"amount"</span>: <span class="hljs-number">12332.0</span>,
+        <span class="hljs-attr">"documents"</span>: {
+          <span class="hljs-attr">"offer_lot"</span>: [
+          ],
+          <span class="hljs-attr">"contract"</span>: [
+          ],
+          <span class="hljs-attr">"qualification"</span>: [
+            {
+              <span class="hljs-attr">"mimetype"</span>: <span class="hljs-string">"image/png"</span>,
+              <span class="hljs-attr">"history"</span>: [
+              ],
+              <span class="hljs-attr">"uid"</span>: <span class="hljs-string">"7f697669682941d2b14ce8a3bae35a4b"</span>,
+              <span class="hljs-attr">"descr"</span>: <span class="hljs-literal">null</span>,
+              <span class="hljs-attr">"title"</span>: <span class="hljs-string">"test_img.png"</span>,
+              <span class="hljs-attr">"url"</span>: <span class="hljs-string">"https://public.docs-sandbox.openprocurement.org/get/64972252fa98447691c442da0d92f4a8?KeyID=1331dc52&amp;Signature=OUldwEOqxBsgMVj%252BaZSGVdTfirubg0r6u8%2FomKqT5POg7rlKmQNBOTW9OnCVsr9wH8H%252BZPQ1yuUDjqlTGT5yCA%253D%253D"</span>,
+              <span class="hljs-attr">"date_created"</span>: <span class="hljs-string">"2017-04-20T14:56:44.608Z"</span>,
+              <span class="hljs-attr">"date_modified"</span>: <span class="hljs-string">"2017-04-20T14:56:44.608Z"</span>,
+              <span class="hljs-attr">"id"</span>: <span class="hljs-number">2916562</span>,
+              <span class="hljs-attr">"confidentiality"</span>: <span class="hljs-string">"public"</span>
+            },
+            {
+              <span class="hljs-attr">"mimetype"</span>: <span class="hljs-string">"application/pkcs7-signature"</span>,
+              <span class="hljs-attr">"history"</span>: [
+              ],
+              <span class="hljs-attr">"uid"</span>: <span class="hljs-string">"025c14268d174980918f63563966d5ae"</span>,
+              <span class="hljs-attr">"descr"</span>: <span class="hljs-literal">null</span>,
+              <span class="hljs-attr">"title"</span>: <span class="hljs-string">"sign.p7s"</span>,
+              <span class="hljs-attr">"url"</span>: <span class="hljs-string">"https://public.docs-sandbox.openprocurement.org/get/1b765d3596694856b619d59e46948fe6?KeyID=1331dc52&amp;Signature=2yz5eI20fi259IOrgzWSHeZhFG5mcjWRLfcFl%252BuGYIhsPaWtYMgDa%252BGOq4izCGIPTaVWWSCYjqFZllkKYokBDQ%253D%253D"</span>,
+              <span class="hljs-attr">"date_created"</span>: <span class="hljs-string">"2017-04-21T06:23:29.198Z"</span>,
+              <span class="hljs-attr">"date_modified"</span>: <span class="hljs-string">"2017-04-21T06:23:29.198Z"</span>,
+              <span class="hljs-attr">"id"</span>: <span class="hljs-number">2916563</span>,
+              <span class="hljs-attr">"confidentiality"</span>: <span class="hljs-string">"public"</span>
+            }
+          ],
+          <span class="hljs-attr">"offer"</span>: [
+            {
+              <span class="hljs-attr">"mimetype"</span>: <span class="hljs-string">"image/png"</span>,
+              <span class="hljs-attr">"history"</span>: [
+              ],
+              <span class="hljs-attr">"uid"</span>: <span class="hljs-string">"eb40ab6c34734d8c9d9c3c2edd3e3076"</span>,
+              <span class="hljs-attr">"descr"</span>: <span class="hljs-literal">null</span>,
+              <span class="hljs-attr">"title"</span>: <span class="hljs-string">"test_img.png"</span>,
+              <span class="hljs-attr">"url"</span>: <span class="hljs-string">"https://public.docs-sandbox.openprocurement.org/get/22ea858dd0fb485eba9c1f55ea4d641b?KeyID=1331dc52&amp;Signature=ueByT1shRreVbi4pw9OEFra28s0h7JopPOynVnUvLR%2Fp5f%252Bmkg1DKRz1SsDKRBKCFKffWd3fZHVd2niL2ZtWBA%253D%253D"</span>,
+              <span class="hljs-attr">"date_created"</span>: <span class="hljs-string">"2017-04-07T05:57:57.845Z"</span>,
+              <span class="hljs-attr">"date_modified"</span>: <span class="hljs-string">"2017-04-07T05:57:57.845Z"</span>,
+              <span class="hljs-attr">"id"</span>: <span class="hljs-number">2916559</span>,
+              <span class="hljs-attr">"confidentiality"</span>: <span class="hljs-string">"public"</span>
+            },
+            {
+              <span class="hljs-attr">"mimetype"</span>: <span class="hljs-string">"text/plain"</span>,
+              <span class="hljs-attr">"history"</span>: [
+              ],
+              <span class="hljs-attr">"uid"</span>: <span class="hljs-string">"c75e4eb786914e81bdefbe7323678fcf"</span>,
+              <span class="hljs-attr">"descr"</span>: <span class="hljs-literal">null</span>,
+              <span class="hljs-attr">"title"</span>: <span class="hljs-string">"test.txt"</span>,
+              <span class="hljs-attr">"url"</span>: <span class="hljs-string">"https://public.docs-sandbox.openprocurement.org/get/d140b45d1ea1464d8226121815450013?KeyID=1331dc52&amp;Signature=b14LdwHkkTbWelpfm1rw%252BwSovHdU4kJTtRf2djl3oO0%2FTLK777L%252BxlJxAmwPCdORrWF4O6W9CwE2DPEBvsjmCQ%253D%253D"</span>,
+              <span class="hljs-attr">"date_created"</span>: <span class="hljs-string">"2017-04-07T05:57:59.382Z"</span>,
+              <span class="hljs-attr">"date_modified"</span>: <span class="hljs-string">"2017-04-07T05:57:59.382Z"</span>,
+              <span class="hljs-attr">"id"</span>: <span class="hljs-number">2916560</span>,
+              <span class="hljs-attr">"confidentiality"</span>: <span class="hljs-string">"public"</span>
+            },
+            {
+              <span class="hljs-attr">"mimetype"</span>: <span class="hljs-string">"text/plain"</span>,
+              <span class="hljs-attr">"history"</span>: [
+              ],
+              <span class="hljs-attr">"uid"</span>: <span class="hljs-string">"f5a06995d51342849aeb5512b16cc8fa"</span>,
+              <span class="hljs-attr">"descr"</span>: <span class="hljs-literal">null</span>,
+              <span class="hljs-attr">"title"</span>: <span class="hljs-string">"test1.txt"</span>,
+              <span class="hljs-attr">"url"</span>: <span class="hljs-string">"https://public.docs-sandbox.openprocurement.org/get/16801fdecdec490eba5f22ab483919dc?KeyID=1331dc52&amp;Signature=yzGTP8QTANbpYvieaX49elk2kdTdznPdwdk%2F97QIGDpduCNDJ1sqm66%252B%2FcFH1XVxpldG%252BUrLhNa9UMQQqDUoCg%253D%253D"</span>,
+              <span class="hljs-attr">"date_created"</span>: <span class="hljs-string">"2017-04-07T05:58:00.723Z"</span>,
+              <span class="hljs-attr">"date_modified"</span>: <span class="hljs-string">"2017-04-07T05:58:00.723Z"</span>,
+              <span class="hljs-attr">"id"</span>: <span class="hljs-number">2916561</span>,
+              <span class="hljs-attr">"confidentiality"</span>: <span class="hljs-string">"public"</span>
+            }
+          ]
+        },
+        <span class="hljs-attr">"features"</span>: [
+          {
+            <span class="hljs-attr">"code"</span>: <span class="hljs-string">"zakupki-bb9cf4c8-8808-4e3c-a6e3-f758161d9aff"</span>,
+            <span class="hljs-attr">"descr_en"</span>: <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"descr"</span>: <span class="hljs-string">"o1"</span>,
+            <span class="hljs-attr">"title"</span>: <span class="hljs-string">"o1"</span>,
+            <span class="hljs-attr">"title_en"</span>: <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"options"</span>: [
+              {
+                <span class="hljs-attr">"coefficient"</span>: <span class="hljs-number">0.03</span>,
+                <span class="hljs-attr">"title_en"</span>: <span class="hljs-literal">null</span>,
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">6265</span>,
+                <span class="hljs-attr">"weight"</span>: <span class="hljs-number">3.0</span>,
+                <span class="hljs-attr">"title"</span>: <span class="hljs-string">"o13"</span>
+              }
+            ],
+            <span class="hljs-attr">"id"</span>: <span class="hljs-number">4231</span>
+          },
+          {
+            <span class="hljs-attr">"code"</span>: <span class="hljs-string">"zakupki-9ce340e7-847f-4e62-a699-a231a1530976"</span>,
+            <span class="hljs-attr">"descr_en"</span>: <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"descr"</span>: <span class="hljs-string">"o2"</span>,
+            <span class="hljs-attr">"title"</span>: <span class="hljs-string">"o2"</span>,
+            <span class="hljs-attr">"title_en"</span>: <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"options"</span>: [
+              {
+                <span class="hljs-attr">"coefficient"</span>: <span class="hljs-number">0.03</span>,
+                <span class="hljs-attr">"title_en"</span>: <span class="hljs-literal">null</span>,
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">6268</span>,
+                <span class="hljs-attr">"weight"</span>: <span class="hljs-number">3.0</span>,
+                <span class="hljs-attr">"title"</span>: <span class="hljs-string">"o23"</span>
+              }
+            ],
+            <span class="hljs-attr">"id"</span>: <span class="hljs-number">4232</span>
+          }
+        ],
+        <span class="hljs-attr">"net_present_amount"</span>: <span class="hljs-number">11592.08</span>,
+        <span class="hljs-attr">"status_text"</span>: <span class="hljs-string">"дискваліфіковано"</span>,
+        <span class="hljs-attr">"currency_iso_code"</span>: <span class="hljs-string">"UAH"</span>,
+        <span class="hljs-attr">"id"</span>: <span class="hljs-number">143253</span>,
+        <span class="hljs-attr">"contract"</span>: <span class="hljs-literal">null</span>
+      }
+    ],
+    <span class="hljs-attr">"plan_to_participate"</span>: <span class="hljs-literal">false</span>,
+    <span class="hljs-attr">"procuring_entity"</span>: {
+      <span class="hljs-attr">"name"</span>: <span class="hljs-string">"some1@mailinator.com"</span>,
+      <span class="hljs-attr">"contacts"</span>: {
+        <span class="hljs-attr">"main"</span>: {
+          <span class="hljs-attr">"phones"</span>: <span class="hljs-string">"123123123,+380234234234,+380345345345,+380456456456,+380567567567"</span>,
+          <span class="hljs-attr">"name_en"</span>: <span class="hljs-string">""</span>,
+          <span class="hljs-attr">"name"</span>: <span class="hljs-string">"some some"</span>,
+          <span class="hljs-attr">"email"</span>: <span class="hljs-string">"some1@mailinator.com"</span>
+        },
+        <span class="hljs-attr">"additional"</span>: [
+        ]
+      },
+      <span class="hljs-attr">"url"</span>: <span class="hljs-string">"http://localhost"</span>,
+      <span class="hljs-attr">"srn"</span>: <span class="hljs-string">"123123"</span>,
+      <span class="hljs-attr">"address"</span>: <span class="hljs-string">"hell, mariupol, Донецкая область, Украина, 87553"</span>,
+      <span class="hljs-attr">"id"</span>: <span class="hljs-number">56638</span>
+    },
+    <span class="hljs-attr">"status_text"</span>: <span class="hljs-string">"завершено"</span>,
+    <span class="hljs-attr">"pre_qualification"</span>: [
+    ],
+    <span class="hljs-attr">"stage2_id"</span>: <span class="hljs-literal">null</span>
+  },
+  <span class="hljs-attr">"system"</span>: <span class="hljs-string">""</span>
+}</code></pre><p>success response (with lots):</p>
+<pre class="hljs"><code>{
+  <span class="hljs-attr">"status"</span>: <span class="hljs-string">"ok"</span>,
+  <span class="hljs-attr">"errors"</span>: [
+  ],
+  <span class="hljs-attr">"data"</span>: {
+    <span class="hljs-attr">"status"</span>: <span class="hljs-number">6</span>,
+    <span class="hljs-attr">"stage1_id"</span>: <span class="hljs-literal">null</span>,
+    <span class="hljs-attr">"has_lots"</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">"method_type"</span>: <span class="hljs-number">8</span>,
+    <span class="hljs-attr">"tendering_period"</span>: {
+      <span class="hljs-attr">"start"</span>: <span class="hljs-string">"2017-04-26T12:40:39.316Z"</span>,
+      <span class="hljs-attr">"end"</span>: <span class="hljs-string">"2017-04-26T13:00:00Z"</span>
+    },
+    <span class="hljs-attr">"public_link_tender"</span>: <span class="hljs-string">"http://zakupki.example.com:5001/gov/tenders/UA-2017-04-26-000132-2"</span>,
+    <span class="hljs-attr">"enquiry_period"</span>: {
+      <span class="hljs-attr">"start"</span>: <span class="hljs-string">"2017-04-26T12:40:39.316Z"</span>,
+      <span class="hljs-attr">"end"</span>: <span class="hljs-string">"2017-04-26T12:55:00Z"</span>
+    },
+    <span class="hljs-attr">"step"</span>: <span class="hljs-literal">null</span>,
+    <span class="hljs-attr">"documents"</span>: {
+      <span class="hljs-attr">"tender"</span>: [
+      ]
+    },
+    <span class="hljs-attr">"is_favorite"</span>: <span class="hljs-literal">false</span>,
+    <span class="hljs-attr">"features"</span>: [
+      {
+        <span class="hljs-attr">"code"</span>: <span class="hljs-string">"zakupki-384b05e0-e5f7-4536-8571-d5228963ecc8"</span>,
+        <span class="hljs-attr">"descr"</span>: <span class="hljs-string">"o3"</span>,
+        <span class="hljs-attr">"title"</span>: <span class="hljs-string">"o3"</span>,
+        <span class="hljs-attr">"title_en"</span>: <span class="hljs-literal">null</span>,
+        <span class="hljs-attr">"options"</span>: [
+          {
+            <span class="hljs-attr">"coefficient"</span>: <span class="hljs-number">0.01</span>,
+            <span class="hljs-attr">"title_en"</span>: <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"id"</span>: <span class="hljs-number">6301</span>,
+            <span class="hljs-attr">"weight"</span>: <span class="hljs-number">1.0</span>,
+            <span class="hljs-attr">"title"</span>: <span class="hljs-string">"o31"</span>
+          },
+          {
+            <span class="hljs-attr">"coefficient"</span>: <span class="hljs-number">0.0</span>,
+            <span class="hljs-attr">"title_en"</span>: <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"id"</span>: <span class="hljs-number">6302</span>,
+            <span class="hljs-attr">"weight"</span>: <span class="hljs-number">0.0</span>,
+            <span class="hljs-attr">"title"</span>: <span class="hljs-string">"o32"</span>
+          }
+        ],
+        <span class="hljs-attr">"descr_en"</span>: <span class="hljs-literal">null</span>,
+        <span class="hljs-attr">"id"</span>: <span class="hljs-number">4249</span>
+      },
+      {
+        <span class="hljs-attr">"code"</span>: <span class="hljs-string">"zakupki-b71f92a9-ee34-4ca3-a7ed-dbec985c32d5"</span>,
+        <span class="hljs-attr">"descr"</span>: <span class="hljs-string">"o4"</span>,
+        <span class="hljs-attr">"title"</span>: <span class="hljs-string">"o4"</span>,
+        <span class="hljs-attr">"title_en"</span>: <span class="hljs-literal">null</span>,
+        <span class="hljs-attr">"options"</span>: [
+          {
+            <span class="hljs-attr">"coefficient"</span>: <span class="hljs-number">0.01</span>,
+            <span class="hljs-attr">"title_en"</span>: <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"id"</span>: <span class="hljs-number">6303</span>,
+            <span class="hljs-attr">"weight"</span>: <span class="hljs-number">1.0</span>,
+            <span class="hljs-attr">"title"</span>: <span class="hljs-string">"o41"</span>
+          },
+          {
+            <span class="hljs-attr">"coefficient"</span>: <span class="hljs-number">0.0</span>,
+            <span class="hljs-attr">"title_en"</span>: <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"id"</span>: <span class="hljs-number">6304</span>,
+            <span class="hljs-attr">"weight"</span>: <span class="hljs-number">0.0</span>,
+            <span class="hljs-attr">"title"</span>: <span class="hljs-string">"o42"</span>
+          }
+        ],
+        <span class="hljs-attr">"descr_en"</span>: <span class="hljs-literal">null</span>,
+        <span class="hljs-attr">"id"</span>: <span class="hljs-number">4250</span>
+      }
+    ],
+    <span class="hljs-attr">"tuid"</span>: <span class="hljs-string">"UA-2017-04-26-000132-2"</span>,
+    <span class="hljs-attr">"method_type_text"</span>: <span class="hljs-string">"Конкурентний діалог"</span>,
+    <span class="hljs-attr">"auction_url"</span>: <span class="hljs-literal">null</span>,
+    <span class="hljs-attr">"is_blocked"</span>: <span class="hljs-literal">false</span>,
+    <span class="hljs-attr">"uid"</span>: <span class="hljs-string">"7c26f18ca07149638a7446f64a2c5248"</span>,
+    <span class="hljs-attr">"id"</span>: <span class="hljs-number">262491</span>,
+    <span class="hljs-attr">"desc"</span>: <span class="hljs-string">"asdfasdf"</span>,
+    <span class="hljs-attr">"is_participate"</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">"owner_name"</span>: <span class="hljs-string">"prom.ua"</span>,
+    <span class="hljs-attr">"title"</span>: <span class="hljs-string">"adsfasdf"</span>,
+    <span class="hljs-attr">"lots"</span>: [
+      {
+        <span class="hljs-attr">"uid"</span>: <span class="hljs-string">"eace21efb57647d5a58cd7a4c0cdcc5a"</span>,
+        <span class="hljs-attr">"descr"</span>: <span class="hljs-string">"123123"</span>,
+        <span class="hljs-attr">"title"</span>: <span class="hljs-string">"123123"</span>,
+        <span class="hljs-attr">"currency_iso_code"</span>: <span class="hljs-string">"UAH"</span>,
+        <span class="hljs-attr">"amount"</span>: <span class="hljs-number">123123123.0</span>,
+        <span class="hljs-attr">"id"</span>: <span class="hljs-number">52389</span>,
+        <span class="hljs-attr">"tax_included"</span>: <span class="hljs-literal">false</span>,
+        <span class="hljs-attr">"lot_participate_status"</span>: <span class="hljs-string">"1"</span>,
+      },
+      {
+        <span class="hljs-attr">"uid"</span>: <span class="hljs-string">"ceb07cfe59fc463989a1dac98d069028"</span>,
+        <span class="hljs-attr">"descr"</span>: <span class="hljs-string">"123123"</span>,
+        <span class="hljs-attr">"title"</span>: <span class="hljs-string">"123123"</span>,
+        <span class="hljs-attr">"currency_iso_code"</span>: <span class="hljs-string">"UAH"</span>,
+        <span class="hljs-attr">"amount"</span>: <span class="hljs-number">123123123.0</span>,
+        <span class="hljs-attr">"id"</span>: <span class="hljs-number">52390</span>,
+        <span class="hljs-attr">"tax_included"</span>: <span class="hljs-literal">false</span>,
+        <span class="hljs-attr">"lot_participate_status"</span>: <span class="hljs-string">"0"</span>,
+      }
+    ],
+    <span class="hljs-attr">"items"</span>: [
+    ],
+    <span class="hljs-attr">"auction_period"</span>: {
+      <span class="hljs-attr">"start"</span>: <span class="hljs-literal">null</span>,
+      <span class="hljs-attr">"end"</span>: <span class="hljs-literal">null</span>
+    },
+    <span class="hljs-attr">"user_offer"</span>: {
+    },
+    <span class="hljs-attr">"cancellations"</span>: [
+    ],
+    <span class="hljs-attr">"amount"</span>: {
+      <span class="hljs-attr">"amount"</span>: <span class="hljs-number">246246246.0</span>,
+      <span class="hljs-attr">"currency_iso_code"</span>: <span class="hljs-string">"UAH"</span>,
+      <span class="hljs-attr">"tax_included"</span>: <span class="hljs-literal">false</span>
+    },
+    <span class="hljs-attr">"offers"</span>: [
+    ],
+    <span class="hljs-attr">"guarantee"</span>: {
+      <span class="hljs-attr">"guarantee_amount"</span>: <span class="hljs-number">0.0</span>,
+      <span class="hljs-attr">"currency_iso_code"</span>: <span class="hljs-string">"UAH"</span>
+    },
+    <span class="hljs-attr">"qualification"</span>: [
+    ],
+    <span class="hljs-attr">"plan_to_participate"</span>: <span class="hljs-literal">false</span>,
+    <span class="hljs-attr">"procuring_entity"</span>: {
+      <span class="hljs-attr">"name"</span>: <span class="hljs-string">"some1@mailinator.com"</span>,
+      <span class="hljs-attr">"contacts"</span>: {
+        <span class="hljs-attr">"main"</span>: {
+          <span class="hljs-attr">"phones"</span>: <span class="hljs-string">"123123123,+380234234234,+380345345345,+380456456456,+380567567567"</span>,
+          <span class="hljs-attr">"name_en"</span>: <span class="hljs-string">""</span>,
+          <span class="hljs-attr">"name"</span>: <span class="hljs-string">"some some"</span>,
+          <span class="hljs-attr">"email"</span>: <span class="hljs-string">"some1@mailinator.com"</span>
+        },
+        <span class="hljs-attr">"additional"</span>: [
+        ]
+      },
+      <span class="hljs-attr">"url"</span>: <span class="hljs-string">"http://localhost"</span>,
+      <span class="hljs-attr">"srn"</span>: <span class="hljs-string">"123123"</span>,
+      <span class="hljs-attr">"address"</span>: <span class="hljs-string">"hell, mariupol, Донецкая область, Украина, 87553"</span>,
+      <span class="hljs-attr">"id"</span>: <span class="hljs-number">56638</span>
+    },
+    <span class="hljs-attr">"status_text"</span>: <span class="hljs-string">"завершено"</span>,
+    <span class="hljs-attr">"pre_qualification"</span>: [
+    ],
+    <span class="hljs-attr">"stage2_id"</span>: <span class="hljs-number">262492</span>
+  },
+  <span class="hljs-attr">"system"</span>: <span class="hljs-string">""</span>
+}</code></pre><p>response example with complaints info:</p>
+<pre class="hljs"><code>{
+  <span class="hljs-attr">"status"</span>: <span class="hljs-string">"ok"</span>,
+  <span class="hljs-attr">"errors"</span>: [
+  ],
+  <span class="hljs-attr">"data"</span>: {
+    <span class="hljs-attr">"status"</span>: <span class="hljs-number">7</span>,
+    <span class="hljs-attr">"stage1_id"</span>: <span class="hljs-literal">null</span>,
+    <span class="hljs-attr">"has_lots"</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">"desc_en"</span>: <span class="hljs-literal">null</span>,
+    <span class="hljs-attr">"method_type"</span>: <span class="hljs-number">0</span>,
+    <span class="hljs-attr">"tendering_period"</span>: {
+      <span class="hljs-attr">"start"</span>: <span class="hljs-string">"2016-04-08T11:49:00"</span>,
+      <span class="hljs-attr">"end"</span>: <span class="hljs-string">"2016-04-13T11:49:00"</span>
+    },
+    <span class="hljs-attr">"public_link_tender"</span>: <span class="hljs-string">"http://zakupki.example.com:5001/gov/tenders/UA-2016-04-01-000009-a"</span>,
+    <span class="hljs-attr">"enquiry_period"</span>: {
+      <span class="hljs-attr">"start"</span>: <span class="hljs-string">"2016-04-01T17:55:51"</span>,
+      <span class="hljs-attr">"end"</span>: <span class="hljs-string">"2016-04-08T11:49:00"</span>
+    },
+    <span class="hljs-attr">"questions"</span>: {
+      <span class="hljs-attr">"url"</span>: <span class="hljs-literal">null</span>,
+      <span class="hljs-attr">"count"</span>: <span class="hljs-number">0</span>,
+      <span class="hljs-attr">"lots"</span>: [
+        {
+          <span class="hljs-attr">"url"</span>: <span class="hljs-string">"http://zakupki.example.com:5001/gov/tenders/UA-2016-04-01-000009-a/lot-238701e1e1674abb9e5ba7909a7bd212/questions"</span>,
+          <span class="hljs-attr">"count"</span>: <span class="hljs-number">1</span>,
+          <span class="hljs-attr">"id"</span>: <span class="hljs-number">2</span>
+        }
+      ]
+    },
+    <span class="hljs-attr">"title_en"</span>: <span class="hljs-literal">null</span>,
+    <span class="hljs-attr">"complaints"</span>: {
+      <span class="hljs-attr">"url"</span>: <span class="hljs-literal">null</span>,
+      <span class="hljs-attr">"count"</span>: <span class="hljs-number">0</span>,
+      <span class="hljs-attr">"lots"</span>: [
+        {
+          <span class="hljs-attr">"url"</span>: <span class="hljs-string">"http://zakupki.example.com:5001/gov/tenders/UA-2016-04-01-000009-a/lot-238701e1e1674abb9e5ba7909a7bd212/complaints"</span>,
+          <span class="hljs-attr">"count"</span>: <span class="hljs-number">1</span>,
+          <span class="hljs-attr">"id"</span>: <span class="hljs-number">2</span>,
+          <span class="hljs-attr">"complaints_data"</span>: [
+            {
+              <span class="hljs-attr">"visible_name"</span>: <span class="hljs-string">"Вимога"</span>,
+              <span class="hljs-attr">"status_text"</span>: <span class="hljs-string">"недійсна"</span>,
+              <span class="hljs-attr">"id"</span>: <span class="hljs-number">390</span>,
+              <span class="hljs-attr">"title"</span>: <span class="hljs-string">"fgf  ghh fgh fg"</span>
+            }
+          ]
+        }
+      ],
+      <span class="hljs-attr">"complaints_data"</span>: [
+      ]
+    },
+    <span class="hljs-attr">"step"</span>: <span class="hljs-literal">null</span>,
+    <span class="hljs-attr">"documents"</span>: {
+      <span class="hljs-attr">"tender"</span>: [
+        {
+          <span class="hljs-attr">"mimetype"</span>: <span class="hljs-string">"text/plain"</span>,
+          <span class="hljs-attr">"history"</span>: [
+          ],
+          <span class="hljs-attr">"uid"</span>: <span class="hljs-string">"a4c1adcd12184362bc5d417a4bb3e253"</span>,
+          <span class="hljs-attr">"descr"</span>: <span class="hljs-literal">null</span>,
+          <span class="hljs-attr">"title"</span>: <span class="hljs-string">"2.png"</span>,
+          <span class="hljs-attr">"url"</span>: <span class="hljs-string">"https://lb.api.openprocurement.org/api/2.2/tenders/44fc028524ee4ababfbe327dd35338e2/documents/a4c1adcd12184362bc5d417a4bb3e253?download=65d960d9643a4fe4beda986b632d5bb8"</span>,
+          <span class="hljs-attr">"date_created"</span>: <span class="hljs-string">"2016-04-01T17:55:53"</span>,
+          <span class="hljs-attr">"date_modified"</span>: <span class="hljs-string">"2016-04-01T17:55:53"</span>,
+          <span class="hljs-attr">"id"</span>: <span class="hljs-number">1660018</span>,
+          <span class="hljs-attr">"confidentiality"</span>: <span class="hljs-string">"public"</span>
+        },
+        {
+          <span class="hljs-attr">"mimetype"</span>: <span class="hljs-string">"text/plain"</span>,
+          <span class="hljs-attr">"history"</span>: [
+          ],
+          <span class="hljs-attr">"uid"</span>: <span class="hljs-string">"7a9645b70a064f19a53505dbb0020dd4"</span>,
+          <span class="hljs-attr">"descr"</span>: <span class="hljs-literal">null</span>,
+          <span class="hljs-attr">"title"</span>: <span class="hljs-string">"snimok_ekrana____03_153926.png"</span>,
+          <span class="hljs-attr">"url"</span>: <span class="hljs-string">"https://lb.api.openprocurement.org/api/2.2/tenders/44fc028524ee4ababfbe327dd35338e2/documents/7a9645b70a064f19a53505dbb0020dd4?download=ad8ccda8693d471bb97ecf7fe160bbb3"</span>,
+          <span class="hljs-attr">"date_created"</span>: <span class="hljs-string">"2016-04-01T17:56:24"</span>,
+          <span class="hljs-attr">"date_modified"</span>: <span class="hljs-string">"2016-04-01T17:56:24"</span>,
+          <span class="hljs-attr">"id"</span>: <span class="hljs-number">1660022</span>,
+          <span class="hljs-attr">"confidentiality"</span>: <span class="hljs-string">"public"</span>
+        },
+        {
+          <span class="hljs-attr">"mimetype"</span>: <span class="hljs-string">"text/plain"</span>,
+          <span class="hljs-attr">"history"</span>: [
+            {
+              <span class="hljs-attr">"mimetype"</span>: <span class="hljs-string">"text/plain"</span>,
+              <span class="hljs-attr">"uid"</span>: <span class="hljs-string">"ece6d11a415a4a42bbe1b289928bd7bc"</span>,
+              <span class="hljs-attr">"descr"</span>: <span class="hljs-literal">null</span>,
+              <span class="hljs-attr">"title"</span>: <span class="hljs-string">"1.png"</span>,
+              <span class="hljs-attr">"url"</span>: <span class="hljs-string">"https://lb.api.openprocurement.org/api/2.2/tenders/44fc028524ee4ababfbe327dd35338e2/documents/ece6d11a415a4a42bbe1b289928bd7bc?download=690ceea34c754d56bdf7f5d794102e9d"</span>,
+              <span class="hljs-attr">"date_created"</span>: <span class="hljs-string">"2016-04-01T17:55:52"</span>,
+              <span class="hljs-attr">"date_modified"</span>: <span class="hljs-string">"2016-04-01T17:55:52"</span>,
+              <span class="hljs-attr">"id"</span>: <span class="hljs-number">1660017</span>,
+              <span class="hljs-attr">"confidentiality"</span>: <span class="hljs-string">"public"</span>
+            }
+          ],
+          <span class="hljs-attr">"uid"</span>: <span class="hljs-string">"ece6d11a415a4a42bbe1b289928bd7bc"</span>,
+          <span class="hljs-attr">"descr"</span>: <span class="hljs-literal">null</span>,
+          <span class="hljs-attr">"title"</span>: <span class="hljs-string">"snimok_ekrana____16_131254.png"</span>,
+          <span class="hljs-attr">"url"</span>: <span class="hljs-string">"https://lb.api.openprocurement.org/api/2.2/tenders/44fc028524ee4ababfbe327dd35338e2/documents/ece6d11a415a4a42bbe1b289928bd7bc?download=28a4a7dc03f048b6af8112c6c6377b41"</span>,
+          <span class="hljs-attr">"date_created"</span>: <span class="hljs-string">"2016-04-01T17:55:52"</span>,
+          <span class="hljs-attr">"date_modified"</span>: <span class="hljs-string">"2016-04-01T17:57:01"</span>,
+          <span class="hljs-attr">"id"</span>: <span class="hljs-number">1660023</span>,
+          <span class="hljs-attr">"confidentiality"</span>: <span class="hljs-string">"public"</span>
+        },
+        {
+          <span class="hljs-attr">"mimetype"</span>: <span class="hljs-string">"text/plain"</span>,
+          <span class="hljs-attr">"history"</span>: [
+            {
+              <span class="hljs-attr">"mimetype"</span>: <span class="hljs-string">"text/plain"</span>,
+              <span class="hljs-attr">"uid"</span>: <span class="hljs-string">"7b8d5dd9f0bd476e8db7fc8f57554a42"</span>,
+              <span class="hljs-attr">"descr"</span>: <span class="hljs-literal">null</span>,
+              <span class="hljs-attr">"title"</span>: <span class="hljs-string">"3.png"</span>,
+              <span class="hljs-attr">"url"</span>: <span class="hljs-string">"https://lb.api.openprocurement.org/api/2.2/tenders/44fc028524ee4ababfbe327dd35338e2/documents/7b8d5dd9f0bd476e8db7fc8f57554a42?download=61b8e9a69fdd4af089b7aa900b7f398c"</span>,
+              <span class="hljs-attr">"date_created"</span>: <span class="hljs-string">"2016-04-01T17:55:54"</span>,
+              <span class="hljs-attr">"date_modified"</span>: <span class="hljs-string">"2016-04-01T17:55:54"</span>,
+              <span class="hljs-attr">"id"</span>: <span class="hljs-number">1660019</span>,
+              <span class="hljs-attr">"confidentiality"</span>: <span class="hljs-string">"public"</span>
+            }
+          ],
+          <span class="hljs-attr">"uid"</span>: <span class="hljs-string">"7b8d5dd9f0bd476e8db7fc8f57554a42"</span>,
+          <span class="hljs-attr">"descr"</span>: <span class="hljs-literal">null</span>,
+          <span class="hljs-attr">"title"</span>: <span class="hljs-string">"snimok_ekrana____17_162505.png"</span>,
+          <span class="hljs-attr">"url"</span>: <span class="hljs-string">"https://lb.api.openprocurement.org/api/2.2/tenders/44fc028524ee4ababfbe327dd35338e2/documents/7b8d5dd9f0bd476e8db7fc8f57554a42?download=15f323a8657f40c895d3270ac5326e40"</span>,
+          <span class="hljs-attr">"date_created"</span>: <span class="hljs-string">"2016-04-01T17:55:54"</span>,
+          <span class="hljs-attr">"date_modified"</span>: <span class="hljs-string">"2016-04-01T17:57:03"</span>,
+          <span class="hljs-attr">"id"</span>: <span class="hljs-number">1660024</span>,
+          <span class="hljs-attr">"confidentiality"</span>: <span class="hljs-string">"public"</span>
+        },
+        {
+          <span class="hljs-attr">"mimetype"</span>: <span class="hljs-string">"application/pkcs7-signature"</span>,
+          <span class="hljs-attr">"history"</span>: [
+          ],
+          <span class="hljs-attr">"uid"</span>: <span class="hljs-string">"425c1970da694eaa80a0abde99e3da73"</span>,
+          <span class="hljs-attr">"descr"</span>: <span class="hljs-literal">null</span>,
+          <span class="hljs-attr">"title"</span>: <span class="hljs-string">"sign.p7s"</span>,
+          <span class="hljs-attr">"url"</span>: <span class="hljs-string">"https://lb.api.openprocurement.org/api/2.2/tenders/44fc028524ee4ababfbe327dd35338e2/documents/425c1970da694eaa80a0abde99e3da73?download=45b2c4528a5a4a398e2f0fb645d6010b"</span>,
+          <span class="hljs-attr">"date_created"</span>: <span class="hljs-string">"2016-04-02T12:11:52"</span>,
+          <span class="hljs-attr">"date_modified"</span>: <span class="hljs-string">"2016-04-02T12:11:52"</span>,
+          <span class="hljs-attr">"id"</span>: <span class="hljs-number">1660114</span>,
+          <span class="hljs-attr">"confidentiality"</span>: <span class="hljs-string">"public"</span>
+        }
+      ]
+    },
+    <span class="hljs-attr">"is_favorite"</span>: <span class="hljs-literal">false</span>,
+    <span class="hljs-attr">"features"</span>: [
+    ],
+    <span class="hljs-attr">"tuid"</span>: <span class="hljs-string">"UA-2016-04-01-000009-a"</span>,
+    <span class="hljs-attr">"method_type_text"</span>: <span class="hljs-string">"Допорогова закупівля"</span>,
+    <span class="hljs-attr">"auction_url"</span>: <span class="hljs-literal">null</span>,
+    <span class="hljs-attr">"is_blocked"</span>: <span class="hljs-literal">false</span>,
+    <span class="hljs-attr">"uid"</span>: <span class="hljs-string">"44fc028524ee4ababfbe327dd35338e2"</span>,
+    <span class="hljs-attr">"id"</span>: <span class="hljs-number">86435</span>,
+    <span class="hljs-attr">"desc"</span>: <span class="hljs-string">"это тестовая закупка"</span>,
+    <span class="hljs-attr">"is_participate"</span>: <span class="hljs-literal">false</span>,
+    <span class="hljs-attr">"owner_name"</span>: <span class="hljs-literal">null</span>,
+    <span class="hljs-attr">"title"</span>: <span class="hljs-string">"[ТЕСТУВАННЯ] Допороговая от Иры"</span>,
+    <span class="hljs-attr">"lots"</span>: [
+      {
+        <span class="hljs-attr">"amount"</span>: <span class="hljs-number">100000.0</span>,
+        <span class="hljs-attr">"descr_en"</span>: <span class="hljs-literal">null</span>,
+        <span class="hljs-attr">"uid"</span>: <span class="hljs-string">"238701e1e1674abb9e5ba7909a7bd212"</span>,
+        <span class="hljs-attr">"descr"</span>: <span class="hljs-string">"Описанияе"</span>,
+        <span class="hljs-attr">"title"</span>: <span class="hljs-string">"Лот 1"</span>,
+        <span class="hljs-attr">"currency_iso_code"</span>: <span class="hljs-string">"EUR"</span>,
+        <span class="hljs-attr">"title_en"</span>: <span class="hljs-literal">null</span>,
+        <span class="hljs-attr">"id"</span>: <span class="hljs-number">2</span>,
+        <span class="hljs-attr">"tax_included"</span>: <span class="hljs-literal">false</span>
+      }
+    ],
+    <span class="hljs-attr">"items"</span>: [
+    ],
+    <span class="hljs-attr">"auction_period"</span>: {
+      <span class="hljs-attr">"start"</span>: <span class="hljs-literal">null</span>,
+      <span class="hljs-attr">"end"</span>: <span class="hljs-literal">null</span>
+    },
+    <span class="hljs-attr">"user_offer"</span>: {
+    },
+    <span class="hljs-attr">"cancellations"</span>: [
+    ],
+    <span class="hljs-attr">"amount"</span>: {
+      <span class="hljs-attr">"amount"</span>: <span class="hljs-number">100000.0</span>,
+      <span class="hljs-attr">"currency_iso_code"</span>: <span class="hljs-string">"EUR"</span>,
+      <span class="hljs-attr">"tax_included"</span>: <span class="hljs-literal">false</span>
+    },
+    <span class="hljs-attr">"offers"</span>: [
+    ],
+    <span class="hljs-attr">"guarantee"</span>: {
+      <span class="hljs-attr">"guarantee_amount"</span>: <span class="hljs-literal">null</span>,
+      <span class="hljs-attr">"currency_iso_code"</span>: <span class="hljs-string">"UAH"</span>
+    },
+    <span class="hljs-attr">"qualification"</span>: [
+    ],
+    <span class="hljs-attr">"plan_to_participate"</span>: <span class="hljs-literal">false</span>,
+    <span class="hljs-attr">"procuring_entity"</span>: {
+      <span class="hljs-attr">"name"</span>: <span class="hljs-string">"ПрАТ \"Державна Іра\""</span>,
+      <span class="hljs-attr">"contacts"</span>: {
+        <span class="hljs-attr">"main"</span>: {
+          <span class="hljs-attr">"phones"</span>: [
+            <span class="hljs-string">"+380446541223"</span>
+          ],
+          <span class="hljs-attr">"name_en"</span>: <span class="hljs-literal">null</span>,
+          <span class="hljs-attr">"name"</span>: <span class="hljs-string">"Держ Компанія вап вап ва"</span>,
+          <span class="hljs-attr">"language"</span>: <span class="hljs-string">"українська"</span>,
+          <span class="hljs-attr">"email"</span>: <span class="hljs-string">"i.oleynik+007@smartweb.com.ua.test"</span>
+        },
+        <span class="hljs-attr">"additional"</span>: [
+        ]
+      },
+      <span class="hljs-attr">"url"</span>: <span class="hljs-string">"http://127.0.0.1:8080/"</span>,
+      <span class="hljs-attr">"srn"</span>: <span class="hljs-string">"12345678"</span>,
+      <span class="hljs-attr">"address"</span>: <span class="hljs-string">"Киев, Симферополь, Волынская область, Украина, 01212"</span>,
+      <span class="hljs-attr">"id"</span>: <span class="hljs-number">843</span>
+    },
+    <span class="hljs-attr">"status_text"</span>: <span class="hljs-string">"закупівля не відбулась"</span>,
+    <span class="hljs-attr">"pre_qualification"</span>: [
+    ],
+    <span class="hljs-attr">"stage2_id"</span>: <span class="hljs-literal">null</span>
+  },
+  <span class="hljs-attr">"system"</span>: <span class="hljs-string">""</span>
+}</code></pre><p><strong>V2 response example</strong></p>
+<pre class="hljs"><code>{
+  <span class="hljs-attr">"status"</span>: <span class="hljs-string">"ok"</span>,
+  <span class="hljs-attr">"errors"</span>: [],
+  <span class="hljs-attr">"data"</span>: {
+    <span class="hljs-attr">"stage1_id"</span>: <span class="hljs-literal">null</span>,
+    <span class="hljs-attr">"has_lots"</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">"method_type"</span>: <span class="hljs-number">1</span>,
+    <span class="hljs-attr">"tendering_period"</span>: {
+      <span class="hljs-attr">"start"</span>: <span class="hljs-string">"2018-07-09T10:41:16"</span>,
+      <span class="hljs-attr">"end"</span>: <span class="hljs-string">"2019-07-31T10:40:00"</span>
+    },
+    <span class="hljs-attr">"is_favorite"</span>: <span class="hljs-literal">false</span>,
+    <span class="hljs-attr">"tuid"</span>: <span class="hljs-string">"UA-2018-07-09-000034-a"</span>,
+    <span class="hljs-attr">"method_type_text"</span>: <span class="hljs-string">"\u0412\u0456\u0434\u043a\u0440\u0438\u0442\u0456 \u0442\u043e\u0440\u0433\u0438"</span>,
+    <span class="hljs-attr">"id"</span>: <span class="hljs-number">2697586</span>,
+    <span class="hljs-attr">"features"</span>: [],
+    <span class="hljs-attr">"documents"</span>: {
+      <span class="hljs-attr">"tender"</span>: []
+    },
+    <span class="hljs-attr">"main_procurement_category"</span>: <span class="hljs-literal">null</span>,
+    <span class="hljs-attr">"title"</span>: <span class="hljs-string">"\u0412\u043e\u043f\u0440\u043e\u0441\u044b. \u0422\u0440\u0435\u0431\u043e\u0432\u0430\u043d\u0438\u044f. \u0416\u0430\u043b\u043e\u0431\u044b."</span>,
+    <span class="hljs-attr">"lots"</span>: [
+      {
+        <span class="hljs-attr">"amount"</span>: <span class="hljs-number">50000.0</span>,
+        <span class="hljs-attr">"descr_en"</span>: <span class="hljs-string">""</span>,
+        <span class="hljs-attr">"uid"</span>: <span class="hljs-string">"e581b5d8561e4babbc44d1a1478c83d7"</span>,
+        <span class="hljs-attr">"descr"</span>: <span class="hljs-string">""</span>,
+        <span class="hljs-attr">"title"</span>: <span class="hljs-string">"\u041b\u043e\u0442 1."</span>,
+        <span class="hljs-attr">"currency_iso_code"</span>: <span class="hljs-string">"UAH"</span>,
+        <span class="hljs-attr">"title_en"</span>: <span class="hljs-literal">null</span>,
+        <span class="hljs-attr">"id"</span>: <span class="hljs-number">206409</span>,
+        <span class="hljs-attr">"tax_included"</span>: <span class="hljs-literal">false</span>
+      },
+      {
+        <span class="hljs-attr">"amount"</span>: <span class="hljs-number">50000.0</span>,
+        <span class="hljs-attr">"descr_en"</span>: <span class="hljs-string">""</span>,
+        <span class="hljs-attr">"uid"</span>: <span class="hljs-string">"9276c9501c37488bb4f40f614d178c57"</span>,
+        <span class="hljs-attr">"descr"</span>: <span class="hljs-string">""</span>,
+        <span class="hljs-attr">"title"</span>: <span class="hljs-string">"\u041b\u043e\u0442 2."</span>,
+        <span class="hljs-attr">"currency_iso_code"</span>: <span class="hljs-string">"UAH"</span>,
+        <span class="hljs-attr">"title_en"</span>: <span class="hljs-literal">null</span>,
+        <span class="hljs-attr">"id"</span>: <span class="hljs-number">206410</span>,
+        <span class="hljs-attr">"tax_included"</span>: <span class="hljs-literal">false</span>
+      }
+    ],
+    <span class="hljs-attr">"enquiry_period"</span>: {
+      <span class="hljs-attr">"start"</span>: <span class="hljs-string">"2018-07-09T10:41:16"</span>,
+      <span class="hljs-attr">"end"</span>: <span class="hljs-string">"2019-07-31T10:30:00"</span>
+    },
+    <span class="hljs-attr">"amount"</span>: {
+      <span class="hljs-attr">"amount"</span>: <span class="hljs-number">100000.0</span>,
+      <span class="hljs-attr">"currency_iso_code"</span>: <span class="hljs-string">"UAH"</span>,
+      <span class="hljs-attr">"tax_included"</span>: <span class="hljs-literal">false</span>
+    },
+    <span class="hljs-attr">"complaints_count"</span>: <span class="hljs-number">1</span>,
+    <span class="hljs-attr">"offers"</span>: [],
+    <span class="hljs-attr">"guarantee"</span>: {
+      <span class="hljs-attr">"guarantee_amount"</span>: <span class="hljs-number">0.0</span>,
+      <span class="hljs-attr">"currency_iso_code"</span>: <span class="hljs-string">"UAH"</span>
+    },
+    <span class="hljs-attr">"plan_to_participate"</span>: <span class="hljs-literal">false</span>,
+    <span class="hljs-attr">"procuring_entity"</span>: {
+      <span class="hljs-attr">"name"</span>: <span class="hljs-string">"Aperture Science G"</span>,
+      <span class="hljs-attr">"contacts"</span>: {
+        <span class="hljs-attr">"main"</span>: {
+          <span class="hljs-attr">"phones"</span>: [
+            <span class="hljs-string">"+38000000000"</span>
+          ],
+          <span class="hljs-attr">"name_en"</span>: <span class="hljs-string">""</span>,
+          <span class="hljs-attr">"name"</span>: <span class="hljs-string">"Cave Johnson"</span>,
+          <span class="hljs-attr">"language"</span>: <span class="hljs-string">"\u0443\u043a\u0440\u0430\u0457\u043d\u0441\u044c\u043a\u0430"</span>,
+          <span class="hljs-attr">"email"</span>: <span class="hljs-string">"v.chernyi+ab@smartweb.com.ua"</span>
+        },
+        <span class="hljs-attr">"additional"</span>: []
+      },
+      <span class="hljs-attr">"url"</span>: <span class="hljs-string">"http://inde.bt"</span>,
+      <span class="hljs-attr">"srn"</span>: <span class="hljs-string">"000000000000000000"</span>,
+      <span class="hljs-attr">"address"</span>: <span class="hljs-string">"Necessitatibus dolores, Preston Cline, \u0414\u043d\u0435\u043f\u0440\u043e\u043f\u0435\u0442\u0440\u043e\u0432\u0441\u043a\u0430\u044f \u043e\u0431\u043b\u0430\u0441\u0442\u044c, \u0423\u043a\u0440\u0430\u0438\u043d\u0430, 74351"</span>,
+      <span class="hljs-attr">"id"</span>: <span class="hljs-number">95979</span>
+    },
+    <span class="hljs-attr">"is_participate"</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">"pre_qualification"</span>: [],
+    <span class="hljs-attr">"entity_type"</span>: <span class="hljs-number">0</span>,
+    <span class="hljs-attr">"status"</span>: <span class="hljs-number">2</span>,
+    <span class="hljs-attr">"public_link_tender"</span>: <span class="hljs-string">"http://zakupki.example.com:8000/gov/tenders/UA-2018-07-09-000034-a"</span>,
+    <span class="hljs-attr">"owner_name"</span>: <span class="hljs-string">"prom.ua"</span>,
+    <span class="hljs-attr">"desc_en"</span>: <span class="hljs-literal">null</span>,
+    <span class="hljs-attr">"claims_count"</span>: <span class="hljs-number">1</span>,
+    <span class="hljs-attr">"title_en"</span>: <span class="hljs-literal">null</span>,
+    <span class="hljs-attr">"step"</span>: <span class="hljs-literal">null</span>,
+    <span class="hljs-attr">"stage2_id"</span>: <span class="hljs-literal">null</span>,
+    <span class="hljs-attr">"is_blocked"</span>: <span class="hljs-literal">false</span>,
+    <span class="hljs-attr">"uid"</span>: <span class="hljs-string">"8d5c3ae9e9c8428190a289aa19e2071f"</span>,
+    <span class="hljs-attr">"desc"</span>: <span class="hljs-string">""</span>,
+    <span class="hljs-attr">"items"</span>: [],
+    <span class="hljs-attr">"auction_period"</span>: {
+      <span class="hljs-attr">"start"</span>: <span class="hljs-literal">null</span>,
+      <span class="hljs-attr">"end"</span>: <span class="hljs-literal">null</span>
+    },
+    <span class="hljs-attr">"user_offer"</span>: {},
+    <span class="hljs-attr">"cancellations"</span>: [],
+    <span class="hljs-attr">"questions_count"</span>: <span class="hljs-number">1</span>,
+    <span class="hljs-attr">"auction_url"</span>: <span class="hljs-literal">null</span>,
+    <span class="hljs-attr">"qualification"</span>: [],
+    <span class="hljs-attr">"status_text"</span>: <span class="hljs-string">"\u043f\u0440\u0438\u0439\u043e\u043c \u043f\u0440\u043e\u043f\u043e\u0437\u0438\u0446\u0456\u0439"</span>
+  },
+  <span class="hljs-attr">"system"</span>: <span class="hljs-string">""</span>
+}</code></pre>    </article>
+  </body>
+</html>

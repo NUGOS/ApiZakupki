@@ -1,0 +1,194 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimal-ui">
+    <title>Purchases list and search</title>
+    <link type="text/css" rel="stylesheet" href="../assets/css/github-markdown.css">
+    <link type="text/css" rel="stylesheet" href="../assets/css/pilcrow.css">
+    <link type="text/css" rel="stylesheet" href="../assets/css/hljs-github.min.css"/>
+  </head>
+  <body>
+    <article class="markdown-body"><h1 id="purchases-list-and-search"><a class="header-link" href="#purchases-list-and-search"></a>Purchases list and search</h1>
+<p><strong>GET remote/api/v3/search</strong></p>
+<p>request headers:</p>
+<ul class="list">
+<li><strong>Api-Agent</strong> - type: string, required</li>
+<li><strong>Acc-Token</strong> - type: string, required</li>
+</ul>
+<p>possible <strong>GET</strong> params:</p>
+<ul class="list">
+<li><strong>p</strong> - type: int, page, single</li>
+<li><strong>q</strong> - type: str, search phrase, single</li>
+<li><strong>c</strong> - type: str, cpv classifier code, multiply</li>
+<li><strong>r</strong> - type: str, region code, multiply</li>
+<li><strong>d</strong> - type: str, one of <code>[&#39;&#39;, &#39;true&#39;, &#39;false&#39;]</code>, extend region filter to delivery location, single</li>
+<li><strong>s</strong> - type: int, purchase status, one of <code>[0, 1, 2, 10, 3, 4, 5, 6, 7, 12]</code>, multiply</li>
+<li><strong>t</strong> - type: int, purchase method type, multiply </li>
+<li><strong>m</strong> - type: str, purchase merchant srn, multiply</li>
+<li><strong>b</strong> - type: int, purchase budget amount start value, single</li>
+<li><strong>e</strong> - type: int, purchase budget amount end value, single</li>
+<li><strong>cb</strong> - type: str, purchase date created from, format - <code>YYYY-MM-DD</code>, single</li>
+<li><strong>ce</strong> - type: str, purchase date created to, format - <code>YYYY-MM-DD</code>, single </li>
+<li><strong>sb</strong> - type: str, purchase tendering start from, format - <code>YYYY-MM-DD</code>, single</li>
+<li><strong>se</strong> - type: str, purchase tendering start to, format - <code>YYYY-MM-DD</code>, single</li>
+<li><strong>eb</strong> - type: str, purchase tendering end from, format - <code>YYYY-MM-DD</code>, single</li>
+<li><strong>ee</strong> - type: str, purchase tendering end to, format - <code>YYYY-MM-DD</code>, single</li>
+<li><strong>ab</strong> - type: str, purchase auction start from, format - <code>YYYY-MM-DD</code>, single</li>
+<li><strong>ae</strong> - type: str, purchase auction start to, format - <code>YYYY-MM-DD</code>, single</li>
+<li><strong>no</strong> - type: str, one of <code>[&#39;&#39;, &#39;true&#39;, &#39;false&#39;]</code>, filter purchases with notes, single</li>
+<li><strong>c19</strong> - type: str, one of <code>[&#39;&#39;, &#39;true&#39;, &#39;false&#39;]</code>, filter purchases with covid-19, single</li>
+<li><strong>aep</strong> - type: int, filter purchase by assigned employee, multiply</li>
+<li><strong>mode</strong> - type: str, filter mode, one of <code>[&quot;all&quot;, &quot;starred&quot;, &quot;planned&quot;, &quot;participated&quot;, &quot;won&quot;, &quot;supplier_recommended&quot;, &quot;selected&quot;]</code>, single</li>
+<li><strong>entity_type</strong> - type: str, filter purchase entity type, one of <code>[&#39;general&#39;, &#39;com&#39;]</code>, single</li>
+<li><strong>in</strong> - type: int, single, works only with <code>selected</code> mode, filter tenders with invites</li>
+<li><strong>re</strong> - type: int, single, works only with <code>selected</code> mode, filter recommended tenders</li>
+<li><strong>fp</strong> - type: int, single, one of <code>[0, 1]</code> or empty, filter free tenders</li>
+<li><strong>pp</strong> - type: int string, single, filter post payment delay, ignored if <strong>ad</strong> presents</li>
+<li><strong>ad</strong> - type: bool str, single, allowed values <code>[&#39;true&#39;]</code>, filter for advance payment, ignored if <strong>pp</strong> presents</li>
+<li><strong>bitrix</strong> - type: bool str, single, allowed values <code>[&#39;true&#39;]</code>, filter for add fields in response</li>
+<li><strong>tdm</strong> - type: str, datetime string in iso format <code>YYYY-MM-DDThh:mm:ss.fff+hh:mm</code>, single</li>
+</ul>
+<blockquote>
+<p>IMPORTANT NOTE</p>
+<p>if <strong>tdm</strong> param passed it will change results ordering</p>
+<p>by default result list sorted according to &quot;most interesting&quot; tenders, most interesting meaning that supplier can add offer to tender and tender currently in &quot;offerable&quot; condition</p>
+<p>adding the <strong>tdm</strong> to request params will change that ordering, result list will be ordered by tender modification date in descending order and contain only tenders, where modification date is greather than or equal value in that param</p>
+</blockquote>
+<p>possible response fields:</p>
+<ul class="list">
+<li><strong>status</strong> - type: str, values: ok/error</li>
+<li><strong>errors</strong> - type: array of objects, validation errors</li>
+<li><strong>data</strong> - type: object</li>
+<li><strong>system</strong> - type: str, system error messages</li>
+</ul>
+<p>possible response data fields:</p>
+<ul class="list">
+<li><strong>total_items</strong> - type: int, total found entities</li>
+<li><strong>items</strong> - type: array of item objects</li>
+<li><strong>page</strong> - type: int, current page</li>
+</ul>
+<p>possible items object fields:</p>
+<ul class="list">
+<li><strong>amount</strong> - type: object, <strong>amount object</strong>, described below</li>
+<li><strong>assignee_supplier_employee</strong> - type: <strong>assignee supplier</strong> object or null, described below </li>
+<li><strong>auction_period</strong> - type: object, <strong>state period object</strong>, described below </li>
+<li><strong>date_created</strong> - type: str, format: <strong>yyyy-mm-ddTHH:MM:SS</strong> </li>
+<li><strong>descr</strong> - type: str </li>
+<li><strong>enquiry_period</strong> - type: object, <strong>state period object</strong>, described below</li>
+<li><strong>entity_type</strong> - type: int, values - one of <code>[0, 2]</code>, <a href="./static.html">details</a> </li>
+<li><strong>has_lots</strong> - type: boolean, describes is current item has lots or no</li>
+<li><strong>is_blocked</strong> - type: bool</li>
+<li><strong>is_favorite</strong> - type: bool</li>
+<li><strong>merchant_name</strong> - type: str</li>
+<li><strong>merchant_srn</strong> - type: str</li>
+<li><strong>method_type</strong> - type: int, one of <code>[0, 1, 2, 7, 3, 4, 5, 8, 9, 14, 16]</code>, <a href="./static_data.html">details</a></li>
+<li><strong>participate</strong> - type: bool </li>
+<li><strong>plan_to_participate</strong> - type: bool</li>
+<li><strong>status</strong> - type: int, one of <code>[0, 1, 2, 10, 3, 4, 5, 6, 7, 12]</code>, <a href="./static_data.html">details</a></li>
+<li><strong>status_text</strong> - type: str</li>
+<li><strong>tendering_period</strong> - type: object, <strong>state period object</strong>, described below</li>
+<li><strong>title</strong> - type: str</li>
+<li><strong>uid</strong> - type: str</li>
+<li><strong>is_free</strong> - type: bool</li>
+<li><strong>cabinet_url</strong> - type: str</li>
+<li><strong>portal_url</strong> - type: str</li>
+<li><strong>date_modified</strong> - type: str</li>
+</ul>
+<p>additional possible items object fields if <strong>bitrix</strong> param is passed:</p>
+<ul class="list">
+<li><strong>minimal_step</strong> - type: <strong>minimal_step object</strong> or null, described below</li>
+<li><strong>merchant_contact_name</strong> - type: str or null</li>
+<li><strong>merchant_contact_site</strong> - type: str or null</li>
+<li><strong>merchant_contact_email</strong> - type: str or null</li>
+<li><strong>merchant_contact_telephone</strong> - type: str or null</li>
+<li><strong>merchant_address</strong> - type: str or null</li>
+<li><strong>plan_uid</strong> - type: str or null</li>
+<li><strong>plan_puid</strong> - type: str or null</li>
+<li><strong>plan_cabinet_url</strong> - type: str or null</li>
+<li><strong>plan_portal_url</strong> - type: str or null</li>
+<li><strong>tuid</strong> - type: str or null</li>
+<li><strong>guarantee</strong> - type: <strong>guarantee object</strong> or null, described below</li>
+</ul>
+<p>minimal_step object fields:</p>
+<ul class="list">
+<li><strong>amount</strong> - type: float</li>
+<li><strong>currency</strong> - type: str, one of <code>[&quot;UAH&quot;, &quot;USD&quot;, &quot;EUR&quot;, &quot;RUB&quot;, &quot;GBP&quot;]</code></li>
+<li><strong>value_added_tax_included</strong> - type: bool</li>
+</ul>
+<p>guarantee object fields:</p>
+<ul class="list">
+<li><strong>amount</strong> - type: float</li>
+<li><strong>currency</strong> - type: str, one of <code>[&quot;UAH&quot;, &quot;USD&quot;, &quot;EUR&quot;, &quot;RUB&quot;, &quot;GBP&quot;]</code></li>
+<li><strong>value_added_tax_included</strong> - type: bool</li>
+</ul>
+<p>amount object fields:</p>
+<ul class="list">
+<li><strong>amount</strong> - type: float</li>
+<li><strong>currency</strong> - type: str, one of <code>[&quot;UAH&quot;, &quot;USD&quot;, &quot;EUR&quot;, &quot;RUB&quot;, &quot;GBP&quot;]</code></li>
+<li><strong>value_added_tax_included</strong> - type: bool</li>
+</ul>
+<p>assignee supplier object fields:</p>
+<ul class="list">
+<li><strong>id</strong> - type: int</li>
+<li><strong>name</strong> - type: str</li>
+<li><strong>is_iam</strong> - type: bool</li>
+</ul>
+<p>state period object fields:</p>
+<ul class="list">
+<li><strong>start</strong> - type: str or null, format: <strong>yyyy-mm-ddTHH:MM:SS</strong></li>
+<li><strong>end</strong> - type: str or null, format: <strong>yyyy-mm-ddTHH:MM:SS</strong></li>
+</ul>
+<p>Examples:</p>
+<p>request:</p>
+<pre class="hljs"><code>curl -X GET <span class="hljs-string">"http://my.example.com:5001/remote/api/v3/search?mode=all&amp;c=03000000-1&amp;r=95-98&amp;d=&amp;s=0&amp;m=123123+-+testgov&amp;aep=0&amp;aep=61367&amp;aep=63247&amp;t=0&amp;t=1&amp;t=2&amp;t=3&amp;t=7&amp;b=123&amp;e=123123123&amp;no=true&amp;cb=2019-01-01&amp;ce=2019-12-31&amp;sb=2019-01-01&amp;se=2019-12-31&amp;eb=2019-01-01&amp;ee=2019-12-31&amp;ab=2019-01-01&amp;ae=2019-12-31&amp;entity_type=general&amp;entity_type=com"</span> --header <span class="hljs-string">"Acc-Token: 4debe281d09d463f08e4c7354c9751359ed8fe87"</span> | json_pp</code></pre><p>response:</p>
+<pre class="hljs"><code>{
+   <span class="hljs-attr">"data"</span> : {
+      <span class="hljs-attr">"items"</span> : [
+         {
+            <span class="hljs-attr">"amount"</span> : {
+               <span class="hljs-attr">"amount"</span> : <span class="hljs-number">12312</span>,
+               <span class="hljs-attr">"currency"</span> : <span class="hljs-string">"UAH"</span>,
+               <span class="hljs-attr">"value_added_tax_included"</span> : <span class="hljs-literal">false</span>
+            },
+            <span class="hljs-attr">"assignee_supplier_employee"</span> : <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"auction_period"</span> : {
+               <span class="hljs-attr">"end"</span> : <span class="hljs-literal">null</span>,
+               <span class="hljs-attr">"start"</span> : <span class="hljs-literal">null</span>
+            },
+            <span class="hljs-attr">"date_created"</span> : <span class="hljs-string">"2019-07-03T16:59:59"</span>,
+            <span class="hljs-attr">"descr"</span> : <span class="hljs-string">"asdfasdf"</span>,
+            <span class="hljs-attr">"enquiry_period"</span> : {
+               <span class="hljs-attr">"end"</span> : <span class="hljs-string">"2019-07-05T13:49:00"</span>,
+               <span class="hljs-attr">"start"</span> : <span class="hljs-string">"2019-07-03T13:59:58"</span>
+            },
+            <span class="hljs-attr">"entity_type"</span> : <span class="hljs-number">0</span>,
+            <span class="hljs-attr">"has_lots"</span> : <span class="hljs-literal">false</span>,
+            <span class="hljs-attr">"is_blocked"</span> : <span class="hljs-literal">false</span>,
+            <span class="hljs-attr">"is_favorite"</span> : <span class="hljs-literal">true</span>,
+            <span class="hljs-attr">"merchant_name"</span> : <span class="hljs-string">"some1@mailinator.com"</span>,
+            <span class="hljs-attr">"merchant_srn"</span> : <span class="hljs-string">"123123"</span>,
+            <span class="hljs-attr">"method_type"</span> : <span class="hljs-number">1</span>,
+            <span class="hljs-attr">"participate"</span> : <span class="hljs-literal">false</span>,
+            <span class="hljs-attr">"plan_to_participate"</span> : <span class="hljs-literal">false</span>,
+            <span class="hljs-attr">"status"</span> : <span class="hljs-number">2</span>,
+            <span class="hljs-attr">"status_text"</span> : <span class="hljs-string">"прийом пропозицій"</span>,
+            <span class="hljs-attr">"tendering_period"</span> : {
+               <span class="hljs-attr">"end"</span> : <span class="hljs-string">"2019-07-05T13:59:00"</span>,
+               <span class="hljs-attr">"start"</span> : <span class="hljs-string">"2019-07-03T13:59:58"</span>
+            },
+            <span class="hljs-attr">"title"</span> : <span class="hljs-string">"dasfadsf"</span>,
+            <span class="hljs-attr">"uid"</span> : <span class="hljs-string">"39f607a5b07b441da2003c8de3fdc62a"</span>,
+            <span class="hljs-attr">"cabinet_url"</span>: <span class="hljs-string">"http://my.example.com:8080/cabinet/rialto/bt/5f3a80ef724a26929c6610b2"</span>,
+            <span class="hljs-attr">"portal_url"</span>: <span class="hljs-string">"http://zakupki.example.com:5000/commercial/tenders/R-UA-2020-08-17-1000012-z"</span>
+         }
+      ],
+      <span class="hljs-attr">"page"</span> : <span class="hljs-number">1</span>,
+      <span class="hljs-attr">"total_items"</span> : <span class="hljs-number">1</span>
+   },
+   <span class="hljs-attr">"errors"</span> : [],
+   <span class="hljs-attr">"status"</span> : <span class="hljs-string">"ok"</span>,
+   <span class="hljs-attr">"system"</span> : <span class="hljs-string">""</span>
+}</code></pre>    </article>
+  </body>
+</html>

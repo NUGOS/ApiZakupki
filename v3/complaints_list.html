@@ -1,0 +1,642 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimal-ui">
+    <title>Complaints list for tender</title>
+    <link type="text/css" rel="stylesheet" href="../assets/css/github-markdown.css">
+    <link type="text/css" rel="stylesheet" href="../assets/css/pilcrow.css">
+    <link type="text/css" rel="stylesheet" href="../assets/css/hljs-github.min.css"/>
+  </head>
+  <body>
+    <article class="markdown-body"><h1 id="complaints-list-for-tender"><a class="header-link" href="#complaints-list-for-tender"></a>Complaints list for tender</h1>
+<p><strong>GET /remote/api/v3/complaints/{uid}</strong></p>
+<blockquote>
+<p><strong>uid</strong> - purchase uid from <a href="./view.html">view</a>, <a href="./search.html">search</a></p>
+</blockquote>
+<p>request headers:</p>
+<ul class="list">
+<li><em>Api-Agent</em> - type: string, reuqired</li>
+<li><em>Acc-Token</em> - type: string, required</li>
+</ul>
+<p>possible response fields:</p>
+<ul class="list">
+<li><em>status</em> - type: str, values: ok/error</li>
+<li><em>errors</em> - type: array of objects, validation errors</li>
+<li><em>data</em> - type: object</li>
+<li><em>system</em> - type: str, system error messages</li>
+</ul>
+<p>response data fields</p>
+<ul class="list">
+<li><em>complaints</em> - type: array of <strong>complaints</strong> objects or empty, see <a href="./complaint_view.html">complaint view</a></li>
+<li><em>lots</em> - type: array of <strong>lot complaints</strong> objects or empty, described below</li>
+<li><em>permissions</em>: - type: <strong>complaints permissions</strong> object, described below</li>
+<li><em>uid</em> - type: str</li>
+<li><em>url</em> - type: str</li>
+</ul>
+<p>lot complaints object fields</p>
+<ul class="list">
+<li><em>complaints</em> - type: array of <strong>complaints</strong> objects or empty, see <a href="./complaint_view.html">complaint view</a></li>
+<li><em>uid</em> - type: str</li>
+<li><em>url</em> - type: str</li>
+</ul>
+<p>permission object data fields</p>
+<ul class="list">
+<li><em>award_choices</em> - type: array of <strong>award choice</strong> objects or empty, described below</li>
+<li><em>can_create</em> - type: bool</li>
+<li><em>create_scope</em> - type: int</li>
+<li><em>create_title</em> - type: str</li>
+<li><em>create_until</em> - type: date str or null, format <strong>yyyy-mm-ddTHH:MM:SS.fZ</strong></li>
+<li><em>id</em> - type: str</li>
+<li><em>lots</em> - type: array of <strong>lot permission</strong> objects or empty, described below</li>
+<li><em>qualification_choices</em> - type: array of <strong>qualification choice</strong> objects or empty, described below</li>
+</ul>
+<p>lot permission object data fields</p>
+<ul class="list">
+<li><em>award_choices</em> - type: array of <strong>award choice</strong> objects or empty, described below</li>
+<li><em>can_create</em> - type: bool</li>
+<li><em>create_until</em> - type: date str or null, format <strong>yyyy-mm-ddTHH:MM:SS.fZ</strong></li>
+<li><em>id</em> - type: str</li>
+<li><em>qualification_choices</em> - type: array of <strong>qualification choice</strong> objects or empty, described below</li>
+</ul>
+<p>award choice object fields</p>
+<ul class="list">
+<li><em>id</em> - type: str (award id)</li>
+<li><em>name</em> - type: str (merchant name)</li>
+</ul>
+<p>qualification choice object fields</p>
+<ul class="list">
+<li><em>id</em> - type: str (qualification id)</li>
+<li><em>name</em> - type: str (merchant name)</li>
+</ul>
+<p>award choices and qualification choices are needed to create a claim or complaint on specific supplier during &quot;prequalification_stand_still&quot; and &quot;qualification&quot; tender statuses (see create_claim doc)</p>
+<p>Example:</p>
+<p>request:</p>
+<pre class="hljs"><code>clear &amp;&amp; curl -X GET --header <span class="hljs-string">"Acc-Token: 5a119647c3fa191ab60d41ed9fabf784453999d4"</span> --header <span class="hljs-string">"Api-Agent: zk_ios"</span> <span class="hljs-string">"http://my.example.com:5001/remote/api/v3/complaints/209789bff98041188bc64c9f9eb72e5f"</span> | json_pp</code></pre><p>response:</p>
+<pre class="hljs"><code>{
+   <span class="hljs-attr">"data"</span> : {
+      <span class="hljs-attr">"complaints"</span> : [
+         {
+            <span class="hljs-attr">"author"</span> : {
+               <span class="hljs-attr">"contact_email"</span> : <span class="hljs-string">"267374@example.com"</span>,
+               <span class="hljs-attr">"contact_name"</span> : <span class="hljs-string">"Оксана"</span>,
+               <span class="hljs-attr">"organization_address"</span> : <span class="hljs-string">"вул.Мельникова, буд.12"</span>,
+               <span class="hljs-attr">"organization_name"</span> : <span class="hljs-string">"ТОВ \"Виробничо-комерційна компанія \"ПРОМУКРТАРА\""</span>
+            },
+            <span class="hljs-attr">"cancellation_reason"</span> : <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"date_accepted"</span> : <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"date_answered"</span> : <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"date_decision"</span> : <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"date_escalated"</span> : <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"date_submitted"</span> : <span class="hljs-string">"2016-07-19T15:09:24"</span>,
+            <span class="hljs-attr">"description"</span> : <span class="hljs-string">"Оскільки в аукціоні приймала участь ФОП - платник єдиного податку, то згідно розяснеь Антимонопольного комітету України оцінка результатів аукціону повинна проводитись за заявленими сумами без ПДВ. "</span>,
+            <span class="hljs-attr">"files"</span> : {
+               <span class="hljs-attr">"complaintOwnerFiles"</span> : [],
+               <span class="hljs-attr">"purchaseOwnerFiles"</span> : [],
+               <span class="hljs-attr">"reviewerAboveOwnerFiles"</span> : [],
+               <span class="hljs-attr">"reviewerOwnerFiles"</span> : []
+            },
+            <span class="hljs-attr">"id"</span> : <span class="hljs-string">"31120ba7451942db91fa8ae7a86ea9f4"</span>,
+            <span class="hljs-attr">"resolution"</span> : <span class="hljs-string">"Відповідно до вимог частини 2 статті 22 Закону №922\nЯкщо замовник не є платником ПДВ, очікувана вартість закупівлі має бути взначена з усіма податками, оскільки для замовника немає різниці чи є постачальник платником ПДВ чи ні."</span>,
+            <span class="hljs-attr">"resolution_type"</span> : <span class="hljs-string">"задовільнена"</span>,
+            <span class="hljs-attr">"satisfied"</span> : <span class="hljs-literal">false</span>,
+            <span class="hljs-attr">"status"</span> : <span class="hljs-number">1</span>,
+            <span class="hljs-attr">"status_text"</span> : <span class="hljs-string">"недійсна"</span>,
+            <span class="hljs-attr">"tenderer_action"</span> : <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"title"</span> : <span class="hljs-string">"Кваліфікація результатів аукціону "</span>,
+            <span class="hljs-attr">"tuid"</span> : <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"type_title"</span> : <span class="hljs-string">"Оскарження визначення переможця"</span>,
+            <span class="hljs-attr">"visible_name"</span> : <span class="hljs-string">"Вимога"</span>,
+            <span class="hljs-attr">"winner"</span> : <span class="hljs-string">"Овсянкина Алина Владимировна"</span>
+         },
+         {
+            <span class="hljs-attr">"author"</span> : {
+               <span class="hljs-attr">"contact_email"</span> : <span class="hljs-string">"267374@example.com"</span>,
+               <span class="hljs-attr">"contact_name"</span> : <span class="hljs-string">"Оксана"</span>,
+               <span class="hljs-attr">"organization_address"</span> : <span class="hljs-string">"вул.Мельникова, буд.12"</span>,
+               <span class="hljs-attr">"organization_name"</span> : <span class="hljs-string">"ТОВ \"Виробничо-комерційна компанія \"ПРОМУКРТАРА\""</span>
+            },
+            <span class="hljs-attr">"cancellation_reason"</span> : <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"date_accepted"</span> : <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"date_answered"</span> : <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"date_decision"</span> : <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"date_escalated"</span> : <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"date_submitted"</span> : <span class="hljs-string">"2016-07-19T15:14:05"</span>,
+            <span class="hljs-attr">"description"</span> : <span class="hljs-string">"Для недопущення дискримінації компаній платників ПДВ, результати аукціонів повинні кваліфікуватися за ціною без ПДВ. При заключенні договору з переможцем-платником єдиного податку (неплатником ПДВ) загальна сума реально буде вищою на розмір ПДВ.  Шановні колеги! Нагадуємо, що:\nЗгідно п.139 Податкового Кодексу України видатки, здійсненні у зв’язку з придбанням товарів (робіт, послуг) та інших матеріальних і нематеріальних активів у ФОП, що сплачують єдиний податок, Замовник не зможе включити до складу витрат"</span>,
+            <span class="hljs-attr">"files"</span> : {
+               <span class="hljs-attr">"complaintOwnerFiles"</span> : [],
+               <span class="hljs-attr">"purchaseOwnerFiles"</span> : [],
+               <span class="hljs-attr">"reviewerAboveOwnerFiles"</span> : [],
+               <span class="hljs-attr">"reviewerOwnerFiles"</span> : []
+            },
+            <span class="hljs-attr">"id"</span> : <span class="hljs-string">"b8be24bb0d224ee38be7e5f2d77a928a"</span>,
+            <span class="hljs-attr">"resolution"</span> : <span class="hljs-string">"Відповідно до вимог частини 2 статті 22 Закону №922\nЯкщо замовник не є платником ПДВ, очікувана вартість закупівлі має бути взначена з усіма податками, оскільки для замовника немає різниці чи є постачальник платником ПДВ чи ні."</span>,
+            <span class="hljs-attr">"resolution_type"</span> : <span class="hljs-string">"задовільнена"</span>,
+            <span class="hljs-attr">"satisfied"</span> : <span class="hljs-literal">false</span>,
+            <span class="hljs-attr">"status"</span> : <span class="hljs-number">1</span>,
+            <span class="hljs-attr">"status_text"</span> : <span class="hljs-string">"недійсна"</span>,
+            <span class="hljs-attr">"tenderer_action"</span> : <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"title"</span> : <span class="hljs-string">"Кваліфікація результатів аукціону відносно платників ПДВ і ФОП"</span>,
+            <span class="hljs-attr">"tuid"</span> : <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"type_title"</span> : <span class="hljs-string">"Оскарження визначення переможця"</span>,
+            <span class="hljs-attr">"visible_name"</span> : <span class="hljs-string">"Вимога"</span>,
+            <span class="hljs-attr">"winner"</span> : <span class="hljs-string">"Овсянкина Алина Владимировна"</span>
+         },
+         {
+            <span class="hljs-attr">"author"</span> : {
+               <span class="hljs-attr">"contact_email"</span> : <span class="hljs-string">"267374@example.com"</span>,
+               <span class="hljs-attr">"contact_name"</span> : <span class="hljs-string">"Оксана"</span>,
+               <span class="hljs-attr">"organization_address"</span> : <span class="hljs-string">"вул.Мельникова, буд.12"</span>,
+               <span class="hljs-attr">"organization_name"</span> : <span class="hljs-string">"ТОВ \"Виробничо-комерційна компанія \"ПРОМУКРТАРА\""</span>
+            },
+            <span class="hljs-attr">"cancellation_reason"</span> : <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"date_accepted"</span> : <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"date_answered"</span> : <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"date_decision"</span> : <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"date_escalated"</span> : <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"date_submitted"</span> : <span class="hljs-string">"2016-07-19T15:14:56"</span>,
+            <span class="hljs-attr">"description"</span> : <span class="hljs-string">"Шановні колеги! Нагадуємо, що:\nЗгідно п.139 Податкового Кодексу України видатки, здійсненні у зв’язку з придбанням товарів (робіт, послуг) та інших матеріальних і нематеріальних активів у ФОП, що сплачують єдиний податок, Замовник не зможе включити до складу витрат при визначенні податку на прибуток. Це спричинить збільшення суми нарахованого податку на прибуток."</span>,
+            <span class="hljs-attr">"files"</span> : {
+               <span class="hljs-attr">"complaintOwnerFiles"</span> : [],
+               <span class="hljs-attr">"purchaseOwnerFiles"</span> : [],
+               <span class="hljs-attr">"reviewerAboveOwnerFiles"</span> : [],
+               <span class="hljs-attr">"reviewerOwnerFiles"</span> : []
+            },
+            <span class="hljs-attr">"id"</span> : <span class="hljs-string">"c72d844f8ef545249bf94c2c425197b1"</span>,
+            <span class="hljs-attr">"resolution"</span> : <span class="hljs-string">"Відповідно до вимог частини 2 статті 22 Закону №922\nЯкщо замовник не є платником ПДВ, очікувана вартість закупівлі має бути взначена з усіма податками, оскільки для замовника немає різниці чи є постачальник платником ПДВ чи ні."</span>,
+            <span class="hljs-attr">"resolution_type"</span> : <span class="hljs-string">"задовільнена"</span>,
+            <span class="hljs-attr">"satisfied"</span> : <span class="hljs-literal">false</span>,
+            <span class="hljs-attr">"status"</span> : <span class="hljs-number">1</span>,
+            <span class="hljs-attr">"status_text"</span> : <span class="hljs-string">"недійсна"</span>,
+            <span class="hljs-attr">"tenderer_action"</span> : <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"title"</span> : <span class="hljs-string">"Кваліфікація результатів аукціону "</span>,
+            <span class="hljs-attr">"tuid"</span> : <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"type_title"</span> : <span class="hljs-string">"Оскарження визначення переможця"</span>,
+            <span class="hljs-attr">"visible_name"</span> : <span class="hljs-string">"Вимога"</span>,
+            <span class="hljs-attr">"winner"</span> : <span class="hljs-string">"Овсянкина Алина Владимировна"</span>
+         },
+         {
+            <span class="hljs-attr">"author"</span> : {
+               <span class="hljs-attr">"contact_email"</span> : <span class="hljs-string">"267374@example.com"</span>,
+               <span class="hljs-attr">"contact_name"</span> : <span class="hljs-string">"Оксана"</span>,
+               <span class="hljs-attr">"organization_address"</span> : <span class="hljs-string">"вул.Мельникова, буд.12"</span>,
+               <span class="hljs-attr">"organization_name"</span> : <span class="hljs-string">"ТОВ \"Виробничо-комерційна компанія \"ПРОМУКРТАРА\""</span>
+            },
+            <span class="hljs-attr">"cancellation_reason"</span> : <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"date_accepted"</span> : <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"date_answered"</span> : <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"date_decision"</span> : <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"date_escalated"</span> : <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"date_submitted"</span> : <span class="hljs-string">"2016-07-19T15:15:35"</span>,
+            <span class="hljs-attr">"description"</span> : <span class="hljs-string">"Згідно закону УКРАЇНИ «Про здійснення державних закупівель» основною метою проведення конкурсних торгів є забезпечення раціонального та ефективного використання  коштів підприємства. Таким чином, у разі подання пропозиції Учасника, який не зареєстрований як платник податку на додану вартість, оцінка пропозицій повинна здійснюватися по цінам без урахування ПДВ.\n"</span>,
+            <span class="hljs-attr">"files"</span> : {
+               <span class="hljs-attr">"complaintOwnerFiles"</span> : [],
+               <span class="hljs-attr">"purchaseOwnerFiles"</span> : [],
+               <span class="hljs-attr">"reviewerAboveOwnerFiles"</span> : [],
+               <span class="hljs-attr">"reviewerOwnerFiles"</span> : []
+            },
+            <span class="hljs-attr">"id"</span> : <span class="hljs-string">"5c75635f159d47ffb21982dbaaf48314"</span>,
+            <span class="hljs-attr">"resolution"</span> : <span class="hljs-string">"Відповідно до вимог частини 2 статті 22 Закону №922 Якщо замовник не є платником ПДВ, очікувана вартість закупівлі має бути взначена з усіма податками, оскільки для замовника немає різниці чи є постачальник платником ПДВ чи ні.\n"</span>,
+            <span class="hljs-attr">"resolution_type"</span> : <span class="hljs-string">"задовільнена"</span>,
+            <span class="hljs-attr">"satisfied"</span> : <span class="hljs-literal">false</span>,
+            <span class="hljs-attr">"status"</span> : <span class="hljs-number">1</span>,
+            <span class="hljs-attr">"status_text"</span> : <span class="hljs-string">"недійсна"</span>,
+            <span class="hljs-attr">"tenderer_action"</span> : <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"title"</span> : <span class="hljs-string">"Кваліфікація результатів аукціону "</span>,
+            <span class="hljs-attr">"tuid"</span> : <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"type_title"</span> : <span class="hljs-string">"Оскарження визначення переможця"</span>,
+            <span class="hljs-attr">"visible_name"</span> : <span class="hljs-string">"Вимога"</span>,
+            <span class="hljs-attr">"winner"</span> : <span class="hljs-string">"Овсянкина Алина Владимировна"</span>
+         },
+         {
+            <span class="hljs-attr">"author"</span> : {
+               <span class="hljs-attr">"contact_email"</span> : <span class="hljs-string">"267374@example.com"</span>,
+               <span class="hljs-attr">"contact_name"</span> : <span class="hljs-string">"Оксана"</span>,
+               <span class="hljs-attr">"organization_address"</span> : <span class="hljs-string">"вул.Мельникова, буд.12"</span>,
+               <span class="hljs-attr">"organization_name"</span> : <span class="hljs-string">"ТОВ \"Виробничо-комерційна компанія \"ПРОМУКРТАРА\""</span>
+            },
+            <span class="hljs-attr">"cancellation_reason"</span> : <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"date_accepted"</span> : <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"date_answered"</span> : <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"date_decision"</span> : <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"date_escalated"</span> : <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"date_submitted"</span> : <span class="hljs-string">"2016-07-19T15:26:28"</span>,
+            <span class="hljs-attr">"description"</span> : <span class="hljs-string">"Замовником було заявлено \"Очікувана вартість:120 000 грн. з ПДВ !!\" тому за результатами аукціону очікується сума також з ПДВ, проте ФОП, який приймав участь в аукціоні не є платником ПДВ , і його пропозиція не містить ПДВ,  що не відповідає вимогам Закупівлі!!"</span>,
+            <span class="hljs-attr">"files"</span> : {
+               <span class="hljs-attr">"complaintOwnerFiles"</span> : [],
+               <span class="hljs-attr">"purchaseOwnerFiles"</span> : [],
+               <span class="hljs-attr">"reviewerAboveOwnerFiles"</span> : [],
+               <span class="hljs-attr">"reviewerOwnerFiles"</span> : []
+            },
+            <span class="hljs-attr">"id"</span> : <span class="hljs-string">"799f8dd996004f5aa47dca99113a2548"</span>,
+            <span class="hljs-attr">"resolution"</span> : <span class="hljs-string">"Відповідно до вимог частини 2 статті 22 Закону №922\nЯкщо замовник не є платником ПДВ, очікувана вартість закупівлі має бути взначена з усіма податками, оскільки для замовника немає різниці чи є постачальник платником ПДВ чи ні."</span>,
+            <span class="hljs-attr">"resolution_type"</span> : <span class="hljs-string">"задовільнена"</span>,
+            <span class="hljs-attr">"satisfied"</span> : <span class="hljs-literal">false</span>,
+            <span class="hljs-attr">"status"</span> : <span class="hljs-number">1</span>,
+            <span class="hljs-attr">"status_text"</span> : <span class="hljs-string">"недійсна"</span>,
+            <span class="hljs-attr">"tenderer_action"</span> : <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"title"</span> : <span class="hljs-string">"Кваліфікація результатів аукціону "</span>,
+            <span class="hljs-attr">"tuid"</span> : <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"type_title"</span> : <span class="hljs-string">"Оскарження визначення переможця"</span>,
+            <span class="hljs-attr">"visible_name"</span> : <span class="hljs-string">"Вимога"</span>,
+            <span class="hljs-attr">"winner"</span> : <span class="hljs-string">"Овсянкина Алина Владимировна"</span>
+         },
+         {
+            <span class="hljs-attr">"author"</span> : {
+               <span class="hljs-attr">"contact_email"</span> : <span class="hljs-string">"267374@example.com"</span>,
+               <span class="hljs-attr">"contact_name"</span> : <span class="hljs-string">"Оксана"</span>,
+               <span class="hljs-attr">"organization_address"</span> : <span class="hljs-string">"вул.Мельникова, буд.12"</span>,
+               <span class="hljs-attr">"organization_name"</span> : <span class="hljs-string">"ТОВ \"Виробничо-комерційна компанія \"ПРОМУКРТАРА\""</span>
+            },
+            <span class="hljs-attr">"cancellation_reason"</span> : <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"date_accepted"</span> : <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"date_answered"</span> : <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"date_decision"</span> : <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"date_escalated"</span> : <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"date_submitted"</span> : <span class="hljs-string">"2016-07-20T14:47:05"</span>,
+            <span class="hljs-attr">"description"</span> : <span class="hljs-string">"Замовником було заявлено \"Очікувана вартість:120 000 грн. з ПДВ !!\" тому за результатами аукціону очікується сума також з ПДВ, проте ФОП, який приймав участь в аукціоні не є платником ПДВ , і його пропозиція не містить ПДВ, що не відповідає вимогам Закупівлі.  Замовник  свідомо ввів нас в оману   щодо правил подання пропозицій. Якщо Замовник не звертає увагу з ПДВ чи без ПДВ, то це є дискримінацією платників ПДВ. "</span>,
+            <span class="hljs-attr">"files"</span> : {
+               <span class="hljs-attr">"complaintOwnerFiles"</span> : [],
+               <span class="hljs-attr">"purchaseOwnerFiles"</span> : [],
+               <span class="hljs-attr">"reviewerAboveOwnerFiles"</span> : [],
+               <span class="hljs-attr">"reviewerOwnerFiles"</span> : []
+            },
+            <span class="hljs-attr">"id"</span> : <span class="hljs-string">"54f1112255e345cda356f04c1a86e856"</span>,
+            <span class="hljs-attr">"resolution"</span> : <span class="hljs-string">"Відповідно до вимог частини 2 статті 22 Закону №922 Якщо замовник не є платником ПДВ, очікувана вартість закупівлі має бути взначена з усіма податками, оскільки для замовника немає різниці чи є постачальник платником ПДВ чи ні.\n"</span>,
+            <span class="hljs-attr">"resolution_type"</span> : <span class="hljs-string">"задовільнена"</span>,
+            <span class="hljs-attr">"satisfied"</span> : <span class="hljs-literal">false</span>,
+            <span class="hljs-attr">"status"</span> : <span class="hljs-number">1</span>,
+            <span class="hljs-attr">"status_text"</span> : <span class="hljs-string">"недійсна"</span>,
+            <span class="hljs-attr">"tenderer_action"</span> : <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"title"</span> : <span class="hljs-string">"Оскарження результатів закупівлі"</span>,
+            <span class="hljs-attr">"tuid"</span> : <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"type_title"</span> : <span class="hljs-string">"Оскарження визначення переможця"</span>,
+            <span class="hljs-attr">"visible_name"</span> : <span class="hljs-string">"Вимога"</span>,
+            <span class="hljs-attr">"winner"</span> : <span class="hljs-string">"Овсянкина Алина Владимировна"</span>
+         },
+         {
+            <span class="hljs-attr">"author"</span> : {
+               <span class="hljs-attr">"contact_email"</span> : <span class="hljs-string">"267374@example.com"</span>,
+               <span class="hljs-attr">"contact_name"</span> : <span class="hljs-string">"Оксана"</span>,
+               <span class="hljs-attr">"organization_address"</span> : <span class="hljs-string">"вул.Мельникова, буд.12"</span>,
+               <span class="hljs-attr">"organization_name"</span> : <span class="hljs-string">"ТОВ \"Виробничо-комерційна компанія \"ПРОМУКРТАРА\""</span>
+            },
+            <span class="hljs-attr">"cancellation_reason"</span> : <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"date_accepted"</span> : <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"date_answered"</span> : <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"date_decision"</span> : <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"date_escalated"</span> : <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"date_submitted"</span> : <span class="hljs-string">"2016-07-20T14:53:01"</span>,
+            <span class="hljs-attr">"description"</span> : <span class="hljs-string">"У звя зку із постійними скаргами щодо порушень Замовниками законодавства закупівель в кваліфікації платників ПДВ пропонуємо передбачити на торгових площадках при поданні пропозицій поле для вводу номера платника ПДВ - Учасника або номера його свідоцтва. Без введення такого номера повинна бути відсутня можливість участі в закупівлі."</span>,
+            <span class="hljs-attr">"files"</span> : {
+               <span class="hljs-attr">"complaintOwnerFiles"</span> : [],
+               <span class="hljs-attr">"purchaseOwnerFiles"</span> : [],
+               <span class="hljs-attr">"reviewerAboveOwnerFiles"</span> : [],
+               <span class="hljs-attr">"reviewerOwnerFiles"</span> : []
+            },
+            <span class="hljs-attr">"id"</span> : <span class="hljs-string">"33c30113eb9d45e7b8c91d32d9087b22"</span>,
+            <span class="hljs-attr">"resolution"</span> : <span class="hljs-string">"Законом не передбачено розділяти на торгових площадках ФОП і платників ПДВ. Відповідно до вимог частини 2 статті 22 Закону №922 Якщо замовник не є платником ПДВ, очікувана вартість закупівлі має бути взначена з усіма податками, оскільки для замовника немає різниці чи є постачальник платником ПДВ чи ні.\n"</span>,
+            <span class="hljs-attr">"resolution_type"</span> : <span class="hljs-string">"задовільнена"</span>,
+            <span class="hljs-attr">"satisfied"</span> : <span class="hljs-literal">false</span>,
+            <span class="hljs-attr">"status"</span> : <span class="hljs-number">1</span>,
+            <span class="hljs-attr">"status_text"</span> : <span class="hljs-string">"недійсна"</span>,
+            <span class="hljs-attr">"tenderer_action"</span> : <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"title"</span> : <span class="hljs-string">"Дискваліфікація Замовників за введення в оману щодо закупівельних цін"</span>,
+            <span class="hljs-attr">"tuid"</span> : <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"type_title"</span> : <span class="hljs-string">"Оскарження визначення переможця"</span>,
+            <span class="hljs-attr">"visible_name"</span> : <span class="hljs-string">"Вимога"</span>,
+            <span class="hljs-attr">"winner"</span> : <span class="hljs-string">"Овсянкина Алина Владимировна"</span>
+         },
+         {
+            <span class="hljs-attr">"author"</span> : {
+               <span class="hljs-attr">"contact_email"</span> : <span class="hljs-string">"267374@example.com"</span>,
+               <span class="hljs-attr">"contact_name"</span> : <span class="hljs-string">"Оксана"</span>,
+               <span class="hljs-attr">"organization_address"</span> : <span class="hljs-string">"вул.Мельникова, буд.12"</span>,
+               <span class="hljs-attr">"organization_name"</span> : <span class="hljs-string">"ТОВ \"Виробничо-комерційна компанія \"ПРОМУКРТАРА\""</span>
+            },
+            <span class="hljs-attr">"cancellation_reason"</span> : <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"date_accepted"</span> : <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"date_answered"</span> : <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"date_decision"</span> : <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"date_escalated"</span> : <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"date_submitted"</span> : <span class="hljs-string">"2016-07-21T11:04:28"</span>,
+            <span class="hljs-attr">"description"</span> : <span class="hljs-string">"Із сторони Замовника закупівлі присутні корупційні ознаки надання переваги оголошеному переможцю: в пропозиції переможця відсутні будь-які  документи щодо якості  продукції, що пропонується. Фото продукції взяті з оголошень в мережі."</span>,
+            <span class="hljs-attr">"files"</span> : {
+               <span class="hljs-attr">"complaintOwnerFiles"</span> : [],
+               <span class="hljs-attr">"purchaseOwnerFiles"</span> : [],
+               <span class="hljs-attr">"reviewerAboveOwnerFiles"</span> : [],
+               <span class="hljs-attr">"reviewerOwnerFiles"</span> : []
+            },
+            <span class="hljs-attr">"id"</span> : <span class="hljs-string">"3015e4621f404740aaeaa1ae81fbbfa6"</span>,
+            <span class="hljs-attr">"resolution"</span> : <span class="hljs-string">"Доброго дня, учасником надані зразки (кроваті металевої фото) і сертифікати якості №993, №1526, №3355, №003, №004 та висновок державної експертизи №05.03.02-03/20216 на матеріали, які відповідають вимогам замовника."</span>,
+            <span class="hljs-attr">"resolution_type"</span> : <span class="hljs-string">"задовільнена"</span>,
+            <span class="hljs-attr">"satisfied"</span> : <span class="hljs-literal">false</span>,
+            <span class="hljs-attr">"status"</span> : <span class="hljs-number">1</span>,
+            <span class="hljs-attr">"status_text"</span> : <span class="hljs-string">"недійсна"</span>,
+            <span class="hljs-attr">"tenderer_action"</span> : <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"title"</span> : <span class="hljs-string">"Кваліфікація переможця"</span>,
+            <span class="hljs-attr">"tuid"</span> : <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"type_title"</span> : <span class="hljs-string">"Оскарження визначення переможця"</span>,
+            <span class="hljs-attr">"visible_name"</span> : <span class="hljs-string">"Вимога"</span>,
+            <span class="hljs-attr">"winner"</span> : <span class="hljs-string">"Овсянкина Алина Владимировна"</span>
+         }
+      ],
+      <span class="hljs-attr">"lots"</span> : [
+         {
+            <span class="hljs-attr">"complaints"</span> : [
+               {
+                  <span class="hljs-attr">"author"</span> : {
+                     <span class="hljs-attr">"contact_email"</span> : <span class="hljs-string">"267374@example.com"</span>,
+                     <span class="hljs-attr">"contact_name"</span> : <span class="hljs-string">"Оксана"</span>,
+                     <span class="hljs-attr">"organization_address"</span> : <span class="hljs-string">"вул.Мельникова, буд.12"</span>,
+                     <span class="hljs-attr">"organization_name"</span> : <span class="hljs-string">"ТОВ \"Виробничо-комерційна компанія \"ПРОМУКРТАРА\""</span>
+                  },
+                  <span class="hljs-attr">"cancellation_reason"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"date_accepted"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"date_answered"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"date_decision"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"date_escalated"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"date_submitted"</span> : <span class="hljs-string">"2016-07-19T15:09:24"</span>,
+                  <span class="hljs-attr">"description"</span> : <span class="hljs-string">"Оскільки в аукціоні приймала участь ФОП - платник єдиного податку, то згідно розяснеь Антимонопольного комітету України оцінка результатів аукціону повинна проводитись за заявленими сумами без ПДВ. "</span>,
+                  <span class="hljs-attr">"files"</span> : {
+                     <span class="hljs-attr">"complaintOwnerFiles"</span> : [],
+                     <span class="hljs-attr">"purchaseOwnerFiles"</span> : [],
+                     <span class="hljs-attr">"reviewerAboveOwnerFiles"</span> : [],
+                     <span class="hljs-attr">"reviewerOwnerFiles"</span> : []
+                  },
+                  <span class="hljs-attr">"id"</span> : <span class="hljs-string">"31120ba7451942db91fa8ae7a86ea9f4"</span>,
+                  <span class="hljs-attr">"resolution"</span> : <span class="hljs-string">"Відповідно до вимог частини 2 статті 22 Закону №922\nЯкщо замовник не є платником ПДВ, очікувана вартість закупівлі має бути взначена з усіма податками, оскільки для замовника немає різниці чи є постачальник платником ПДВ чи ні."</span>,
+                  <span class="hljs-attr">"resolution_type"</span> : <span class="hljs-string">"задовільнена"</span>,
+                  <span class="hljs-attr">"satisfied"</span> : <span class="hljs-literal">false</span>,
+                  <span class="hljs-attr">"status"</span> : <span class="hljs-number">1</span>,
+                  <span class="hljs-attr">"status_text"</span> : <span class="hljs-string">"недійсна"</span>,
+                  <span class="hljs-attr">"tenderer_action"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"title"</span> : <span class="hljs-string">"Кваліфікація результатів аукціону "</span>,
+                  <span class="hljs-attr">"tuid"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"type_title"</span> : <span class="hljs-string">"Оскарження визначення переможця"</span>,
+                  <span class="hljs-attr">"visible_name"</span> : <span class="hljs-string">"Вимога"</span>,
+                  <span class="hljs-attr">"winner"</span> : <span class="hljs-string">"Овсянкина Алина Владимировна"</span>
+               },
+               {
+                  <span class="hljs-attr">"author"</span> : {
+                     <span class="hljs-attr">"contact_email"</span> : <span class="hljs-string">"267374@example.com"</span>,
+                     <span class="hljs-attr">"contact_name"</span> : <span class="hljs-string">"Оксана"</span>,
+                     <span class="hljs-attr">"organization_address"</span> : <span class="hljs-string">"вул.Мельникова, буд.12"</span>,
+                     <span class="hljs-attr">"organization_name"</span> : <span class="hljs-string">"ТОВ \"Виробничо-комерційна компанія \"ПРОМУКРТАРА\""</span>
+                  },
+                  <span class="hljs-attr">"cancellation_reason"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"date_accepted"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"date_answered"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"date_decision"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"date_escalated"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"date_submitted"</span> : <span class="hljs-string">"2016-07-19T15:14:05"</span>,
+                  <span class="hljs-attr">"description"</span> : <span class="hljs-string">"Для недопущення дискримінації компаній платників ПДВ, результати аукціонів повинні кваліфікуватися за ціною без ПДВ. При заключенні договору з переможцем-платником єдиного податку (неплатником ПДВ) загальна сума реально буде вищою на розмір ПДВ.  Шановні колеги! Нагадуємо, що:\nЗгідно п.139 Податкового Кодексу України видатки, здійсненні у зв’язку з придбанням товарів (робіт, послуг) та інших матеріальних і нематеріальних активів у ФОП, що сплачують єдиний податок, Замовник не зможе включити до складу витрат"</span>,
+                  <span class="hljs-attr">"files"</span> : {
+                     <span class="hljs-attr">"complaintOwnerFiles"</span> : [],
+                     <span class="hljs-attr">"purchaseOwnerFiles"</span> : [],
+                     <span class="hljs-attr">"reviewerAboveOwnerFiles"</span> : [],
+                     <span class="hljs-attr">"reviewerOwnerFiles"</span> : []
+                  },
+                  <span class="hljs-attr">"id"</span> : <span class="hljs-string">"b8be24bb0d224ee38be7e5f2d77a928a"</span>,
+                  <span class="hljs-attr">"resolution"</span> : <span class="hljs-string">"Відповідно до вимог частини 2 статті 22 Закону №922\nЯкщо замовник не є платником ПДВ, очікувана вартість закупівлі має бути взначена з усіма податками, оскільки для замовника немає різниці чи є постачальник платником ПДВ чи ні."</span>,
+                  <span class="hljs-attr">"resolution_type"</span> : <span class="hljs-string">"задовільнена"</span>,
+                  <span class="hljs-attr">"satisfied"</span> : <span class="hljs-literal">false</span>,
+                  <span class="hljs-attr">"status"</span> : <span class="hljs-number">1</span>,
+                  <span class="hljs-attr">"status_text"</span> : <span class="hljs-string">"недійсна"</span>,
+                  <span class="hljs-attr">"tenderer_action"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"title"</span> : <span class="hljs-string">"Кваліфікація результатів аукціону відносно платників ПДВ і ФОП"</span>,
+                  <span class="hljs-attr">"tuid"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"type_title"</span> : <span class="hljs-string">"Оскарження визначення переможця"</span>,
+                  <span class="hljs-attr">"visible_name"</span> : <span class="hljs-string">"Вимога"</span>,
+                  <span class="hljs-attr">"winner"</span> : <span class="hljs-string">"Овсянкина Алина Владимировна"</span>
+               },
+               {
+                  <span class="hljs-attr">"author"</span> : {
+                     <span class="hljs-attr">"contact_email"</span> : <span class="hljs-string">"267374@example.com"</span>,
+                     <span class="hljs-attr">"contact_name"</span> : <span class="hljs-string">"Оксана"</span>,
+                     <span class="hljs-attr">"organization_address"</span> : <span class="hljs-string">"вул.Мельникова, буд.12"</span>,
+                     <span class="hljs-attr">"organization_name"</span> : <span class="hljs-string">"ТОВ \"Виробничо-комерційна компанія \"ПРОМУКРТАРА\""</span>
+                  },
+                  <span class="hljs-attr">"cancellation_reason"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"date_accepted"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"date_answered"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"date_decision"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"date_escalated"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"date_submitted"</span> : <span class="hljs-string">"2016-07-19T15:14:56"</span>,
+                  <span class="hljs-attr">"description"</span> : <span class="hljs-string">"Шановні колеги! Нагадуємо, що:\nЗгідно п.139 Податкового Кодексу України видатки, здійсненні у зв’язку з придбанням товарів (робіт, послуг) та інших матеріальних і нематеріальних активів у ФОП, що сплачують єдиний податок, Замовник не зможе включити до складу витрат при визначенні податку на прибуток. Це спричинить збільшення суми нарахованого податку на прибуток."</span>,
+                  <span class="hljs-attr">"files"</span> : {
+                     <span class="hljs-attr">"complaintOwnerFiles"</span> : [],
+                     <span class="hljs-attr">"purchaseOwnerFiles"</span> : [],
+                     <span class="hljs-attr">"reviewerAboveOwnerFiles"</span> : [],
+                     <span class="hljs-attr">"reviewerOwnerFiles"</span> : []
+                  },
+                  <span class="hljs-attr">"id"</span> : <span class="hljs-string">"c72d844f8ef545249bf94c2c425197b1"</span>,
+                  <span class="hljs-attr">"resolution"</span> : <span class="hljs-string">"Відповідно до вимог частини 2 статті 22 Закону №922\nЯкщо замовник не є платником ПДВ, очікувана вартість закупівлі має бути взначена з усіма податками, оскільки для замовника немає різниці чи є постачальник платником ПДВ чи ні."</span>,
+                  <span class="hljs-attr">"resolution_type"</span> : <span class="hljs-string">"задовільнена"</span>,
+                  <span class="hljs-attr">"satisfied"</span> : <span class="hljs-literal">false</span>,
+                  <span class="hljs-attr">"status"</span> : <span class="hljs-number">1</span>,
+                  <span class="hljs-attr">"status_text"</span> : <span class="hljs-string">"недійсна"</span>,
+                  <span class="hljs-attr">"tenderer_action"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"title"</span> : <span class="hljs-string">"Кваліфікація результатів аукціону "</span>,
+                  <span class="hljs-attr">"tuid"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"type_title"</span> : <span class="hljs-string">"Оскарження визначення переможця"</span>,
+                  <span class="hljs-attr">"visible_name"</span> : <span class="hljs-string">"Вимога"</span>,
+                  <span class="hljs-attr">"winner"</span> : <span class="hljs-string">"Овсянкина Алина Владимировна"</span>
+               },
+               {
+                  <span class="hljs-attr">"author"</span> : {
+                     <span class="hljs-attr">"contact_email"</span> : <span class="hljs-string">"267374@example.com"</span>,
+                     <span class="hljs-attr">"contact_name"</span> : <span class="hljs-string">"Оксана"</span>,
+                     <span class="hljs-attr">"organization_address"</span> : <span class="hljs-string">"вул.Мельникова, буд.12"</span>,
+                     <span class="hljs-attr">"organization_name"</span> : <span class="hljs-string">"ТОВ \"Виробничо-комерційна компанія \"ПРОМУКРТАРА\""</span>
+                  },
+                  <span class="hljs-attr">"cancellation_reason"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"date_accepted"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"date_answered"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"date_decision"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"date_escalated"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"date_submitted"</span> : <span class="hljs-string">"2016-07-19T15:15:35"</span>,
+                  <span class="hljs-attr">"description"</span> : <span class="hljs-string">"Згідно закону УКРАЇНИ «Про здійснення державних закупівель» основною метою проведення конкурсних торгів є забезпечення раціонального та ефективного використання  коштів підприємства. Таким чином, у разі подання пропозиції Учасника, який не зареєстрований як платник податку на додану вартість, оцінка пропозицій повинна здійснюватися по цінам без урахування ПДВ.\n"</span>,
+                  <span class="hljs-attr">"files"</span> : {
+                     <span class="hljs-attr">"complaintOwnerFiles"</span> : [],
+                     <span class="hljs-attr">"purchaseOwnerFiles"</span> : [],
+                     <span class="hljs-attr">"reviewerAboveOwnerFiles"</span> : [],
+                     <span class="hljs-attr">"reviewerOwnerFiles"</span> : []
+                  },
+                  <span class="hljs-attr">"id"</span> : <span class="hljs-string">"5c75635f159d47ffb21982dbaaf48314"</span>,
+                  <span class="hljs-attr">"resolution"</span> : <span class="hljs-string">"Відповідно до вимог частини 2 статті 22 Закону №922 Якщо замовник не є платником ПДВ, очікувана вартість закупівлі має бути взначена з усіма податками, оскільки для замовника немає різниці чи є постачальник платником ПДВ чи ні.\n"</span>,
+                  <span class="hljs-attr">"resolution_type"</span> : <span class="hljs-string">"задовільнена"</span>,
+                  <span class="hljs-attr">"satisfied"</span> : <span class="hljs-literal">false</span>,
+                  <span class="hljs-attr">"status"</span> : <span class="hljs-number">1</span>,
+                  <span class="hljs-attr">"status_text"</span> : <span class="hljs-string">"недійсна"</span>,
+                  <span class="hljs-attr">"tenderer_action"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"title"</span> : <span class="hljs-string">"Кваліфікація результатів аукціону "</span>,
+                  <span class="hljs-attr">"tuid"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"type_title"</span> : <span class="hljs-string">"Оскарження визначення переможця"</span>,
+                  <span class="hljs-attr">"visible_name"</span> : <span class="hljs-string">"Вимога"</span>,
+                  <span class="hljs-attr">"winner"</span> : <span class="hljs-string">"Овсянкина Алина Владимировна"</span>
+               },
+               {
+                  <span class="hljs-attr">"author"</span> : {
+                     <span class="hljs-attr">"contact_email"</span> : <span class="hljs-string">"267374@example.com"</span>,
+                     <span class="hljs-attr">"contact_name"</span> : <span class="hljs-string">"Оксана"</span>,
+                     <span class="hljs-attr">"organization_address"</span> : <span class="hljs-string">"вул.Мельникова, буд.12"</span>,
+                     <span class="hljs-attr">"organization_name"</span> : <span class="hljs-string">"ТОВ \"Виробничо-комерційна компанія \"ПРОМУКРТАРА\""</span>
+                  },
+                  <span class="hljs-attr">"cancellation_reason"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"date_accepted"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"date_answered"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"date_decision"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"date_escalated"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"date_submitted"</span> : <span class="hljs-string">"2016-07-19T15:26:28"</span>,
+                  <span class="hljs-attr">"description"</span> : <span class="hljs-string">"Замовником було заявлено \"Очікувана вартість:120 000 грн. з ПДВ !!\" тому за результатами аукціону очікується сума також з ПДВ, проте ФОП, який приймав участь в аукціоні не є платником ПДВ , і його пропозиція не містить ПДВ,  що не відповідає вимогам Закупівлі!!"</span>,
+                  <span class="hljs-attr">"files"</span> : {
+                     <span class="hljs-attr">"complaintOwnerFiles"</span> : [],
+                     <span class="hljs-attr">"purchaseOwnerFiles"</span> : [],
+                     <span class="hljs-attr">"reviewerAboveOwnerFiles"</span> : [],
+                     <span class="hljs-attr">"reviewerOwnerFiles"</span> : []
+                  },
+                  <span class="hljs-attr">"id"</span> : <span class="hljs-string">"799f8dd996004f5aa47dca99113a2548"</span>,
+                  <span class="hljs-attr">"resolution"</span> : <span class="hljs-string">"Відповідно до вимог частини 2 статті 22 Закону №922\nЯкщо замовник не є платником ПДВ, очікувана вартість закупівлі має бути взначена з усіма податками, оскільки для замовника немає різниці чи є постачальник платником ПДВ чи ні."</span>,
+                  <span class="hljs-attr">"resolution_type"</span> : <span class="hljs-string">"задовільнена"</span>,
+                  <span class="hljs-attr">"satisfied"</span> : <span class="hljs-literal">false</span>,
+                  <span class="hljs-attr">"status"</span> : <span class="hljs-number">1</span>,
+                  <span class="hljs-attr">"status_text"</span> : <span class="hljs-string">"недійсна"</span>,
+                  <span class="hljs-attr">"tenderer_action"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"title"</span> : <span class="hljs-string">"Кваліфікація результатів аукціону "</span>,
+                  <span class="hljs-attr">"tuid"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"type_title"</span> : <span class="hljs-string">"Оскарження визначення переможця"</span>,
+                  <span class="hljs-attr">"visible_name"</span> : <span class="hljs-string">"Вимога"</span>,
+                  <span class="hljs-attr">"winner"</span> : <span class="hljs-string">"Овсянкина Алина Владимировна"</span>
+               },
+               {
+                  <span class="hljs-attr">"author"</span> : {
+                     <span class="hljs-attr">"contact_email"</span> : <span class="hljs-string">"267374@example.com"</span>,
+                     <span class="hljs-attr">"contact_name"</span> : <span class="hljs-string">"Оксана"</span>,
+                     <span class="hljs-attr">"organization_address"</span> : <span class="hljs-string">"вул.Мельникова, буд.12"</span>,
+                     <span class="hljs-attr">"organization_name"</span> : <span class="hljs-string">"ТОВ \"Виробничо-комерційна компанія \"ПРОМУКРТАРА\""</span>
+                  },
+                  <span class="hljs-attr">"cancellation_reason"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"date_accepted"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"date_answered"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"date_decision"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"date_escalated"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"date_submitted"</span> : <span class="hljs-string">"2016-07-20T14:47:05"</span>,
+                  <span class="hljs-attr">"description"</span> : <span class="hljs-string">"Замовником було заявлено \"Очікувана вартість:120 000 грн. з ПДВ !!\" тому за результатами аукціону очікується сума також з ПДВ, проте ФОП, який приймав участь в аукціоні не є платником ПДВ , і його пропозиція не містить ПДВ, що не відповідає вимогам Закупівлі.  Замовник  свідомо ввів нас в оману   щодо правил подання пропозицій. Якщо Замовник не звертає увагу з ПДВ чи без ПДВ, то це є дискримінацією платників ПДВ. "</span>,
+                  <span class="hljs-attr">"files"</span> : {
+                     <span class="hljs-attr">"complaintOwnerFiles"</span> : [],
+                     <span class="hljs-attr">"purchaseOwnerFiles"</span> : [],
+                     <span class="hljs-attr">"reviewerAboveOwnerFiles"</span> : [],
+                     <span class="hljs-attr">"reviewerOwnerFiles"</span> : []
+                  },
+                  <span class="hljs-attr">"id"</span> : <span class="hljs-string">"54f1112255e345cda356f04c1a86e856"</span>,
+                  <span class="hljs-attr">"resolution"</span> : <span class="hljs-string">"Відповідно до вимог частини 2 статті 22 Закону №922 Якщо замовник не є платником ПДВ, очікувана вартість закупівлі має бути взначена з усіма податками, оскільки для замовника немає різниці чи є постачальник платником ПДВ чи ні.\n"</span>,
+                  <span class="hljs-attr">"resolution_type"</span> : <span class="hljs-string">"задовільнена"</span>,
+                  <span class="hljs-attr">"satisfied"</span> : <span class="hljs-literal">false</span>,
+                  <span class="hljs-attr">"status"</span> : <span class="hljs-number">1</span>,
+                  <span class="hljs-attr">"status_text"</span> : <span class="hljs-string">"недійсна"</span>,
+                  <span class="hljs-attr">"tenderer_action"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"title"</span> : <span class="hljs-string">"Оскарження результатів закупівлі"</span>,
+                  <span class="hljs-attr">"tuid"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"type_title"</span> : <span class="hljs-string">"Оскарження визначення переможця"</span>,
+                  <span class="hljs-attr">"visible_name"</span> : <span class="hljs-string">"Вимога"</span>,
+                  <span class="hljs-attr">"winner"</span> : <span class="hljs-string">"Овсянкина Алина Владимировна"</span>
+               },
+               {
+                  <span class="hljs-attr">"author"</span> : {
+                     <span class="hljs-attr">"contact_email"</span> : <span class="hljs-string">"267374@example.com"</span>,
+                     <span class="hljs-attr">"contact_name"</span> : <span class="hljs-string">"Оксана"</span>,
+                     <span class="hljs-attr">"organization_address"</span> : <span class="hljs-string">"вул.Мельникова, буд.12"</span>,
+                     <span class="hljs-attr">"organization_name"</span> : <span class="hljs-string">"ТОВ \"Виробничо-комерційна компанія \"ПРОМУКРТАРА\""</span>
+                  },
+                  <span class="hljs-attr">"cancellation_reason"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"date_accepted"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"date_answered"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"date_decision"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"date_escalated"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"date_submitted"</span> : <span class="hljs-string">"2016-07-20T14:53:01"</span>,
+                  <span class="hljs-attr">"description"</span> : <span class="hljs-string">"У звя зку із постійними скаргами щодо порушень Замовниками законодавства закупівель в кваліфікації платників ПДВ пропонуємо передбачити на торгових площадках при поданні пропозицій поле для вводу номера платника ПДВ - Учасника або номера його свідоцтва. Без введення такого номера повинна бути відсутня можливість участі в закупівлі."</span>,
+                  <span class="hljs-attr">"files"</span> : {
+                     <span class="hljs-attr">"complaintOwnerFiles"</span> : [],
+                     <span class="hljs-attr">"purchaseOwnerFiles"</span> : [],
+                     <span class="hljs-attr">"reviewerAboveOwnerFiles"</span> : [],
+                     <span class="hljs-attr">"reviewerOwnerFiles"</span> : []
+                  },
+                  <span class="hljs-attr">"id"</span> : <span class="hljs-string">"33c30113eb9d45e7b8c91d32d9087b22"</span>,
+                  <span class="hljs-attr">"resolution"</span> : <span class="hljs-string">"Законом не передбачено розділяти на торгових площадках ФОП і платників ПДВ. Відповідно до вимог частини 2 статті 22 Закону №922 Якщо замовник не є платником ПДВ, очікувана вартість закупівлі має бути взначена з усіма податками, оскільки для замовника немає різниці чи є постачальник платником ПДВ чи ні.\n"</span>,
+                  <span class="hljs-attr">"resolution_type"</span> : <span class="hljs-string">"задовільнена"</span>,
+                  <span class="hljs-attr">"satisfied"</span> : <span class="hljs-literal">false</span>,
+                  <span class="hljs-attr">"status"</span> : <span class="hljs-number">1</span>,
+                  <span class="hljs-attr">"status_text"</span> : <span class="hljs-string">"недійсна"</span>,
+                  <span class="hljs-attr">"tenderer_action"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"title"</span> : <span class="hljs-string">"Дискваліфікація Замовників за введення в оману щодо закупівельних цін"</span>,
+                  <span class="hljs-attr">"tuid"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"type_title"</span> : <span class="hljs-string">"Оскарження визначення переможця"</span>,
+                  <span class="hljs-attr">"visible_name"</span> : <span class="hljs-string">"Вимога"</span>,
+                  <span class="hljs-attr">"winner"</span> : <span class="hljs-string">"Овсянкина Алина Владимировна"</span>
+               },
+               {
+                  <span class="hljs-attr">"author"</span> : {
+                     <span class="hljs-attr">"contact_email"</span> : <span class="hljs-string">"267374@example.com"</span>,
+                     <span class="hljs-attr">"contact_name"</span> : <span class="hljs-string">"Оксана"</span>,
+                     <span class="hljs-attr">"organization_address"</span> : <span class="hljs-string">"вул.Мельникова, буд.12"</span>,
+                     <span class="hljs-attr">"organization_name"</span> : <span class="hljs-string">"ТОВ \"Виробничо-комерційна компанія \"ПРОМУКРТАРА\""</span>
+                  },
+                  <span class="hljs-attr">"cancellation_reason"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"date_accepted"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"date_answered"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"date_decision"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"date_escalated"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"date_submitted"</span> : <span class="hljs-string">"2016-07-21T11:04:28"</span>,
+                  <span class="hljs-attr">"description"</span> : <span class="hljs-string">"Із сторони Замовника закупівлі присутні корупційні ознаки надання переваги оголошеному переможцю: в пропозиції переможця відсутні будь-які  документи щодо якості  продукції, що пропонується. Фото продукції взяті з оголошень в мережі."</span>,
+                  <span class="hljs-attr">"files"</span> : {
+                     <span class="hljs-attr">"complaintOwnerFiles"</span> : [],
+                     <span class="hljs-attr">"purchaseOwnerFiles"</span> : [],
+                     <span class="hljs-attr">"reviewerAboveOwnerFiles"</span> : [],
+                     <span class="hljs-attr">"reviewerOwnerFiles"</span> : []
+                  },
+                  <span class="hljs-attr">"id"</span> : <span class="hljs-string">"3015e4621f404740aaeaa1ae81fbbfa6"</span>,
+                  <span class="hljs-attr">"resolution"</span> : <span class="hljs-string">"Доброго дня, учасником надані зразки (кроваті металевої фото) і сертифікати якості №993, №1526, №3355, №003, №004 та висновок державної експертизи №05.03.02-03/20216 на матеріали, які відповідають вимогам замовника."</span>,
+                  <span class="hljs-attr">"resolution_type"</span> : <span class="hljs-string">"задовільнена"</span>,
+                  <span class="hljs-attr">"satisfied"</span> : <span class="hljs-literal">false</span>,
+                  <span class="hljs-attr">"status"</span> : <span class="hljs-number">1</span>,
+                  <span class="hljs-attr">"status_text"</span> : <span class="hljs-string">"недійсна"</span>,
+                  <span class="hljs-attr">"tenderer_action"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"title"</span> : <span class="hljs-string">"Кваліфікація переможця"</span>,
+                  <span class="hljs-attr">"tuid"</span> : <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"type_title"</span> : <span class="hljs-string">"Оскарження визначення переможця"</span>,
+                  <span class="hljs-attr">"visible_name"</span> : <span class="hljs-string">"Вимога"</span>,
+                  <span class="hljs-attr">"winner"</span> : <span class="hljs-string">"Овсянкина Алина Владимировна"</span>
+               }
+            ],
+            <span class="hljs-attr">"uid"</span> : <span class="hljs-string">"595fbe5937b7475692a5bf2326e3d414"</span>,
+            <span class="hljs-attr">"url"</span> : <span class="hljs-string">"http://zakupki.example.com:5001/gov/tenders/UA-2016-07-08-000413-b/lot-595fbe5937b7475692a5bf2326e3d414/complaints"</span>
+         }
+      ],
+      <span class="hljs-attr">"permissions"</span> : {
+         <span class="hljs-attr">"award_choices"</span> : [],
+         <span class="hljs-attr">"can_create"</span> : <span class="hljs-literal">false</span>,
+         <span class="hljs-attr">"create_scope"</span> : <span class="hljs-literal">null</span>,
+         <span class="hljs-attr">"create_title"</span> : <span class="hljs-literal">null</span>,
+         <span class="hljs-attr">"create_until"</span> : <span class="hljs-literal">null</span>,
+         <span class="hljs-attr">"id"</span> : <span class="hljs-string">"209789bff98041188bc64c9f9eb72e5f"</span>,
+         <span class="hljs-attr">"lots"</span> : [
+            {
+               <span class="hljs-attr">"award_choices"</span> : [],
+               <span class="hljs-attr">"can_create"</span> : <span class="hljs-literal">false</span>,
+               <span class="hljs-attr">"create_until"</span> : <span class="hljs-literal">null</span>,
+               <span class="hljs-attr">"id"</span> : <span class="hljs-string">"595fbe5937b7475692a5bf2326e3d414"</span>,
+               <span class="hljs-attr">"qualification_choices"</span> : []
+            }
+         ],
+         <span class="hljs-attr">"qualification_choices"</span> : []
+      },
+      <span class="hljs-attr">"uid"</span> : <span class="hljs-string">"209789bff98041188bc64c9f9eb72e5f"</span>,
+      <span class="hljs-attr">"url"</span> : <span class="hljs-string">"http://zakupki.example.com:5001/gov/tenders/UA-2016-07-08-000413-b/complaints"</span>
+   },
+   <span class="hljs-attr">"errors"</span> : [],
+   <span class="hljs-attr">"status"</span> : <span class="hljs-string">"ok"</span>,
+   <span class="hljs-attr">"system"</span> : <span class="hljs-string">""</span>
+}</code></pre>    </article>
+  </body>
+</html>

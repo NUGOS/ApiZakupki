@@ -1,0 +1,56 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimal-ui">
+    <title>View single notification</title>
+    <link type="text/css" rel="stylesheet" href="../assets/css/github-markdown.css">
+    <link type="text/css" rel="stylesheet" href="../assets/css/pilcrow.css">
+    <link type="text/css" rel="stylesheet" href="../assets/css/hljs-github.min.css"/>
+  </head>
+  <body>
+    <article class="markdown-body"><h1 id="view-single-notification"><a class="header-link" href="#view-single-notification"></a>View single notification</h1>
+<p><strong>GET remote/api/v3/notifications/{notification_id}</strong></p>
+<blockquote>
+<p><strong>notification_id</strong> - _id of notification, can be find in <a href="../notifications.html">notifications list</a></p>
+</blockquote>
+<p>request headers:</p>
+<ul class="list">
+<li><em>Api-Agent</em> - type: string, required</li>
+<li><em>Acc-Token</em> - type: string, required</li>
+</ul>
+<p>possible response fields:</p>
+<ul class="list">
+<li><em>status</em> - type: str, values: ok/error</li>
+<li><em>errors</em> - type: array of objects, validation errors</li>
+<li><em>data</em> - type: object</li>
+<li><em>system</em> - type: str, system error messages</li>
+</ul>
+<p>possible response data fields:
+see <strong>notification object fields</strong> from <a href="../notifications.html">notifications list</a></p>
+<h3 id="example"><a class="header-link" href="#example"></a>Example</h3>
+<p>request:</p>
+<pre class="hljs"><code>clear &amp;&amp; curl -X GET <span class="hljs-string">"http://my.example.com:5001/remote/api/v3/notifications/5d517fdb1f18015f2813522b"</span> --header <span class="hljs-string">"Acc-Token: 43b06b921e3df14a66cb9a38be51e71dabde5856"</span> --header <span class="hljs-string">"Api-Agent: zk_ios"</span> | json_pp</code></pre><p>response:</p>
+<pre class="hljs"><code>{
+   <span class="hljs-attr">"data"</span> : {
+      <span class="hljs-attr">"_id"</span> : <span class="hljs-string">"5d517fdb1f18015f2813522b"</span>,
+      <span class="hljs-attr">"body_en"</span> : <span class="hljs-string">"Ви отримали відповідь на своє запитання\n\n\t&lt;a href='http://my.example.com/cabinet/purchases/state_purchase_lot_question/list/52568'&gt;UA-2019-08-12-000025-c&lt;/a&gt;\n"</span>,
+      <span class="hljs-attr">"body_ru"</span> : <span class="hljs-string">"Ви отримали відповідь на своє запитання\n\n\t&lt;a href='http://my.example.com/cabinet/purchases/state_purchase_lot_question/list/52568'&gt;UA-2019-08-12-000025-c&lt;/a&gt;\n"</span>,
+      <span class="hljs-attr">"body_uk"</span> : <span class="hljs-string">"Ви отримали відповідь на своє запитання\n\n\t&lt;a href='http://my.example.com/cabinet/purchases/state_purchase_lot_question/list/52568'&gt;UA-2019-08-12-000025-c&lt;/a&gt;\n"</span>,
+      <span class="hljs-attr">"created_datetime"</span> : <span class="hljs-string">"2019-08-12T18:03:54"</span>,
+      <span class="hljs-attr">"delivery_status"</span> : <span class="hljs-string">"sent"</span>,
+      <span class="hljs-attr">"disable"</span> : <span class="hljs-literal">false</span>,
+      <span class="hljs-attr">"event_id"</span> : <span class="hljs-string">"14d81b241a194c298f6fcd5979d07490"</span>,
+      <span class="hljs-attr">"event_name"</span> : <span class="hljs-string">"info_question_answered"</span>,
+      <span class="hljs-attr">"is_read"</span> : <span class="hljs-literal">false</span>,
+      <span class="hljs-attr">"sent_datetime"</span> : <span class="hljs-string">"2019-08-12T18:03:58"</span>,
+      <span class="hljs-attr">"service_id"</span> : <span class="hljs-number">100</span>,
+      <span class="hljs-attr">"status"</span> : <span class="hljs-string">"published"</span>,
+      <span class="hljs-attr">"type"</span> : <span class="hljs-string">"cabinet"</span>
+   },
+   <span class="hljs-attr">"errors"</span> : [],
+   <span class="hljs-attr">"status"</span> : <span class="hljs-string">"ok"</span>,
+   <span class="hljs-attr">"system"</span> : <span class="hljs-string">""</span>
+}</code></pre>    </article>
+  </body>
+</html>

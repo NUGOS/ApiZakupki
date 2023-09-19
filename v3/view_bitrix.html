@@ -1,0 +1,534 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimal-ui">
+    <title>Purchases list and search</title>
+    <link type="text/css" rel="stylesheet" href="../assets/css/github-markdown.css">
+    <link type="text/css" rel="stylesheet" href="../assets/css/pilcrow.css">
+    <link type="text/css" rel="stylesheet" href="../assets/css/hljs-github.min.css"/>
+  </head>
+  <body>
+    <article class="markdown-body"><h1 id="purchases-list-and-search"><a class="header-link" href="#purchases-list-and-search"></a>Purchases list and search</h1>
+<p><strong>GET remote/api/v3/view/bitrix/{uid}</strong></p>
+<blockquote>
+<p>uid - purchase <strong>uid</strong> from <a href="./search.html">search result item</a></p>
+</blockquote>
+<p>request headers:</p>
+<ul class="list">
+<li><em>Api-Agent</em> - type: string, required</li>
+<li><em>Acc-Token</em> - type: string, required</li>
+</ul>
+<p>possible response fields:</p>
+<ul class="list">
+<li><em>status</em> - type: str, values: ok/error</li>
+<li><em>errors</em> - type: array of objects, validation errors</li>
+<li><em>data</em> - type: object</li>
+<li><em>system</em> - type: str, system error messages</li>
+</ul>
+<p>possible response data fields:</p>
+<ul class="list">
+<li><strong>amount</strong> - type: <strong>amount object</strong>, described below</li>
+<li><strong>assignee_supplier_employee</strong> - type: <strong>assignee supplier</strong> objector null, described below</li>
+<li><strong>auction_period</strong> - type: object, <strong>state period object</strong>, described below</li>
+<li><strong>auction_url</strong> - type: str or null</li>
+<li><strong>cancellations</strong> - type: <strong>cancellation object</strong>s list, described below</li>
+<li><strong>claims_count</strong> - type: int</li>
+<li><strong>complaints_count</strong> - type: int</li>
+<li><strong>date</strong> - type: str or null, format: <strong>yyyy-mm-ddTHH:MM:SS</strong></li>
+<li><strong>desc</strong> - type: str</li>
+<li><strong>desc_en</strong> - type: str</li>
+<li><strong>documents</strong> - type: <strong>documents object</strong>, described below</li>
+<li><strong>enquiry_period</strong> - type: object, <strong>state period object</strong>, described below</li>
+<li><strong>entity_type</strong> - type: int, values - one of <code>[0, 2]</code>, <a href="./static.html">details</a></li>
+<li><strong>features</strong> - type: <strong>feature object</strong>s list, describe below</li>
+<li><strong>guarantee</strong> - type: <strong>guarantee object</strong>, describe below</li>
+<li><strong>has_lots</strong> - type: bool</li>
+<li><strong>id</strong> - type: str</li>
+<li><strong>is_blocked</strong> - type: bool</li>
+<li><strong>is_favorite</strong> - type: bool</li>
+<li><strong>is_participate</strong> - type: bool</li>
+<li><strong>items</strong> - type: <strong>item object</strong>s list, described below</li>
+<li><strong>lots</strong> - type: <strong>lot object</strong>s list, described below</li>
+<li><strong>method_type</strong> - type: int, one of <code>[0, 1, 2, 7, 3, 4, 5, 8, 9, 14, 16]</code>, <a href="./static.html">details</a></li>
+<li><strong>method_type_text</strong> - type: str</li>
+<li><strong>offers</strong> - type: <strong>offer object</strong>s list, described below</li>
+<li><strong>plan_to_participate</strong> - type: bool</li>
+<li><strong>pre_qualification</strong> - type: <strong>pre_qualification object</strong>s list, described below</li>
+<li><strong>procuring_entity</strong> - type: <strong>procuring_entity object</strong>, described below</li>
+<li><strong>public_link_tender</strong> - type: str</li>
+<li><strong>qualification</strong> - type: <strong>qualification</strong> objects list or empty, described below</li>
+<li><strong>questions</strong> - type: <strong>questions</strong> object, described below</li>
+<li><strong>questions_count</strong> - type: int</li>
+<li><strong>stage1_id</strong> - type: str or null</li>
+<li><strong>stage2_id</strong> - type: str or null</li>
+<li><strong>status</strong> - type: int, one of <code>[0, 1, 2, 10, 3, 4, 5, 6, 7, 12]</code>, <a href="./static.html">details</a> </li>
+<li><strong>status_text</strong> - type: str</li>
+<li><strong>step</strong> - type: <strong>amount object</strong> or null, described below</li>
+<li><strong>tendering_period</strong> - type: object, <strong>state period object</strong>, described below</li>
+<li><strong>title</strong> - type: str</li>
+<li><strong>title_en</strong> - type: str</li>
+<li><strong>tuid</strong> - type: str</li>
+<li><strong>uid</strong> - type: str</li>
+<li><strong>user_offer</strong> - type: <strong>offer</strong> objector null, described below</li>
+<li><strong>cabinet_url</strong> - type: str</li>
+<li><strong>main_procurement_category</strong> - type: <strong>main_procurement_category object</strong> or null, described below</li>
+<li><strong>milestones</strong> - type: array of <strong>milestones</strong> objects, described below</li>
+<li><strong>minimal_step</strong> - type: <strong>minimal_step object</strong> or null, described below</li>
+<li><strong>merchant_contact_name</strong> - type: str or null</li>
+<li><strong>merchant_contact_site</strong> - type: str or null</li>
+<li><strong>merchant_contact_email</strong> - type: str or null</li>
+<li><strong>merchant_contact_telephone</strong> - type: str or null</li>
+<li><strong>merchant_address</strong> - type: str or null</li>
+<li><strong>plan_uid</strong> - type: str or null</li>
+<li><strong>plan_puid</strong> - type: str or null</li>
+<li><strong>plan_cabinet_url</strong> - type: str or null</li>
+<li><strong>plan_portal_url</strong> - type: str or null</li>
+<li><strong>tuid</strong> - type: str or null</li>
+<li><strong>guarantee</strong> - type: <strong>guarantee object</strong> or null, described below</li>
+<li><strong>enquiry_period</strong> - type: object, <strong>state period object</strong>, see <a href="./view.html">view purchase doc</a></li>
+<li><strong>tendering_period</strong> - type: object, <strong>state period object</strong>, see <a href="./view.html">view purchase doc</a></li>
+<li><strong>max_awards_count</strong> - type: int or null</li>
+<li><strong>clarifications_until</strong> - type: str or null, format: <strong>yyyy-mm-ddTHH:MM:SS</strong></li>
+<li><strong>complaint_period</strong> - type: object, <strong>state period object</strong>, described below</li>
+<li><strong>invalidation_date</strong> - type: str or null, format: <strong>yyyy-mm-ddTHH:MM:SS</strong></li>
+<li><strong>agreement_duration</strong> - type: srt or null</li>
+</ul>
+<p>minimal_step object fields:</p>
+<ul class="list">
+<li><strong>amount</strong> - type: float</li>
+<li><strong>currency</strong> - type: str, one of <code>[&quot;UAH&quot;, &quot;USD&quot;, &quot;EUR&quot;, &quot;RUB&quot;, &quot;GBP&quot;]</code></li>
+<li><strong>value_added_tax_included</strong> - type: bool</li>
+</ul>
+<p>guarantee object fields:</p>
+<ul class="list">
+<li><strong>amount</strong> - type: float</li>
+<li><strong>currency</strong> - type: str, one of <code>[&quot;UAH&quot;, &quot;USD&quot;, &quot;EUR&quot;, &quot;RUB&quot;, &quot;GBP&quot;]</code></li>
+<li><strong>value_added_tax_included</strong> - type: bool</li>
+</ul>
+<p>amount object fields:</p>
+<ul class="list">
+<li><strong>amount</strong> - type: float or null</li>
+<li><strong>currency</strong> - type: str, one of <code>[&quot;UAH&quot;, &quot;USD&quot;, &quot;EUR&quot;, &quot;RUB&quot;, &quot;GBP&quot;]</code></li>
+<li><strong>value_added_tax_included</strong> - type: bool</li>
+</ul>
+<p>assignee supplier object fields:</p>
+<ul class="list">
+<li><strong>id</strong> - type: int</li>
+<li><strong>name</strong> - type: str</li>
+<li><strong>is_iam</strong> - type: bool</li>
+</ul>
+<p>state period object fields:</p>
+<ul class="list">
+<li><strong>start</strong> - type: str or null, format: <strong>yyyy-mm-ddTHH:MM:SS</strong></li>
+<li><strong>end</strong> - type: str or null, format: <strong>yyyy-mm-ddTHH:MM:SS</strong></li>
+</ul>
+<p>cancellation object fields:</p>
+<ul class="list">
+<li><strong>date</strong> - type: str or null, format: <strong>yyyy-mm-ddTHH:MM:SS</strong></li>
+<li><strong>documents</strong> - type: <strong>documents object</strong>, described below</li>
+<li><strong>id</strong> - type: str</li>
+<li><strong>reason</strong> - type: str</li>
+<li><strong>status</strong> - type: int, one of <code>[&#39;draft&#39;, &#39;pending&#39;, &#39;active&#39;, &#39;unsuccessful&#39;, &#39;deleted&#39;]</code></li>
+<li><strong>status_text</strong> - type: str</li>
+</ul>
+<p>documents object fields:</p>
+<ul class="list">
+<li><strong>tender</strong> - type: <strong>document</strong> objects list or empty, described below</li>
+<li><strong>pre_qualification</strong> - type: <strong>document</strong> objects list or empty, described below</li>
+<li><strong>offer</strong> - type: <strong>document</strong> objects list or empty, described below</li>
+<li><strong>offer_lot</strong> - type: <strong>document</strong> objects list or empty, described below</li>
+<li><strong>cancellation</strong> - type: <strong>document</strong> objects list or empty, described below</li>
+<li><strong>qualification</strong> - type: <strong>document</strong> objects list or empty, described below</li>
+<li><strong>contract</strong> - type: <strong>document</strong> objects list or empty, described below</li>
+<li><strong>lot</strong> - type: <strong>document</strong> objects list or empty, described below</li>
+</ul>
+<p>document object fields:</p>
+<ul class="list">
+<li><strong>date_modified</strong> - type: str, format: <strong>yyyy-mm-ddTHH:MM:SS</strong></li>
+<li><strong>date_published</strong> - type: str, format: <strong>yyyy-mm-ddTHH:MM:SS</strong></li>
+<li><strong>history</strong> - type: <strong>document</strong> objects list or empty, described below</li>
+<li><strong>id</strong> - type: str</li>
+<li><strong>mimetype</strong> - type: str</li>
+<li><strong>title</strong> - type: str</li>
+<li><strong>url</strong> - type: str</li>
+</ul>
+<p>feature object fields:</p>
+<ul class="list">
+<li><strong>code</strong> - type: str</li>
+<li><strong>descr</strong> - type: str</li>
+<li><strong>descr_en</strong> - type: str</li>
+<li><strong>options</strong> - type: <strong>option</strong> objects list, described below</li>
+<li><strong>title</strong> - type: str</li>
+<li><strong>title_en</strong> - type: str</li>
+</ul>
+<p>option object fields:</p>
+<ul class="list">
+<li><strong>coefficient</strong> - type: float</li>
+<li><strong>title</strong> - type: str</li>
+<li><strong>title_en</strong> - type: str or null</li>
+<li><strong>weight</strong> - type: int</li>
+</ul>
+<p>guarantee object fields:</p>
+<ul class="list">
+<li><strong>amount</strong> - type: float</li>
+<li><strong>currency</strong> - type: str</li>
+<li><strong>value_added_tax_included</strong> - type: bool</li>
+</ul>
+<p>item object fields:</p>
+<ul class="list">
+<li><strong>classifiers</strong> - type: <strong>classifier</strong> objects list or empty, described below</li>
+<li><strong>delivery_address</strong> - type: <strong>address</strong> object, described below</li>
+<li><strong>delivery_period</strong> - type: object, <strong>state period object</strong>, described below</li>
+<li><strong>descr</strong> - type: str</li>
+<li><strong>descr_en</strong> - type: str or null</li>
+<li><strong>features</strong> - type: <strong>feature object</strong>s list, describe below</li>
+<li><strong>id</strong> - type: str</li>
+<li><strong>primary_classifier</strong> - type: <strong>classifier</strong> objects, described below</li>
+<li><strong>quantity</strong> - type: float</li>
+<li><strong>status</strong> - type: int, one of <code>[0, 1]</code>, <a href="./static.html">details</a></li>
+<li><strong>uid</strong> - type: str</li>
+<li><strong>unit</strong> - type: <strong>unit</strong> object, described below</li>
+</ul>
+<p>classifier object fields:</p>
+<ul class="list">
+<li><strong>code</strong> - type: str</li>
+<li><strong>id</strong> - type: str</li>
+<li><strong>name_with_code</strong> - type: str</li>
+<li><strong>type</strong> - type: str</li>
+</ul>
+<p>address object fields:</p>
+<ul class="list">
+<li><strong>country_name</strong> - type: str</li>
+<li><strong>is_all_ukraine</strong> - type: bool</li>
+<li><strong>locality</strong> - type: str or null</li>
+<li><strong>postal_code</strong> - type: str or null</li>
+<li><strong>region</strong> - type: str or null</li>
+<li><strong>street_address</strong> - type: str or null</li>
+</ul>
+<p>unit object fields:</p>
+<ul class="list">
+<li><strong>code</strong> - type: str</li>
+<li><strong>name</strong> - type: str</li>
+</ul>
+<p>lot object fields:</p>
+<ul class="list">
+<li><strong>amount</strong> - type: <strong>amount object</strong>, described below</li>
+<li><strong>claims_count</strong> - type: int</li>
+<li><strong>complaints_count</strong> - type: int</li>
+<li><strong>descr</strong> - type: str</li>
+<li><strong>descr_en</strong> - type: str or null</li>
+<li><strong>lot_participate_status</strong> - type: int, one of <code>[0, 1, 2]</code>, <a href="./static.html">details</a></li>
+<li><strong>questions_count</strong> - type: int</li>
+<li><strong>title</strong> - type: str</li>
+<li><strong>title_en</strong> - type: str or null</li>
+<li><strong>uid</strong> - type: str</li>
+</ul>
+<p>offer object fields:</p>
+<ul class="list">
+<li><strong>amount_weight</strong> - type: float or null</li>
+<li><strong>auction_url</strong> - type: str or null</li>
+<li><strong>auto_active</strong> - type: bool</li>
+<li><strong>coefficient_of_features</strong> - type: float or null</li>
+<li><strong>documents</strong> - type: <strong>documents object</strong>, described below</li>
+<li><strong>features</strong> - type: <strong>feature</strong> objects array or null</li>
+<li><strong>merchant</strong> - type: <strong>merchant</strong> object</li>
+<li><strong>net_present_amount</strong> - type: float or null</li>
+<li><strong>status</strong> - type: int, one of <code>[0, 1, 2, 3, 4, 5, 6]</code>, <a href="./static.html">details</a></li>
+<li><strong>status_text</strong> - type: str</li>
+<li><strong>subcontracting_details</strong> - type: str or null</li>
+<li><strong>uid</strong> - type: str</li>
+<li><strong>value</strong> - type: <strong>amount object</strong>, described below</li>
+</ul>
+<p>merchant object fields:</p>
+<ul class="list">
+<li><strong>address</strong> - type: <strong>address</strong> object, described below</li>
+<li><strong>contact_point</strong> - type: <strong>contact_point</strong> object, described below</li>
+<li><strong>identifier</strong> - type: <strong>identifier</strong> object, described below</li>
+<li><strong>name</strong> - type: str</li>
+</ul>
+<p>contact_point object fields:</p>
+<ul class="list">
+<li><strong>available_language</strong> - optional, type: str</li>
+<li><strong>email</strong> - type: str</li>
+<li><strong>fax_number</strong> - type: str</li>
+<li><strong>name</strong> - type: str</li>
+<li><strong>name_en</strong> - type: str</li>
+<li><strong>name_ru</strong> - type: str</li>
+<li><strong>telephone</strong> - type: str</li>
+</ul>
+<p>identifier object fields:</p>
+<ul class="list">
+<li><strong>id</strong> - type: str</li>
+<li><strong>legal_name</strong> - type: str</li>
+<li><strong>legal_name_en</strong> - type: str or null</li>
+<li><strong>scheme</strong> - type: str</li>
+<li><strong>uri</strong> - type: str or null</li>
+</ul>
+<p>pre_qualification object fields:</p>
+<ul class="list">
+<li><strong>desc</strong> - type: str or null</li>
+<li><strong>documents</strong> - type: <strong>documents object</strong>, described below</li>
+<li><strong>id</strong> - type: str</li>
+<li><strong>self_eligible</strong> - type: bool</li>
+<li><strong>self_qualified</strong> - type: bool</li>
+<li><strong>status</strong> - type: int, one of <code>[0, 1, 2, 3]</code>, <a href="./static.html">details</a></li>
+<li><strong>status_text</strong> - type: str</li>
+<li><strong>tenderer</strong> - type: <strong>merchant</strong> object, described below</li>
+<li><strong>uid</strong> - type: str</li>
+</ul>
+<p>procuring_entity object fields:</p>
+<ul class="list">
+<li><strong>additional_contact_points</strong> - type: <strong>contact point</strong> objects list or empty, described below</li>
+<li><strong>address</strong> - type: <strong>address</strong> object, described below</li>
+<li><strong>contact_point</strong> - type: type: <strong>contact point</strong> objector null, described below</li>
+<li><strong>identifier</strong> - type: <strong>identifier</strong> object, described below</li>
+<li><strong>kind</strong> - type: str or null</li>
+<li><strong>name</strong> - type: str</li>
+<li><strong>name_en</strong> - type: str or null</li>
+</ul>
+<p>questions object fields:</p>
+<ul class="list">
+<li><strong>count</strong> - type: int</li>
+<li><strong>lots</strong> - type: <strong>lot</strong> questions preview objects list or empty, described below</li>
+<li><strong>questions_data</strong> - type: <strong>question_data</strong> objects list or empty, described below</li>
+<li><strong>url</strong> - type: str</li>
+</ul>
+<p>lot object fields:</p>
+<ul class="list">
+<li><strong>count</strong> - type: int</li>
+<li><strong>id</strong> - type: str</li>
+<li><strong>url</strong> - type: str</li>
+</ul>
+<p>question_data object fields:</p>
+<ul class="list">
+<li><strong>answer</strong> - type: str or null</li>
+<li><strong>description</strong> - type: str</li>
+<li><strong>has_answer</strong> - type: str</li>
+<li><strong>id</strong> - type: str</li>
+<li><strong>title</strong> - type: str</li>
+</ul>
+<p>qualification object fields:</p>
+<ul class="list">
+<li><strong>amount_weight</strong> - type: float or null</li>
+<li><strong>coefficient_of_features</strong> - type: float or null</li>
+<li><strong>contract</strong> - type: <strong>contract</strong> objector empty, described below</li>
+<li><strong>documents</strong> - type: <strong>documents object</strong>, described below</li>
+<li><strong>features</strong> - type: <strong>feature</strong> objects list or null, described below</li>
+<li><strong>id</strong> - type: str</li>
+<li><strong>merchant</strong> - type: <strong>merchant</strong> object, described below</li>
+<li><strong>net_present_amount</strong> - type: float or null</li>
+<li><strong>status</strong> - type: int, one of <code>[0, 1, 2, 3]</code>, <a href="./static.html">details</a></li>
+<li><strong>status_text</strong> - type: str</li>
+<li><strong>value</strong> - type: <strong>amount</strong> object, described below</li>
+<li><strong>milestones</strong> - type: array of <strong>award milestone</strong> objects, <a href="./view.html">details</a></li>
+</ul>
+<p>contract object fields:</p>
+<ul class="list">
+<li><strong>award_id</strong> - type: str</li>
+<li><strong>contract_id</strong> - type: str</li>
+<li><strong>contract_number</strong> - type: str</li>
+<li><strong>date</strong> - type: str or null, format: <strong>yyyy-mm-ddTHH:MM:SS</strong></li>
+<li><strong>date_signed</strong> - type: str or null, format: <strong>yyyy-mm-ddTHH:MM:SS</strong></li>
+<li><strong>documents</strong> - type: <strong>documents object</strong>, described below</li>
+<li><strong>id</strong> - type: str</li>
+<li><strong>period</strong> - type: object, <strong>state period object</strong>, described below</li>
+<li><strong>status</strong> - type: int, one of <code>[0, 1, 2, 3, 4]</code>, <a href="./static.html">details</a></li>
+<li><strong>status_text</strong> - type: str</li>
+<li><strong>value</strong> - type: <strong>amount object</strong>, described below</li>
+</ul>
+<p>main_procurement_category fields:</p>
+<ul class="list">
+<li><strong>value</strong> - type: str</li>
+<li><strong>label</strong> - type: str</li>
+</ul>
+<p>milestones fields:</p>
+<ul class="list">
+<li><strong>value</strong> - type: str</li>
+<li><strong>label</strong> - type: str</li>
+<li><strong>description</strong> - type: str</li>
+<li><strong>duration</strong> - type: <strong>duration object</strong>, described below</li>
+<li><strong>id</strong> - type: str</li>
+<li><strong>percentage</strong> - type: float</li>
+<li><strong>relatedLot</strong> - type: str or null</li>
+<li><strong>sequenceNumber</strong> - type: int</li>
+<li><strong>title</strong> - type: str</li>
+<li><strong>type</strong> - type: str</li>
+</ul>
+<p>duration fields:</p>
+<ul class="list">
+<li><strong>days</strong> - type: int</li>
+<li><strong>type</strong> - type: str</li>
+</ul>
+<p>Examples:</p>
+<p>request:</p>
+<pre class="hljs"><code>curl -X GET <span class="hljs-string">"http://my.example.com:5001/remote/api/v3/view/bitrix/093eec34cd824f49a0453d966bfa9254"</span> --header <span class="hljs-string">"Acc-Token: 652f63055958c44387e78b5f96b33ad5b3217ba1"</span></code></pre><p>response</p>
+<pre class="hljs"><code>{
+  <span class="hljs-attr">"data"</span>: {
+    <span class="hljs-attr">"amount"</span>: {
+      <span class="hljs-attr">"amount"</span>: <span class="hljs-number">123123.0</span>,
+      <span class="hljs-attr">"currency"</span>: <span class="hljs-string">"UAH"</span>,
+      <span class="hljs-attr">"value_added_tax_included"</span>: <span class="hljs-literal">false</span>
+    },
+    <span class="hljs-attr">"assignee_supplier_employee"</span>: <span class="hljs-literal">null</span>,
+    <span class="hljs-attr">"auction_period"</span>: {
+      <span class="hljs-attr">"end"</span>: <span class="hljs-literal">null</span>,
+      <span class="hljs-attr">"start"</span>: <span class="hljs-literal">null</span>
+    },
+    <span class="hljs-attr">"auction_url"</span>: <span class="hljs-literal">null</span>,
+    <span class="hljs-attr">"cabinet_url"</span>: <span class="hljs-string">"http://my.example.com:5000/cabinet/purchases/state_purchase/view/13789902"</span>,
+    <span class="hljs-attr">"cancellations"</span>: [],
+    <span class="hljs-attr">"claims_count"</span>: <span class="hljs-number">0</span>,
+    <span class="hljs-attr">"complaints_count"</span>: <span class="hljs-number">0</span>,
+    <span class="hljs-attr">"date"</span>: <span class="hljs-string">"2020-11-10T13:35:24"</span>,
+    <span class="hljs-attr">"desc"</span>: <span class="hljs-string">""</span>,
+    <span class="hljs-attr">"desc_en"</span>: <span class="hljs-string">""</span>,
+    <span class="hljs-attr">"documents"</span>: {
+      <span class="hljs-attr">"tender"</span>: []
+    },
+    <span class="hljs-attr">"enquiry_period"</span>: {
+      <span class="hljs-attr">"end"</span>: <span class="hljs-string">"2020-11-27T13:34:00"</span>,
+      <span class="hljs-attr">"start"</span>: <span class="hljs-string">"2020-11-10T13:35:23"</span>
+    },
+    <span class="hljs-attr">"entity_type"</span>: <span class="hljs-number">0</span>,
+    <span class="hljs-attr">"features"</span>: [],
+    <span class="hljs-attr">"guarantee"</span>: {
+      <span class="hljs-attr">"amount"</span>: <span class="hljs-number">0.0</span>,
+      <span class="hljs-attr">"currency"</span>: <span class="hljs-string">"UAH"</span>,
+      <span class="hljs-attr">"value_added_tax_included"</span>: <span class="hljs-literal">false</span>
+    },
+    <span class="hljs-attr">"has_lots"</span>: <span class="hljs-literal">false</span>,
+    <span class="hljs-attr">"id"</span>: <span class="hljs-string">"093eec34cd824f49a0453d966bfa9254"</span>,
+    <span class="hljs-attr">"is_blocked"</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">"is_favorite"</span>: <span class="hljs-literal">false</span>,
+    <span class="hljs-attr">"is_participate"</span>: <span class="hljs-literal">false</span>,
+    <span class="hljs-attr">"items"</span>: [
+      {
+        <span class="hljs-attr">"classifiers"</span>: [],
+        <span class="hljs-attr">"delivery_address"</span>: {
+          <span class="hljs-attr">"country_name"</span>: <span class="hljs-string">"Україна"</span>,
+          <span class="hljs-attr">"is_all_ukraine"</span>: <span class="hljs-literal">false</span>,
+          <span class="hljs-attr">"locality"</span>: <span class="hljs-string">"Відповідно до документації"</span>,
+          <span class="hljs-attr">"postal_code"</span>: <span class="hljs-literal">null</span>,
+          <span class="hljs-attr">"region"</span>: <span class="hljs-string">""</span>,
+          <span class="hljs-attr">"street_address"</span>: <span class="hljs-literal">null</span>
+        },
+        <span class="hljs-attr">"delivery_period"</span>: {
+          <span class="hljs-attr">"end"</span>: <span class="hljs-string">"2020-11-20T00:00:00"</span>,
+          <span class="hljs-attr">"start"</span>: <span class="hljs-literal">null</span>
+        },
+        <span class="hljs-attr">"descr"</span>: <span class="hljs-string">"dsflksadf"</span>,
+        <span class="hljs-attr">"descr_en"</span>: <span class="hljs-literal">null</span>,
+        <span class="hljs-attr">"features"</span>: [],
+        <span class="hljs-attr">"id"</span>: <span class="hljs-string">"6b199b4763e44991bcf89b3ef6a84e7c"</span>,
+        <span class="hljs-attr">"primary_classifier"</span>: {
+          <span class="hljs-attr">"code"</span>: <span class="hljs-string">"03000000-1"</span>,
+          <span class="hljs-attr">"id"</span>: <span class="hljs-string">"03000000-1"</span>,
+          <span class="hljs-attr">"name_with_code"</span>: <span class="hljs-string">"03000000-1 Сільськогосподарська, фермерська продукція, продукція рибальства, лісівництва та супутня продукція"</span>,
+          <span class="hljs-attr">"type"</span>: <span class="hljs-string">"ДК 021"</span>
+        },
+        <span class="hljs-attr">"quantity"</span>: <span class="hljs-number">123.0</span>,
+        <span class="hljs-attr">"status"</span>: <span class="hljs-number">0</span>,
+        <span class="hljs-attr">"uid"</span>: <span class="hljs-string">"6b199b4763e44991bcf89b3ef6a84e7c"</span>,
+        <span class="hljs-attr">"unit"</span>: {
+          <span class="hljs-attr">"code"</span>: <span class="hljs-string">"P1"</span>,
+          <span class="hljs-attr">"name"</span>: <span class="hljs-string">"%"</span>
+        }
+      }
+    ],
+    <span class="hljs-attr">"lots"</span>: [],
+    <span class="hljs-attr">"main_procurement_category"</span>: {
+      <span class="hljs-attr">"label"</span>: <span class="hljs-string">"товари"</span>,
+      <span class="hljs-attr">"value"</span>: <span class="hljs-string">"goods"</span>
+    },
+    <span class="hljs-attr">"merchant_address"</span>: <span class="hljs-string">"12345, Україна, Кіровоградська область, ХШ 201, Київ"</span>,
+    <span class="hljs-attr">"merchant_contact_email"</span>: <span class="hljs-string">"a.fatianov@smartweb.com.ua"</span>,
+    <span class="hljs-attr">"merchant_contact_name"</span>: <span class="hljs-string">"Aleksandr Fatianov"</span>,
+    <span class="hljs-attr">"merchant_contact_site"</span>: <span class="hljs-string">"http://zakupki.example.com:5000"</span>,
+    <span class="hljs-attr">"merchant_contact_telephone"</span>: <span class="hljs-string">"+380999999999"</span>,
+    <span class="hljs-attr">"method_type"</span>: <span class="hljs-number">0</span>,
+    <span class="hljs-attr">"method_type_text"</span>: <span class="hljs-string">"Допорогова закупівля"</span>,
+    <span class="hljs-attr">"milestones"</span>: [
+      {
+        <span class="hljs-attr">"code"</span>: <span class="hljs-string">"postpayment"</span>,
+        <span class="hljs-attr">"description"</span>: <span class="hljs-string">""</span>,
+        <span class="hljs-attr">"duration"</span>: {
+          <span class="hljs-attr">"days"</span>: <span class="hljs-number">11</span>,
+          <span class="hljs-attr">"type"</span>: <span class="hljs-string">"banking"</span>
+        },
+        <span class="hljs-attr">"id"</span>: <span class="hljs-string">"b73228a3bfe047ac9a51d72486f17409"</span>,
+        <span class="hljs-attr">"percentage"</span>: <span class="hljs-number">100.0</span>,
+        <span class="hljs-attr">"sequence_number"</span>: <span class="hljs-number">0</span>,
+        <span class="hljs-attr">"title"</span>: <span class="hljs-string">"deliveryOfGoods"</span>,
+        <span class="hljs-attr">"type"</span>: <span class="hljs-string">"financing"</span>
+      }
+    ],
+    <span class="hljs-attr">"minimal_step"</span>: {
+      <span class="hljs-attr">"amount"</span>: <span class="hljs-number">1231.23</span>,
+      <span class="hljs-attr">"currency"</span>: <span class="hljs-string">"UAH"</span>,
+      <span class="hljs-attr">"value_added_tax_included"</span>: <span class="hljs-literal">false</span>
+    },
+    <span class="hljs-attr">"offers"</span>: [],
+    <span class="hljs-attr">"plan_cabinet_url"</span>: <span class="hljs-literal">null</span>,
+    <span class="hljs-attr">"plan_portal_url"</span>: <span class="hljs-literal">null</span>,
+    <span class="hljs-attr">"plan_puid"</span>: <span class="hljs-literal">null</span>,
+    <span class="hljs-attr">"plan_to_participate"</span>: <span class="hljs-literal">false</span>,
+    <span class="hljs-attr">"plan_uid"</span>: <span class="hljs-literal">null</span>,
+    <span class="hljs-attr">"pre_qualification"</span>: [],
+    <span class="hljs-attr">"procuring_entity"</span>: {
+      <span class="hljs-attr">"address"</span>: {
+        <span class="hljs-attr">"country_name"</span>: <span class="hljs-string">"Україна"</span>,
+        <span class="hljs-attr">"locality"</span>: <span class="hljs-string">"Київ"</span>,
+        <span class="hljs-attr">"postal_code"</span>: <span class="hljs-string">"12345"</span>,
+        <span class="hljs-attr">"region"</span>: <span class="hljs-string">"Кіровоградська область"</span>,
+        <span class="hljs-attr">"street_address"</span>: <span class="hljs-string">"ХШ 201"</span>
+      },
+      <span class="hljs-attr">"contact_point"</span>: {
+        <span class="hljs-attr">"email"</span>: <span class="hljs-string">"a.fatianov@smartweb.com.ua"</span>,
+        <span class="hljs-attr">"name"</span>: <span class="hljs-string">"Aleksandr Fatianov"</span>,
+        <span class="hljs-attr">"telephone"</span>: <span class="hljs-string">"+380999999999"</span>,
+        <span class="hljs-attr">"url"</span>: <span class="hljs-string">"http://zakupki.example.com:5000"</span>
+      },
+      <span class="hljs-attr">"identifier"</span>: {
+        <span class="hljs-attr">"id"</span>: <span class="hljs-string">"678876678876"</span>,
+        <span class="hljs-attr">"legal_name"</span>: <span class="hljs-string">"GOV TENDERS ORGANAIZER"</span>,
+        <span class="hljs-attr">"scheme"</span>: <span class="hljs-string">"UA-EDR"</span>,
+        <span class="hljs-attr">"uri"</span>: <span class="hljs-string">"http://zakupki.example.com:5000"</span>
+      },
+      <span class="hljs-attr">"kind"</span>: <span class="hljs-string">"defense"</span>,
+      <span class="hljs-attr">"name"</span>: <span class="hljs-string">"GOV TENDERS ORGANAIZER"</span>
+    },
+    <span class="hljs-attr">"public_link_tender"</span>: <span class="hljs-string">"http://zakupki.example.com:5000/gov/tenders/UA-2020-11-10-000074-a"</span>,
+    <span class="hljs-attr">"qualification"</span>: [],
+    <span class="hljs-attr">"questions"</span>: {
+      <span class="hljs-attr">"count"</span>: <span class="hljs-number">0</span>,
+      <span class="hljs-attr">"lots"</span>: [],
+      <span class="hljs-attr">"questions_data"</span>: [],
+      <span class="hljs-attr">"url"</span>: <span class="hljs-literal">null</span>
+    },
+    <span class="hljs-attr">"questions_count"</span>: <span class="hljs-number">0</span>,
+    <span class="hljs-attr">"stage1_id"</span>: <span class="hljs-literal">null</span>,
+    <span class="hljs-attr">"stage2_id"</span>: <span class="hljs-literal">null</span>,
+    <span class="hljs-attr">"status"</span>: <span class="hljs-number">0</span>,
+    <span class="hljs-attr">"status_text"</span>: <span class="hljs-string">"Призупинено"</span>,
+    <span class="hljs-attr">"step"</span>: {
+      <span class="hljs-attr">"amount"</span>: <span class="hljs-number">1231.23</span>,
+      <span class="hljs-attr">"currency"</span>: <span class="hljs-string">"UAH"</span>,
+      <span class="hljs-attr">"value_added_tax_included"</span>: <span class="hljs-literal">false</span>
+    },
+    <span class="hljs-attr">"tendering_period"</span>: {
+      <span class="hljs-attr">"end"</span>: <span class="hljs-string">"2020-12-04T13:34:00"</span>,
+      <span class="hljs-attr">"start"</span>: <span class="hljs-string">"2020-11-27T13:34:00"</span>
+    },
+    <span class="hljs-attr">"title"</span>: <span class="hljs-string">"test 422 error"</span>,
+    <span class="hljs-attr">"title_en"</span>: <span class="hljs-literal">null</span>,
+    <span class="hljs-attr">"tuid"</span>: <span class="hljs-string">"UA-2020-11-10-000074-a"</span>,
+    <span class="hljs-attr">"uid"</span>: <span class="hljs-string">"093eec34cd824f49a0453d966bfa9254"</span>,
+    <span class="hljs-attr">"user_offer"</span>: <span class="hljs-literal">null</span>
+  },
+  <span class="hljs-attr">"errors"</span>: [],
+  <span class="hljs-attr">"status"</span>: <span class="hljs-string">"ok"</span>,
+  <span class="hljs-attr">"system"</span>: <span class="hljs-string">""</span>
+}</code></pre>    </article>
+  </body>
+</html>

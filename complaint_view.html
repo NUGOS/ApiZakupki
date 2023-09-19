@@ -1,0 +1,159 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimal-ui">
+    <title>Просмотр жалобы</title>
+    <link type="text/css" rel="stylesheet" href="assets/css/github-markdown.css">
+    <link type="text/css" rel="stylesheet" href="assets/css/pilcrow.css">
+    <link type="text/css" rel="stylesheet" href="assets/css/hljs-github.min.css"/>
+  </head>
+  <body>
+    <article class="markdown-body"><h1 id="просмотр-жалобы"><a class="header-link" href="#просмотр-жалобы"></a>Просмотр жалобы</h1>
+<p><strong>GET remote/api/v1/complaint/{complaint_id}</strong>
+<strong>GET remote/api/v2/complaint/{complaint_id}</strong></p>
+<blockquote>
+<p>id - id жалобы из <a href="./view_entity.html">закупки</a> или <a href="./view_entity_lot.html">лота</a></p>
+</blockquote>
+<p><strong>UPDATE for permissions in v2</strong></p>
+<ul class="list">
+<li>Added <em>permissions</em> block</li>
+</ul>
+<p>request headers:</p>
+<ul class="list">
+<li><em>Api-Agent</em> - type: string, reuqired</li>
+<li><em>Acc-Token</em> - type: string, required</li>
+</ul>
+<p>possible response fields:</p>
+<ul class="list">
+<li><em>status</em> - type: str, values: ok/error</li>
+<li><em>errors</em> - type: array of objects, validation errors</li>
+<li><em>data</em> - type: object</li>
+<li><em>system</em> - type: str, system error messages</li>
+</ul>
+<p>possible response data fields:</p>
+<ul class="list">
+<li><em>status</em> - type: int</li>
+<li><em>files</em> - type: <strong>complaint files</strong> object, described below</li>
+<li><em>description</em> - type: str</li>
+<li><em>date_decision</em> - type: date str or null, format <strong>yyyy-mm-ddTHH:MM:SS.fZ</strong></li>
+<li><em>resolution_type</em> - type: str or null</li>
+<li><em>date_submitted</em> - type: date str or null, format <strong>yyyy-mm-ddTHH:MM:SS.fZ</strong></li>
+<li><em>satisfied</em> - type: bool</li>
+<li><em>tuid</em> - type: str or null</li>
+<li><em>date_answered</em> - type: date str or null, format <strong>yyyy-mm-ddTHH:MM:SS.fZ</strong></li>
+<li><em>id</em> - type: int</li>
+<li><em>uid</em> - type: str or null</li>
+<li><em>cancellation_reason</em> - type: str or null</li>
+<li><em>title</em> - type: str</li>
+<li><em>type_title</em> - type: str</li>
+<li><em>author</em> - type: <strong>complaint author</strong> object or empty object</li>
+<li><em>tenderer_action</em> - type: str or null</li>
+<li><em>date_escalated</em> - type: date str or null, format <strong>yyyy-mm-ddTHH:MM:SS.fZ</strong></li>
+<li><em>visible_name</em> - type: str or null</li>
+<li><em>date_accepted</em> - type: date str or null, format <strong>yyyy-mm-ddTHH:MM:SS.fZ</strong></li>
+<li><em>status_text</em> - type: str</li>
+<li><em>resolution</em> - type: str or null</li>
+<li><em>permissions</em> - type: object or null <strong>only v2</strong></li>
+</ul>
+<p>complaint author object fields:</p>
+<ul class="list">
+<li><em>organization_name</em> - type: str</li>
+<li><em>organization_address</em> - type: str</li>
+<li><em>contact_name</em> - type: str</li>
+<li><em>contact_email</em> - type: str</li>
+</ul>
+<p>complaint files fields:</p>
+<ul class="list">
+<li><em>purchaseOwnerFiles</em> - type: array of <a href="./view_entity.html">document_instatnces</a> or empty</li>
+<li><em>reviewerAboveOwnerFiles</em> - type: array of <a href="./view_entity.html">document_instatnces</a> or empty</li>
+<li><em>complaintOwnerFiles</em> - type: array of <a href="./view_entity.html">document_instatnces</a> or empty</li>
+<li><em>reviewerOwnerFiles</em> - type: array of <a href="./view_entity.html">document_instatnces</a> or empty</li>
+</ul>
+<p>permission object data fields</p>
+<ul class="list">
+<li><em>can_cancel</em> - type: bool</li>
+</ul>
+<p>request example:</p>
+<pre class="hljs"><code>curl --header <span class="hljs-string">"Acc-Token: eyJlbXBsb3llZSI6NjEyNjEsIm1lcmNoYW50Ijo1NTEzOH0.C-RgqA.iwxHPKJq2KHCj8Qe6BvcvJlSNss"</span> -X GET <span class="hljs-string">"http://my.example.com:5001/remote/api/v1/complaint/390"</span></code></pre><p>response example</p>
+<pre class="hljs"><code>{
+  <span class="hljs-attr">"status"</span>: <span class="hljs-string">"ok"</span>,
+  <span class="hljs-attr">"errors"</span>: [
+  ],
+  <span class="hljs-attr">"data"</span>: {
+    <span class="hljs-attr">"status"</span>: <span class="hljs-number">1</span>,
+    <span class="hljs-attr">"files"</span>: {
+      <span class="hljs-attr">"purchaseOwnerFiles"</span>: [
+      ],
+      <span class="hljs-attr">"reviewerAboveOwnerFiles"</span>: [
+      ],
+      <span class="hljs-attr">"complaintOwnerFiles"</span>: [
+      ],
+      <span class="hljs-attr">"reviewerOwnerFiles"</span>: [
+      ]
+    },
+    <span class="hljs-attr">"description"</span>: <span class="hljs-string">"fg gfhgh fh gfh gfh f"</span>,
+    <span class="hljs-attr">"date_decision"</span>: <span class="hljs-literal">null</span>,
+    <span class="hljs-attr">"resolution_type"</span>: <span class="hljs-literal">null</span>,
+    <span class="hljs-attr">"date_submitted"</span>: <span class="hljs-literal">null</span>,
+    <span class="hljs-attr">"satisfied"</span>: <span class="hljs-literal">null</span>,
+    <span class="hljs-attr">"tuid"</span>: <span class="hljs-literal">null</span>,
+    <span class="hljs-attr">"date_answered"</span>: <span class="hljs-literal">null</span>,
+    <span class="hljs-attr">"id"</span>: <span class="hljs-number">390</span>,
+    <span class="hljs-attr">"uid"</span>: <span class="hljs-string">"25d496efdac84dbf8986a9ca2d38ed3c"</span>,
+    <span class="hljs-attr">"cancellation_reason"</span>: <span class="hljs-literal">null</span>,
+    <span class="hljs-attr">"title"</span>: <span class="hljs-string">"fgf  ghh fgh fg"</span>,
+    <span class="hljs-attr">"type_title"</span>: <span class="hljs-string">"Оскарження умов тендеру"</span>,
+    <span class="hljs-attr">"author"</span>: {
+      <span class="hljs-attr">"organization_name"</span>: <span class="hljs-string">"ДП \"Oleynik_Irina_бла ла бал бла \""</span>,
+      <span class="hljs-attr">"organization_address"</span>: <span class="hljs-string">"Вербицкого, 14"</span>,
+      <span class="hljs-attr">"contact_name"</span>: <span class="hljs-string">"Ирина вап п авпв Олейник"</span>,
+      <span class="hljs-attr">"contact_email"</span>: <span class="hljs-string">"i.oleynik@smartweb.com.ua.test"</span>
+    },
+    <span class="hljs-attr">"tenderer_action"</span>: <span class="hljs-literal">null</span>,
+    <span class="hljs-attr">"date_escalated"</span>: <span class="hljs-literal">null</span>,
+    <span class="hljs-attr">"visible_name"</span>: <span class="hljs-string">"Вимога"</span>,
+    <span class="hljs-attr">"date_accepted"</span>: <span class="hljs-literal">null</span>,
+    <span class="hljs-attr">"status_text"</span>: <span class="hljs-string">"недійсна"</span>,
+    <span class="hljs-attr">"resolution"</span>: <span class="hljs-literal">null</span>
+  },
+  <span class="hljs-attr">"system"</span>: <span class="hljs-string">""</span>
+}</code></pre><p><strong>v2</strong> response example</p>
+<pre class="hljs"><code>{
+  <span class="hljs-attr">"status"</span>: <span class="hljs-string">"ok"</span>,
+  <span class="hljs-attr">"errors"</span>: [],
+  <span class="hljs-attr">"data"</span>: {
+    <span class="hljs-attr">"status"</span>: <span class="hljs-number">6</span>,
+    <span class="hljs-attr">"files"</span>: {
+      <span class="hljs-attr">"purchaseOwnerFiles"</span>: [],
+      <span class="hljs-attr">"reviewerAboveOwnerFiles"</span>: [],
+      <span class="hljs-attr">"complaintOwnerFiles"</span>: [],
+      <span class="hljs-attr">"reviewerOwnerFiles"</span>: []
+    },
+    <span class="hljs-attr">"description"</span>: <span class="hljs-string">"\u0422\u0440\u0435\u0431\u0443\u044e \u0441\u043a\u0438\u0434\u043a\u0443!"</span>,
+    <span class="hljs-attr">"date_decision"</span>: <span class="hljs-literal">null</span>,
+    <span class="hljs-attr">"resolution_type"</span>: <span class="hljs-literal">null</span>,
+    <span class="hljs-attr">"date_submitted"</span>: <span class="hljs-literal">null</span>,
+    <span class="hljs-attr">"satisfied"</span>: <span class="hljs-literal">false</span>,
+    <span class="hljs-attr">"tuid"</span>: <span class="hljs-string">"UA-2018-07-09-000034-a.a1"</span>,
+    <span class="hljs-attr">"date_answered"</span>: <span class="hljs-literal">null</span>,
+    <span class="hljs-attr">"id"</span>: <span class="hljs-number">31906</span>,
+    <span class="hljs-attr">"uid"</span>: <span class="hljs-string">"e314c291f5764669aeb6f40a3b8d6967"</span>,
+    <span class="hljs-attr">"cancellation_reason"</span>: <span class="hljs-literal">null</span>,
+    <span class="hljs-attr">"title"</span>: <span class="hljs-string">"\u0422\u0440\u0435\u0431\u043e\u0432\u0430\u043d\u0438\u0435 \u043a \u0442\u0435\u043d\u0434\u0435\u0440\u0443"</span>,
+    <span class="hljs-attr">"type_title"</span>: <span class="hljs-string">"\u041e\u0441\u043a\u0430\u0440\u0436\u0435\u043d\u043d\u044f \u0443\u043c\u043e\u0432 \u0442\u0435\u043d\u0434\u0435\u0440\u0443"</span>,
+    <span class="hljs-attr">"author"</span>: {},
+    <span class="hljs-attr">"tenderer_action"</span>: <span class="hljs-literal">null</span>,
+    <span class="hljs-attr">"date_escalated"</span>: <span class="hljs-literal">null</span>,
+    <span class="hljs-attr">"visible_name"</span>: <span class="hljs-string">"\u0421\u043a\u0430\u0440\u0433\u0430"</span>,
+    <span class="hljs-attr">"date_accepted"</span>: <span class="hljs-literal">null</span>,
+    <span class="hljs-attr">"permissions"</span>: {
+      <span class="hljs-attr">"can_cancel"</span>: <span class="hljs-literal">true</span>
+    },
+    <span class="hljs-attr">"status_text"</span>: <span class="hljs-string">"\u0440\u043e\u0437\u0433\u043b\u044f\u0434\u0430\u0454\u0442\u044c\u0441\u044f \u0437\u0430\u043c\u043e\u0432\u043d\u0438\u043a\u043e\u043c"</span>,
+    <span class="hljs-attr">"resolution"</span>: <span class="hljs-literal">null</span>
+  },
+  <span class="hljs-attr">"system"</span>: <span class="hljs-string">""</span>
+}</code></pre>    </article>
+  </body>
+</html>

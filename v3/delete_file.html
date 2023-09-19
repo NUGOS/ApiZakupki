@@ -1,0 +1,43 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimal-ui">
+    <title>Delete file</title>
+    <link type="text/css" rel="stylesheet" href="../assets/css/github-markdown.css">
+    <link type="text/css" rel="stylesheet" href="../assets/css/pilcrow.css">
+    <link type="text/css" rel="stylesheet" href="../assets/css/hljs-github.min.css"/>
+  </head>
+  <body>
+    <article class="markdown-body"><h1 id="delete-file"><a class="header-link" href="#delete-file"></a>Delete file</h1>
+<p><strong>POST remote/api/v3/delete_file/{id}</strong></p>
+<blockquote>
+<p>delete uploaded file
+<strong>id</strong> - file id, can be getted from <a href="../files_upload.html">upload file</a> response</p>
+</blockquote>
+<p>request headers:</p>
+<ul class="list">
+<li><em>Api-Agent</em> - type: string, required</li>
+<li><em>Acc-Token</em> - type: string, required</li>
+</ul>
+<p>possible response fields:</p>
+<ul class="list">
+<li><em>status</em> - type: str, values: ok/error</li>
+<li><em>errors</em> - type: array of objects, validation errors</li>
+<li><em>data</em> - type: object</li>
+<li><em>system</em> - type: str, system error messages</li>
+</ul>
+<blockquote>
+<p>always returns empty success response</p>
+</blockquote>
+<h2 id="example"><a class="header-link" href="#example"></a>Example</h2>
+<p>request:</p>
+<pre class="hljs"><code>clear &amp;&amp; curl -X POST <span class="hljs-string">"http://my.example.com:5001/remote/api/v3/delete_file/1246173"</span> --header <span class="hljs-string">"Acc-Token: 0064e3bbac9bd39c6d40af0f16b5852b4f84da22"</span> --header <span class="hljs-string">"Api-Agent: zk_ios"</span> | json_pp</code></pre><p>response:</p>
+<pre class="hljs"><code>{
+   <span class="hljs-attr">"data"</span> : {},
+    <span class="hljs-attr">"errors"</span> : [],
+    <span class="hljs-attr">"status"</span> : <span class="hljs-string">"ok"</span>,
+    <span class="hljs-attr">"system"</span> : <span class="hljs-string">""</span>
+}</code></pre>    </article>
+  </body>
+</html>

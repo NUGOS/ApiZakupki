@@ -1,0 +1,55 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimal-ui">
+    <title>Resolve claim</title>
+    <link type="text/css" rel="stylesheet" href="../assets/css/github-markdown.css">
+    <link type="text/css" rel="stylesheet" href="../assets/css/pilcrow.css">
+    <link type="text/css" rel="stylesheet" href="../assets/css/hljs-github.min.css"/>
+  </head>
+  <body>
+    <article class="markdown-body"><h1 id="resolve-claim"><a class="header-link" href="#resolve-claim"></a>Resolve claim</h1>
+<p><strong>POST remote/api/v3/claim/{claim_id}/resolve</strong></p>
+<blockquote>
+<p>id - claim id from <a href="./claims_list.html">claims list</a> page or
+<a href="./view.html">view purchase</a> or <a href="./view_lot.html">view lot</a></p>
+<p>purchase - state_purchase uid from <a href="./view.html">view purchase</a></p>
+<p>purchase_lot - state_purchase_lot uid from <a href="./view_lot.html">view lot</a></p>
+<p>Переводит требование в статус <strong>resolved</strong> (int index 3)</p>
+<p>Выставляет у требования поле <strong>satisfied</strong> в одно из: [True, False]</p>
+<p>Работает для поставщика который создал требование</p>
+<p>Работает если требование в статусе <strong>answered</strong> (int index 7)</p>
+</blockquote>
+<p>request headers:</p>
+<ul class="list">
+<li><em>Api-Agent</em> - type: string, reuqired</li>
+<li><em>Acc-Token</em> - type: string, required</li>
+<li><em>Content-Type</em> - type: string, required</li>
+</ul>
+<p>possible request fields:</p>
+<ul class="list">
+<li><em>action</em> - type: string, required one of [&#39;satisfy&#39;, &#39;agree&#39;, &#39;disagree&#39;]</li>
+<li><em>purchase</em> - type: str, required</li>
+<li><em>purchase_lot</em> - type: str, optional if <strong>purchase</strong> passed</li>
+</ul>
+<p>possible response fields:</p>
+<ul class="list">
+<li><em>status</em> - type: str, values: ok/error</li>
+<li><em>errors</em> - type: array of objects, validation errors</li>
+<li><em>data</em> - type: object</li>
+<li><em>system</em> - type: str, system error messages</li>
+</ul>
+<h1 id="examples"><a class="header-link" href="#examples"></a>Examples</h1>
+<p>request:</p>
+<pre class="hljs"><code>clear &amp;&amp; curl --header <span class="hljs-string">"Acc-Token: 4952d0d50cd4c504ee4818f5f487df10c7e4d10a"</span> --header <span class="hljs-string">"Api-Agent: zk_ios"</span> --header <span class="hljs-string">"Content-Type: application/json"</span> --data <span class="hljs-string">'{"action": "satisfy"}'</span> -X POST <span class="hljs-string">"http://my.example.com:5000/remote/api/v3/claim/6f37c3e7b5e143098eed932925ad7dc3/resolve"</span></code></pre><p>response:</p>
+<pre class="hljs"><code>{
+  <span class="hljs-attr">"status"</span>: <span class="hljs-string">"ok"</span>,
+  <span class="hljs-attr">"errors"</span>: [],
+  <span class="hljs-attr">"data"</span>: {
+    <span class="hljs-attr">"id"</span>: <span class="hljs-string">"6f37c3e7b5e143098eed932925ad7dc3"</span>
+  },
+  <span class="hljs-attr">"system"</span>: <span class="hljs-string">""</span>
+}</code></pre>    </article>
+  </body>
+</html>

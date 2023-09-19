@@ -1,0 +1,230 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimal-ui">
+    <title>Список транзакций</title>
+    <link type="text/css" rel="stylesheet" href="assets/css/github-markdown.css">
+    <link type="text/css" rel="stylesheet" href="assets/css/pilcrow.css">
+    <link type="text/css" rel="stylesheet" href="assets/css/hljs-github.min.css"/>
+  </head>
+  <body>
+    <article class="markdown-body"><h1 id="список-транзакций"><a class="header-link" href="#список-транзакций"></a>Список транзакций</h1>
+<p><strong>GET remote/api/v2/cashflow?page={int}&amp;dt_from={str}&amp;dt_to={str}&amp;filter={int}</strong></p>
+<p>request headers:</p>
+<ul class="list">
+<li><em>Api-Agent</em> - type: string, required</li>
+<li><em>Acc-Token</em> - type: string, required</li>
+</ul>
+<p>request args:</p>
+<ul class="list">
+<li><em>page</em> - type: int, optional</li>
+<li><em>dt_to</em> - type: date str, optional, format <strong>dd.mm.yyyy</strong></li>
+<li><em>dt_from</em> - type: date str, optional, format <strong>dd.mm.yyyy</strong></li>
+<li><em>filter</em> - type: int, one of <a href="./static_data.html"><strong>cashflow_types</strong></a>, optional</li>
+</ul>
+<blockquote>
+<p>созвращает постраничный список транзакций</p>
+</blockquote>
+<p>possible response fields:</p>
+<ul class="list">
+<li><em>status</em> - type: str, values: ok/error</li>
+<li><em>errors</em> - type: array of objects, validation errors</li>
+<li><em>data</em> - type: object</li>
+<li><em>system</em> - type: str, system error messages</li>
+</ul>
+<p>possible response data fields:</p>
+<ul class="list">
+<li><em>total</em> - type: int</li>
+<li><em>cashflows</em> - type: array of <strong>cashflow</strong> objects or empty, described below</li>
+<li><em>current_page</em> - type: int</li>
+<li><em>last_page</em> - type: int</li>
+<li><em>is_last_page</em> - type: bool</li>
+</ul>
+<p>possible cashflows object fields:</p>
+<ul class="list">
+<li><em>comment</em> - type: str, can contain html</li>
+<li><em>date_create</em> - type: datetime str, format <strong>yyyy-mm-ddTHH:MM:SS</strong></li>
+<li><em>amount</em> - type: str</li>
+<li><em>type_text</em> - type: str</li>
+<li><em>type</em> - type: signed int one of <code>[1, -1]</code></li>
+<li><em>id</em> - type: int</li>
+</ul>
+<p>##Examples</p>
+<p>request:</p>
+<pre class="hljs"><code>curt -H <span class="hljs-string">"Acc-Token: 2ec2c2454b63dd5f3f96e6b6ebad7aa922f0b952"</span> -X GET <span class="hljs-string">"http://my.example.com:5001/remote/api/v2/cashflow"</span></code></pre><p>response:</p>
+<pre class="hljs"><code>{
+    <span class="hljs-attr">"status"</span>: <span class="hljs-string">"ok"</span>,
+    <span class="hljs-attr">"errors"</span>: [],
+    <span class="hljs-attr">"data"</span>: {
+        <span class="hljs-attr">"total"</span>: <span class="hljs-number">445</span>,
+        <span class="hljs-attr">"current_page"</span>: <span class="hljs-number">1</span>,
+        <span class="hljs-attr">"last_page"</span>: <span class="hljs-number">23</span>,
+        <span class="hljs-attr">"cashflows"</span>: [
+            {
+                <span class="hljs-attr">"comment"</span>: <span class="hljs-string">"Оплата за участь у тендері &lt;a href=\"http://my.example.com:5001/cabinet/purchases/state_purchase/view/274082\"&gt;UA-2018-10-22-000083-c&lt;/a&gt;"</span>,
+                <span class="hljs-attr">"date_create"</span>: <span class="hljs-string">"2018-10-22T21:19:50"</span>,
+                <span class="hljs-attr">"amount"</span>: <span class="hljs-string">"- 340 грн."</span>,
+                <span class="hljs-attr">"type_text"</span>: <span class="hljs-string">"Списання"</span>,
+                <span class="hljs-attr">"type"</span>: <span class="hljs-number">-1</span>,
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">73744</span>
+            },
+            {
+                <span class="hljs-attr">"comment"</span>: <span class="hljs-string">"Оплата за участь у тендері &lt;a href=\"http://my.example.com:5001/cabinet/purchases/com_purchase/view/274080\"&gt;R-UA-2018-10-18-000113-1&lt;/a&gt;"</span>,
+                <span class="hljs-attr">"date_create"</span>: <span class="hljs-string">"2018-10-18T15:56:26"</span>,
+                <span class="hljs-attr">"amount"</span>: <span class="hljs-string">"- 340 грн."</span>,
+                <span class="hljs-attr">"type_text"</span>: <span class="hljs-string">"Списання"</span>,
+                <span class="hljs-attr">"type"</span>: <span class="hljs-number">-1</span>,
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">73743</span>
+            },
+            {
+                <span class="hljs-attr">"comment"</span>: <span class="hljs-string">"Оплата за участь у тендері &lt;a href=\"http://my.example.com:5001/cabinet/purchases/com_purchase/view/274079\"&gt;R-UA-2018-10-18-000055-1&lt;/a&gt;"</span>,
+                <span class="hljs-attr">"date_create"</span>: <span class="hljs-string">"2018-10-18T12:03:23"</span>,
+                <span class="hljs-attr">"amount"</span>: <span class="hljs-string">"- 340 грн."</span>,
+                <span class="hljs-attr">"type_text"</span>: <span class="hljs-string">"Списання"</span>,
+                <span class="hljs-attr">"type"</span>: <span class="hljs-number">-1</span>,
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">73741</span>
+            },
+            {
+                <span class="hljs-attr">"comment"</span>: <span class="hljs-string">"Оплата за участь у тендері &lt;a href=\"http://my.example.com:5001/cabinet/purchases/com_purchase_lot/view/52496\"&gt;R-UA-2018-10-17-000171-1&lt;/a&gt;"</span>,
+                <span class="hljs-attr">"date_create"</span>: <span class="hljs-string">"2018-10-18T00:41:26"</span>,
+                <span class="hljs-attr">"amount"</span>: <span class="hljs-string">"- 340 грн."</span>,
+                <span class="hljs-attr">"type_text"</span>: <span class="hljs-string">"Списання"</span>,
+                <span class="hljs-attr">"type"</span>: <span class="hljs-number">-1</span>,
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">73739</span>
+            },
+            {
+                <span class="hljs-attr">"comment"</span>: <span class="hljs-string">"Оплата за участь у тендері &lt;a href=\"http://my.example.com:5001/cabinet/purchases/com_purchase/view/274077\"&gt;R-UA-2018-10-17-000113-1&lt;/a&gt;"</span>,
+                <span class="hljs-attr">"date_create"</span>: <span class="hljs-string">"2018-10-17T20:49:33"</span>,
+                <span class="hljs-attr">"amount"</span>: <span class="hljs-string">"- 340 грн."</span>,
+                <span class="hljs-attr">"type_text"</span>: <span class="hljs-string">"Списання"</span>,
+                <span class="hljs-attr">"type"</span>: <span class="hljs-number">-1</span>,
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">73736</span>
+            },
+            {
+                <span class="hljs-attr">"comment"</span>: <span class="hljs-string">"Оплата за участь у тендері &lt;a href=\"http://my.example.com:5001/cabinet/purchases/com_purchase/view/274076\"&gt;R-UA-2018-10-17-000112-1&lt;/a&gt;"</span>,
+                <span class="hljs-attr">"date_create"</span>: <span class="hljs-string">"2018-10-17T19:41:51"</span>,
+                <span class="hljs-attr">"amount"</span>: <span class="hljs-string">"- 1 700 грн."</span>,
+                <span class="hljs-attr">"type_text"</span>: <span class="hljs-string">"Списання"</span>,
+                <span class="hljs-attr">"type"</span>: <span class="hljs-number">-1</span>,
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">73734</span>
+            },
+            {
+                <span class="hljs-attr">"comment"</span>: <span class="hljs-string">"Оплата за участь у тендері &lt;a href=\"http://my.example.com:5001/cabinet/purchases/state_purchase_lot/view/52494\"&gt;UA-2018-09-28-000047-c&lt;/a&gt;"</span>,
+                <span class="hljs-attr">"date_create"</span>: <span class="hljs-string">"2018-09-28T19:54:49"</span>,
+                <span class="hljs-attr">"amount"</span>: <span class="hljs-string">"- 1 700 грн."</span>,
+                <span class="hljs-attr">"type_text"</span>: <span class="hljs-string">"Списання"</span>,
+                <span class="hljs-attr">"type"</span>: <span class="hljs-number">-1</span>,
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">73733</span>
+            },
+            {
+                <span class="hljs-attr">"comment"</span>: <span class="hljs-string">"Оплата за участь у тендері &lt;a href=\"http://my.example.com:5001/cabinet/purchases/state_purchase_lot/view/52495\"&gt;UA-2018-09-28-000047-c&lt;/a&gt;"</span>,
+                <span class="hljs-attr">"date_create"</span>: <span class="hljs-string">"2018-09-28T19:54:49"</span>,
+                <span class="hljs-attr">"amount"</span>: <span class="hljs-string">"- 1 700 грн."</span>,
+                <span class="hljs-attr">"type_text"</span>: <span class="hljs-string">"Списання"</span>,
+                <span class="hljs-attr">"type"</span>: <span class="hljs-number">-1</span>,
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">73732</span>
+            },
+            {
+                <span class="hljs-attr">"comment"</span>: <span class="hljs-string">"Оплата за участь у тендері &lt;a href=\"http://my.example.com:5001/cabinet/purchases/state_purchase/view/274069\"&gt;UA-2018-09-19-000034-c&lt;/a&gt;"</span>,
+                <span class="hljs-attr">"date_create"</span>: <span class="hljs-string">"2018-09-19T15:45:27"</span>,
+                <span class="hljs-attr">"amount"</span>: <span class="hljs-string">"- 340 гр\u043d."</span>,
+                <span class="hljs-attr">"type_text"</span>: <span class="hljs-string">"Списання"</span>,
+                <span class="hljs-attr">"type"</span>: <span class="hljs-number">-1</span>,
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">73730</span>
+            },
+            {
+                <span class="hljs-attr">"comment"</span>: <span class="hljs-string">"Скасування оплати за участь у тендері &lt;a href=\"http://my.example.com:5001/cabinet/purchases/state_purchase/view/274069\"&gt;UA-2018-09-19-000034-c&lt;/a&gt;"</span>,
+                <span class="hljs-attr">"date_create"</span>: <span class="hljs-string">"2018-09-19T15:45:11"</span>,
+                <span class="hljs-attr">"amount"</span>: <span class="hljs-string">"+ 340 грн."</span>,
+                <span class="hljs-attr">"type_text"</span>: <span class="hljs-string">"Поповнення"</span>,
+                <span class="hljs-attr">"type"</span>: <span class="hljs-number">1</span>,
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">73729</span>
+            },
+            {
+                <span class="hljs-attr">"comment"</span>: <span class="hljs-string">"Оплата за участь у тендері &lt;a href=\"http://my.example.com:5001/cabinet/purchases/state_purchase/view/274069\"&gt;UA-2018-09-19-000034-c&lt;/a&gt;"</span>,
+                <span class="hljs-attr">"date_create"</span>: <span class="hljs-string">"2018-09-19T15:44:30"</span>,
+                <span class="hljs-attr">"amount"</span>: <span class="hljs-string">"- 340 грн."</span>,
+                <span class="hljs-attr">"type_text"</span>: <span class="hljs-string">"Списання"</span>,
+                <span class="hljs-attr">"type"</span>: <span class="hljs-number">-1</span>,
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">73728</span>
+            },
+            {
+                <span class="hljs-attr">"comment"</span>: <span class="hljs-string">"Скасування оплати за участь у тендері &lt;a href=\"http://my.example.com:5001/cabinet/purchases/state_purchase/view/274069\"&gt;UA-2018-09-19-000034-c&lt;/a&gt;"</span>,
+                <span class="hljs-attr">"date_create"</span>: <span class="hljs-string">"2018-09-19T15:44:26"</span>,
+                <span class="hljs-attr">"amount"</span>: <span class="hljs-string">"+ 340 грн."</span>,
+                <span class="hljs-attr">"type_text"</span>: <span class="hljs-string">"Поповнення"</span>,
+                <span class="hljs-attr">"type"</span>: <span class="hljs-number">1</span>,
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">73727</span>
+            },
+            {
+                <span class="hljs-attr">"comment"</span>: <span class="hljs-string">"Оплата за участь у тендері &lt;a href=\"http://my.example.com:5001/cabinet/purchases/state_purchase/view/274069\"&gt;UA-2018-09-19-000034-c&lt;/a&gt;"</span>,
+                <span class="hljs-attr">"date_create"</span>: <span class="hljs-string">"2018-09-19T15:39:18"</span>,
+                <span class="hljs-attr">"amount"</span>: <span class="hljs-string">"- 340 грн."</span>,
+                <span class="hljs-attr">"type_text"</span>: <span class="hljs-string">"Списання"</span>,
+                <span class="hljs-attr">"type"</span>: <span class="hljs-number">-1</span>,
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">73726</span>
+            },
+            {
+                <span class="hljs-attr">"comment"</span>: <span class="hljs-string">"Оплата за участь у тендері &lt;a href=\"http://my.example.com:5001/cabinet/purchases/state_purchase/view/274065\"&gt;UA-2018-09-03-000056-a&lt;/a&gt;"</span>,
+                <span class="hljs-attr">"date_create"</span>: <span class="hljs-string">"2018-09-12T20:31:46"</span>,
+                <span class="hljs-attr">"amount"</span>: <span class="hljs-string">"- 1 700 грн."</span>,
+                <span class="hljs-attr">"type_text"</span>: <span class="hljs-string">"Списання"</span>,
+                <span class="hljs-attr">"type"</span>: <span class="hljs-number">-1</span>,
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">73725</span>
+            },
+            {
+                <span class="hljs-attr">"comment"</span>: <span class="hljs-string">"Оплата за участь у тендері &lt;a href=\"http://my.example.com:5001/cabinet/purchases/state_purchase/view/274054\"&gt;UA-2018-08-17-000078-a&lt;/a&gt;"</span>,
+                <span class="hljs-attr">"date_create"</span>: <span class="hljs-string">"2018-08-17T19:14:18"</span>,
+                <span class="hljs-attr">"amount"</span>: <span class="hljs-string">"- 1 700 грн."</span>,
+                <span class="hljs-attr">"type_text"</span>: <span class="hljs-string">"Списання"</span>,
+                <span class="hljs-attr">"type"</span>: <span class="hljs-number">-1</span>,
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">73723</span>
+            },
+            {
+                <span class="hljs-attr">"comment"</span>: <span class="hljs-string">"Оплата за участь у тендері &lt;a href=\"http://my.example.com:5001/cabinet/purchases/state_purchase_lot/view/52491\"&gt;UA-2018-08-15-000056-a&lt;/a&gt;"</span>,
+                <span class="hljs-attr">"date_create"</span>: <span class="hljs-string">"2018-08-15T18:04:48"</span>,
+                <span class="hljs-attr">"amount"</span>: <span class="hljs-string">"- 1 700 грн."</span>,
+                <span class="hljs-attr">"type_text"</span>: <span class="hljs-string">"Списання"</span>,
+                <span class="hljs-attr">"type"</span>: <span class="hljs-number">-1</span>,
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">73720</span>
+            },
+            {
+                <span class="hljs-attr">"comment"</span>: <span class="hljs-string">"Оплата за участь у тендері &lt;a href=\"http://my.example.com:5001/cabinet/purchases/state_purchase_lot/view/52492\"&gt;UA-2018-08-15-000056-a&lt;/a&gt;"</span>,
+                <span class="hljs-attr">"date_create"</span>: <span class="hljs-string">"2018-08-15T18:04:48"</span>,
+                <span class="hljs-attr">"amount"</span>: <span class="hljs-string">"- 1 700 грн."</span>,
+                <span class="hljs-attr">"type_text"</span>: <span class="hljs-string">"Списання"</span>,
+                <span class="hljs-attr">"type"</span>: <span class="hljs-number">-1</span>,
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">73719</span>
+            },
+            {
+                <span class="hljs-attr">"comment"</span>: <span class="hljs-string">"Оплата за участь у тендері &lt;a href=\"http://my.example.com:5001/cabinet/purchases/state_purchase/view/274051\"&gt;UA-2018-08-15-000047-a&lt;/a&gt;"</span>,
+                <span class="hljs-attr">"date_create"</span>: <span class="hljs-string">"2018-08-15T16:26:22"</span>,
+                <span class="hljs-attr">"amount"</span>: <span class="hljs-string">"- 1 700 грн."</span>,
+                <span class="hljs-attr">"type_text"</span>: <span class="hljs-string">"Списання"</span>,
+                <span class="hljs-attr">"type"</span>: <span class="hljs-number">-1</span>,
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">73718</span>
+            },
+            {
+                <span class="hljs-attr">"comment"</span>: <span class="hljs-string">"Скасування оплати за участь у тендері &lt;a href=\"http://my.example.com:5001/cabinet/purchases/state_purchase/view/274051\"&gt;UA-2018-08-15-000047-a&lt;/a&gt;"</span>,
+                <span class="hljs-attr">"date_create"</span>: <span class="hljs-string">"2018-08-15T16:26:21"</span>,
+                <span class="hljs-attr">"amount"</span>: <span class="hljs-string">"+ 1 700 грн."</span>,
+                <span class="hljs-attr">"type_text"</span>: <span class="hljs-string">"Поповнення"</span>,
+                <span class="hljs-attr">"type"</span>: <span class="hljs-number">1</span>,
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">73717</span>
+            },
+            {
+                <span class="hljs-attr">"comment"</span>: <span class="hljs-string">"Оплата за участь у тендері &lt;a href=\"http://my.example.com:5001/cabinet/purchases/state_purchase/view/274051\"&gt;UA-2018-08-15-000047-a&lt;/a&gt;"</span>,
+                <span class="hljs-attr">"date_create"</span>: <span class="hljs-string">"2018-08-15T16:25:04"</span>,
+                <span class="hljs-attr">"amount"</span>: <span class="hljs-string">"- 1 700 грн."</span>,
+                <span class="hljs-attr">"type_text"</span>: <span class="hljs-string">"Списання"</span>,
+                <span class="hljs-attr">"type"</span>: <span class="hljs-number">-1</span>,
+                <span class="hljs-attr">"id"</span>: <span class="hljs-number">73715</span>
+            }
+        ],
+        <span class="hljs-attr">"is_last_page"</span>: <span class="hljs-literal">false</span>
+    },
+    <span class="hljs-attr">"system"</span>: <span class="hljs-string">""</span>
+}</code></pre>    </article>
+  </body>
+</html>

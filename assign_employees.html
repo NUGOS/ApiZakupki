@@ -1,0 +1,166 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimal-ui">
+    <title>Назначение, снятие менеджеров на закупку</title>
+    <link type="text/css" rel="stylesheet" href="assets/css/github-markdown.css">
+    <link type="text/css" rel="stylesheet" href="assets/css/pilcrow.css">
+    <link type="text/css" rel="stylesheet" href="assets/css/hljs-github.min.css"/>
+  </head>
+  <body>
+    <article class="markdown-body"><h1 id="назначение,-снятие-менеджеров-на-закупку"><a class="header-link" href="#назначение,-снятие-менеджеров-на-закупку"></a>Назначение, снятие менеджеров на закупку</h1>
+<h2 id="назначение/переназначение-менеджера"><a class="header-link" href="#назначение/переназначение-менеджера"></a>Назначение/переназначение менеджера</h2>
+<p><strong>POST remote/api/v2/managers/assign</strong></p>
+<p>request headers:</p>
+<ul class="list">
+<li><em>Api-Agent</em> - type: string, required</li>
+<li><em>Acc-Token</em> - type: string, required</li>
+</ul>
+<p>possible request arguments:</p>
+<ul class="list">
+<li><em>state_purchase_id</em> - type: int</li>
+<li><em>assignee_employee_id</em> - type: int, possible values - one of users from <a href="./user_profile.html">assignment_data</a></li>
+</ul>
+<p>possible response fields:</p>
+<ul class="list">
+<li><em>status</em> - type: str, values: ok/error</li>
+</ul>
+<h3 id="examples"><a class="header-link" href="#examples"></a>Examples</h3>
+<p>request body:</p>
+<pre class="hljs"><code>{}</code></pre><p>request:</p>
+<pre class="hljs"><code>curl --header <span class="hljs-string">"Api-Agent: zk_android"</span> --header <span class="hljs-string">"Acc-Token: eyJlbXBsb3llZSI6NjEyNjEsIm1lcmNoYW50Ijo1NTEzOH0.C8di6Q.JPtyyp32oH7KaM7WqyjQPE0SoXA"</span> -X POST <span class="hljs-string">"http://my.example.com:5001/remote/api/v2/managers/assign"</span> <span class="hljs-_">-d</span>@request_body.json</code></pre><p>response:</p>
+<pre class="hljs"><code>{
+    <span class="hljs-attr">"status"</span>: <span class="hljs-string">"error"</span>,
+    <span class="hljs-attr">"errors"</span>: [],
+    <span class="hljs-attr">"system"</span>: <span class="hljs-string">"invalid request"</span>
+}</code></pre><p>request body:</p>
+<pre class="hljs"><code>{
+    <span class="hljs-attr">"json"</span>: <span class="hljs-string">"request"</span>
+}</code></pre><p>request:</p>
+<pre class="hljs"><code>curl --header <span class="hljs-string">"Api-Agent: zk_android"</span> --header <span class="hljs-string">"Acc-Token: eyJlbXBsb3llZSI6NjEyNjEsIm1lcmNoYW50Ijo1NTEzOH0.C8di6Q.JPtyyp32oH7KaM7WqyjQPE0SoXA"</span> -X POST <span class="hljs-string">"http://my.example.com:5001/remote/api/v2/managers/assign"</span> <span class="hljs-_">-d</span>@request_body.json</code></pre><p>response:</p>
+<pre class="hljs"><code>{
+    <span class="hljs-attr">"status"</span>: <span class="hljs-string">"error"</span>,
+    <span class="hljs-attr">"errors"</span>: [],
+    <span class="hljs-attr">"system"</span>: <span class="hljs-string">"state_purchase_id and assignee_employee_id are required"</span>
+}</code></pre><p>request body:</p>
+<pre class="hljs"><code>{
+    <span class="hljs-attr">"state_purchase_id"</span>: <span class="hljs-string">"request"</span>,
+    <span class="hljs-attr">"assignee_employee_id"</span>: <span class="hljs-string">"id"</span>
+}</code></pre><p>request:</p>
+<pre class="hljs"><code>curl --header <span class="hljs-string">"Api-Agent: zk_android"</span> --header <span class="hljs-string">"Acc-Token: eyJlbXBsb3llZSI6NjEyNjEsIm1lcmNoYW50Ijo1NTEzOH0.C8di6Q.JPtyyp32oH7KaM7WqyjQPE0SoXA"</span> -X POST <span class="hljs-string">"http://my.example.com:5001/remote/api/v2/managers/assign"</span> <span class="hljs-_">-d</span>@request_body.json</code></pre><p>response:</p>
+<pre class="hljs"><code>{
+    <span class="hljs-attr">"status"</span>: <span class="hljs-string">"error"</span>,
+    <span class="hljs-attr">"errors"</span>: [
+        {
+            <span class="hljs-attr">"field"</span>: <span class="hljs-string">"state_purchase_id"</span>,
+            <span class="hljs-attr">"messages"</span>: <span class="hljs-string">"\"state_purchase_id\" is not a number"</span>
+        },
+        {
+            <span class="hljs-attr">"field"</span>: <span class="hljs-string">"assignee_employee_id"</span>,
+            <span class="hljs-attr">"messages"</span>: <span class="hljs-string">"\"assignee_employee_id\" is not a number"</span>
+        }
+    ],
+    <span class="hljs-attr">"system"</span>: <span class="hljs-string">""</span>
+}</code></pre><p>request body:</p>
+<pre class="hljs"><code>{
+    <span class="hljs-attr">"state_purchase_id"</span>: <span class="hljs-number">123</span>,
+    <span class="hljs-attr">"assignee_employee_id"</span>: <span class="hljs-number">123</span>
+}</code></pre><p>request:</p>
+<pre class="hljs"><code>curl --header <span class="hljs-string">"Api-Agent: zk_android"</span> --header <span class="hljs-string">"Acc-Token: eyJlbXBsb3llZSI6NjEyNjEsIm1lcmNoYW50Ijo1NTEzOH0.C8di6Q.JPtyyp32oH7KaM7WqyjQPE0SoXA"</span> -X POST <span class="hljs-string">"http://my.example.com:5001/remote/api/v2/managers/assign"</span> <span class="hljs-_">-d</span>@request_body.json</code></pre><p>response:</p>
+<pre class="hljs"><code>{
+    <span class="hljs-attr">"status"</span>: <span class="hljs-string">"error"</span>,
+    <span class="hljs-attr">"errors"</span>: [
+        {
+            <span class="hljs-attr">"field"</span>: <span class="hljs-string">"state_purchase_id"</span>,
+            <span class="hljs-attr">"messages"</span>: <span class="hljs-string">"state_purchase (123) does not exists"</span>
+        },
+        {
+            <span class="hljs-attr">"field"</span>: <span class="hljs-string">"assignee_employee_id"</span>,
+            <span class="hljs-attr">"messages"</span>: <span class="hljs-string">"you do not have permission to assign on employee 123"</span>
+        }
+    ],
+    <span class="hljs-attr">"system"</span>: <span class="hljs-string">""</span>
+}</code></pre><p>request body:</p>
+<pre class="hljs"><code>{
+    <span class="hljs-attr">"state_purchase_id"</span>: <span class="hljs-number">274065</span>,
+    <span class="hljs-attr">"assignee_employee_id"</span>: <span class="hljs-number">61471</span>
+}</code></pre><p>request:</p>
+<pre class="hljs"><code>curl --header <span class="hljs-string">"Api-Agent: zk_android"</span> --header <span class="hljs-string">"Acc-Token: eyJlbXBsb3llZSI6NjEyNjEsIm1lcmNoYW50Ijo1NTEzOH0.C8di6Q.JPtyyp32oH7KaM7WqyjQPE0SoXA"</span> -X POST <span class="hljs-string">"http://my.example.com:5001/remote/api/v2/managers/assign"</span> <span class="hljs-_">-d</span>@request_body.json</code></pre><p>response:</p>
+<pre class="hljs"><code>{
+    <span class="hljs-attr">"status"</span>: <span class="hljs-string">"ok"</span>
+}</code></pre><h2 id="снятие-менеджера-с-закупки"><a class="header-link" href="#снятие-менеджера-с-закупки"></a>Снятие менеджера с закупки</h2>
+<p><strong>POST remote/api/v2/managers/unassign</strong></p>
+<p>request headers:</p>
+<ul class="list">
+<li><em>Api-Agent</em> - type: string, required</li>
+<li><em>Acc-Token</em> - type: string, required</li>
+</ul>
+<p>possible request arguments:</p>
+<ul class="list">
+<li><em>state_purchase_id</em> - type: int</li>
+</ul>
+<p>possible response fields:</p>
+<ul class="list">
+<li><em>status</em> - type: str, values: ok/error</li>
+</ul>
+<h3 id="examples-1"><a class="header-link" href="#examples-1"></a>Examples</h3>
+<p>request body:</p>
+<pre class="hljs"><code>{}</code></pre><p>request:</p>
+<pre class="hljs"><code>curl --header <span class="hljs-string">"Api-Agent: zk_android"</span> --header <span class="hljs-string">"Acc-Token: eyJlbXBsb3llZSI6NjEyNjEsIm1lcmNoYW50Ijo1NTEzOH0.C8di6Q.JPtyyp32oH7KaM7WqyjQPE0SoXA"</span> -X POST <span class="hljs-string">"http://my.example.com:5001/remote/api/v2/managers/unassign"</span> <span class="hljs-_">-d</span>@request_body.json</code></pre><p>response:</p>
+<pre class="hljs"><code>{
+    <span class="hljs-attr">"status"</span>: <span class="hljs-string">"error"</span>,
+    <span class="hljs-attr">"errors"</span>: [],
+    <span class="hljs-attr">"system"</span>: <span class="hljs-string">"invalid request"</span>
+}</code></pre><p>request body:</p>
+<pre class="hljs"><code>{
+    <span class="hljs-attr">"json"</span>: <span class="hljs-string">"request"</span>
+}</code></pre><p>request:</p>
+<pre class="hljs"><code>curl --header <span class="hljs-string">"Api-Agent: zk_android"</span> --header <span class="hljs-string">"Acc-Token: eyJlbXBsb3llZSI6NjEyNjEsIm1lcmNoYW50Ijo1NTEzOH0.C8di6Q.JPtyyp32oH7KaM7WqyjQPE0SoXA"</span> -X POST <span class="hljs-string">"http://my.example.com:5001/remote/api/v2/managers/unassign"</span> <span class="hljs-_">-d</span>@request_body.json</code></pre><p>response:</p>
+<pre class="hljs"><code>{
+    <span class="hljs-attr">"status"</span>: <span class="hljs-string">"error"</span>,
+    <span class="hljs-attr">"errors"</span>: [
+        {
+            <span class="hljs-attr">"field"</span>: <span class="hljs-string">"state_purchase_id"</span>,
+            <span class="hljs-attr">"messages"</span>: <span class="hljs-string">"Required"</span>
+        }
+    ],
+    <span class="hljs-attr">"system"</span>: <span class="hljs-string">""</span>
+}</code></pre><p>request body:</p>
+<pre class="hljs"><code>{
+    <span class="hljs-attr">"state_purchase_id"</span>: <span class="hljs-string">"id"</span>
+}</code></pre><p>request:</p>
+<pre class="hljs"><code>curl --header <span class="hljs-string">"Api-Agent: zk_android"</span> --header <span class="hljs-string">"Acc-Token: eyJlbXBsb3llZSI6NjEyNjEsIm1lcmNoYW50Ijo1NTEzOH0.C8di6Q.JPtyyp32oH7KaM7WqyjQPE0SoXA"</span> -X POST <span class="hljs-string">"http://my.example.com:5001/remote/api/v2/managers/unassign"</span> <span class="hljs-_">-d</span>@request_body.json</code></pre><p>response:</p>
+<pre class="hljs"><code>{
+    <span class="hljs-attr">"status"</span>: <span class="hljs-string">"error"</span>,
+    <span class="hljs-attr">"errors"</span>: [
+        {
+            <span class="hljs-attr">"field"</span>: <span class="hljs-string">"state_purchase_id"</span>,
+            <span class="hljs-attr">"messages"</span>: <span class="hljs-string">"\"state_purchase_id\" is not a number"</span>
+        }
+    ],
+    <span class="hljs-attr">"system"</span>: <span class="hljs-string">""</span>
+}</code></pre><p>request body:</p>
+<pre class="hljs"><code>{
+    <span class="hljs-attr">"state_purchase_id"</span>: <span class="hljs-number">123</span>
+}</code></pre><p>request:</p>
+<pre class="hljs"><code>curl --header <span class="hljs-string">"Api-Agent: zk_android"</span> --header <span class="hljs-string">"Acc-Token: eyJlbXBsb3llZSI6NjEyNjEsIm1lcmNoYW50Ijo1NTEzOH0.C8di6Q.JPtyyp32oH7KaM7WqyjQPE0SoXA"</span> -X POST <span class="hljs-string">"http://my.example.com:5001/remote/api/v2/managers/unassign"</span> <span class="hljs-_">-d</span>@request_body.json</code></pre><p>response:</p>
+<pre class="hljs"><code>{
+    <span class="hljs-attr">"status"</span>: <span class="hljs-string">"error"</span>,
+    <span class="hljs-attr">"errors"</span>: [
+        {
+            <span class="hljs-attr">"field"</span>: <span class="hljs-string">"state_purchase_id"</span>,
+            <span class="hljs-attr">"messages"</span>: <span class="hljs-string">"state_purchase (123) does not exists"</span>
+        }
+    ],
+    <span class="hljs-attr">"system"</span>: <span class="hljs-string">""</span>
+}</code></pre><p>request body:</p>
+<pre class="hljs"><code>{
+    <span class="hljs-attr">"state_purchase_id"</span>: <span class="hljs-number">274044</span>
+}</code></pre><p>request:</p>
+<pre class="hljs"><code>curl --header <span class="hljs-string">"Api-Agent: zk_android"</span> --header <span class="hljs-string">"Acc-Token: eyJlbXBsb3llZSI6NjEyNjEsIm1lcmNoYW50Ijo1NTEzOH0.C8di6Q.JPtyyp32oH7KaM7WqyjQPE0SoXA"</span> -X POST <span class="hljs-string">"http://my.example.com:5001/remote/api/v2/managers/unassign"</span> <span class="hljs-_">-d</span>@request_body.json</code></pre><p>response:</p>
+<pre class="hljs"><code>{
+    <span class="hljs-attr">"status"</span>: <span class="hljs-string">"ok"</span>
+}</code></pre>    </article>
+  </body>
+</html>

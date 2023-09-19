@@ -1,0 +1,64 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimal-ui">
+    <title>Get api data for claim/complaint by portal/cabinet id/uid</title>
+    <link type="text/css" rel="stylesheet" href="../assets/css/github-markdown.css">
+    <link type="text/css" rel="stylesheet" href="../assets/css/pilcrow.css">
+    <link type="text/css" rel="stylesheet" href="../assets/css/hljs-github.min.css"/>
+  </head>
+  <body>
+    <article class="markdown-body"><h1 id="get-api-data-for-claim/complaint-by-portal/cabinet-id/uid"><a class="header-link" href="#get-api-data-for-claim/complaint-by-portal/cabinet-id/uid"></a>Get api data for claim/complaint by portal/cabinet id/uid</h1>
+<p><strong>GET remote/api/v3/dispatch_complaint/{cid}</strong></p>
+<blockquote>
+<p>cid - claim/complaint uid/id from cabinet/portal url</p>
+</blockquote>
+<p>request headers:</p>
+<ul class="list">
+<li><em>Api-Agent</em> - type: string, reuqired</li>
+<li><em>Acc-Token</em> - type: string, required</li>
+</ul>
+<p>possible response fields:</p>
+<ul class="list">
+<li><em>status</em> - type: str, values: ok/error</li>
+<li><em>errors</em> - type: array of objects, validation errors</li>
+<li><em>data</em> - type: object</li>
+<li><em>system</em> - type: str, system error messages</li>
+</ul>
+<p>possible data fields:</p>
+<ul class="list">
+<li><em>lot_uid</em> - type: str or null</li>
+<li><em>tender_uid</em> - type: str or null</li>
+<li><em>type</em> - type: str, possible values one of <code>[&quot;claim&quot;, &quot;complaint&quot;]</code></li>
+<li><em>uid</em> - type: str</li>
+</ul>
+<p>Examples:</p>
+<p>request:</p>
+<pre class="hljs"><code>clear &amp;&amp; curl -X GET <span class="hljs-string">"http://my.example.com:5001/remote/api/v3/dispatch_complaint/848d6d54d5ba451bb85226580a854a25"</span> --header <span class="hljs-string">"Acc-Token: 3010d1bfb81de262d23aa793c5c9fd972e4b93ba"</span> --header <span class="hljs-string">"Api-Agent: zk_ios"</span> | json_pp</code></pre><p>response:</p>
+<pre class="hljs"><code>{
+   <span class="hljs-attr">"data"</span> : {
+      <span class="hljs-attr">"lot_uid"</span> : <span class="hljs-literal">null</span>,
+      <span class="hljs-attr">"tender_uid"</span> : <span class="hljs-string">"72154f78d55545c7a42082f714d6d9a2"</span>,
+      <span class="hljs-attr">"type"</span> : <span class="hljs-string">"claim"</span>,
+      <span class="hljs-attr">"uid"</span> : <span class="hljs-string">"848d6d54d5ba451bb85226580a854a25"</span>
+   },
+   <span class="hljs-attr">"errors"</span> : [],
+   <span class="hljs-attr">"status"</span> : <span class="hljs-string">"ok"</span>,
+   <span class="hljs-attr">"system"</span> : <span class="hljs-string">""</span>
+}
+</code></pre><p>request:</p>
+<pre class="hljs"><code>clear &amp;&amp; curl -X GET <span class="hljs-string">"http://my.example.com:5001/remote/api/v3/dispatch_complaint/4481"</span> --header <span class="hljs-string">"Acc-Token: 3010d1bfb81de262d23aa793c5c9fd972e4b93ba"</span> --header <span class="hljs-string">"Api-Agent: zk_ios"</span> | json_pp</code></pre><p>response:</p>
+<pre class="hljs"><code>{
+   <span class="hljs-attr">"data"</span> : {
+      <span class="hljs-attr">"lot_uid"</span> : <span class="hljs-literal">null</span>,
+      <span class="hljs-attr">"tender_uid"</span> : <span class="hljs-string">"94b2f3db5fe74f2ba27efd8e7bc7474b"</span>,
+      <span class="hljs-attr">"type"</span> : <span class="hljs-string">"complaint"</span>,
+      <span class="hljs-attr">"uid"</span> : <span class="hljs-string">"0c1792faab3d4970889816bcbc60218c"</span>
+   },
+   <span class="hljs-attr">"errors"</span> : [],
+   <span class="hljs-attr">"status"</span> : <span class="hljs-string">"ok"</span>,
+   <span class="hljs-attr">"system"</span> : <span class="hljs-string">""</span>
+}</code></pre>    </article>
+  </body>
+</html>

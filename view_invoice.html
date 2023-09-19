@@ -1,0 +1,44 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimal-ui">
+    <title>Просмотр инвойса</title>
+    <link type="text/css" rel="stylesheet" href="assets/css/github-markdown.css">
+    <link type="text/css" rel="stylesheet" href="assets/css/pilcrow.css">
+    <link type="text/css" rel="stylesheet" href="assets/css/hljs-github.min.css"/>
+  </head>
+  <body>
+    <article class="markdown-body"><h1 id="просмотр-инвойса"><a class="header-link" href="#просмотр-инвойса"></a>Просмотр инвойса</h1>
+<p><strong>GET remote/api/v2/view_invoice/{invoice_id}</strong></p>
+<p>request headers:</p>
+<ul class="list">
+<li><em>Api-Agent</em> - type: string, required</li>
+<li><em>Acc-Token</em> - type: string, required</li>
+</ul>
+<p>request params:</p>
+<ul class="list">
+<li><em>invoice_id</em> - type: int, required</li>
+</ul>
+<blockquote>
+<p>возвращает PDF инвойса по invoice_id (см. <a href="./list_invoices.html">list invoices</a>)</p>
+</blockquote>
+<h2 id="examples"><a class="header-link" href="#examples"></a>Examples</h2>
+<p>request:</p>
+<pre class="hljs"><code>curl -i -X GET <span class="hljs-string">"http://my.example.com:5001/remote/api/v2/view_invoice"</span> -H <span class="hljs-string">"Acc-Token: 2ec2c2454b63dd5f3f96e6b6ebad7aa922f0b952"</span></code></pre><p>response:</p>
+<pre class="hljs"><code>HTTP/1.0 404 Not Found
+Date: Mon, 29 Oct 2018 06:55:20 GMT
+Content-Type: text/html; charset=utf-8
+Pragma: no-cache
+Cache-Control: no-cache</code></pre><p>request:</p>
+<pre class="hljs"><code>curl -i -X GET <span class="hljs-string">"http://my.example.com:5001/remote/api/v2/view_invoice"</span> -H <span class="hljs-string">"Acc-Token: 2ec2c2454b63dd5f3f96e6b6ebad7aa922f0b952"</span></code></pre><p>response:</p>
+<pre class="hljs"><code>HTTP/1.0 200 OK
+Date: Mon, 29 Oct 2018 06:56:17 GMT
+Content-Dispsition: attachment;filename=<span class="hljs-string">"zakupki_prom_ua_ZK-0021429-11.pdf"</span>
+Content-Type: application/pdf
+Accept-Ranges: bytes
+Last-Modified: Mon, 29 Oct 2018 06:56:17 GMT
+ETag: 1540796177.23-164625
+Content-Range: bytes 0-164624/164625</code></pre>    </article>
+  </body>
+</html>

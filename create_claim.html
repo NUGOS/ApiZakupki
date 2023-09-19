@@ -1,0 +1,195 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimal-ui">
+    <title>Claims creation</title>
+    <link type="text/css" rel="stylesheet" href="assets/css/github-markdown.css">
+    <link type="text/css" rel="stylesheet" href="assets/css/pilcrow.css">
+    <link type="text/css" rel="stylesheet" href="assets/css/hljs-github.min.css"/>
+  </head>
+  <body>
+    <article class="markdown-body"><h1 id="claims-creation"><a class="header-link" href="#claims-creation"></a>Claims creation</h1>
+<p><strong>POST remote/api/v1/claim/add</strong></p>
+<p>request headers:</p>
+<ul class="list">
+<li><em>Api-Agent</em> - type: string, reuqired</li>
+<li><em>Acc-Token</em> - type: string, required</li>
+</ul>
+<p>possible response fields:</p>
+<ul class="list">
+<li><em>status</em> - type: str, values: ok/error</li>
+<li><em>errors</em> - type: array of objects, validation errors</li>
+<li><em>data</em> - type: object</li>
+<li><em>system</em> - type: str, system error messages</li>
+</ul>
+<p>possible request fields:</p>
+<ul class="list">
+<li><em>state_purchase</em> - type: int, required one of <em>state_purchase</em> or <em>state_purchase_lot</em></li>
+<li><em>state_purchase_lot</em> - type: int, required one of <em>state_purchase</em> or <em>state_purchase_lot</em></li>
+<li><em>name</em> - type: str, required</li>
+<li><em>description</em> - type: str, required</li>
+<li><em>files</em> - type: array of int, optional, array must contain valid file ids from <a href="./files_upload.html">files upload response</a></li>
+<li><em>awardId</em> - type: int, optional</li>
+<li><em>qualificationId</em> - type: int, optional</li>
+</ul>
+<p>possible response data fields:</p>
+<ul class="list">
+<li><em>status</em> - type: int</li>
+<li><em>files</em> - type: <strong>complaint files</strong> object, described below</li>
+<li><em>description</em> - type: str</li>
+<li><em>date_decision</em> - type: date str or null, format <strong>yyyy-mm-ddTHH:MM:SS.fZ</strong></li>
+<li><em>resolution_type</em> - type: str or null</li>
+<li><em>date_submitted</em> - type: date str or null, format <strong>yyyy-mm-ddTHH:MM:SS.fZ</strong></li>
+<li><em>satisfied</em> - type: bool</li>
+<li><em>tuid</em> - type: str or null</li>
+<li><em>date_answered</em> - type: date str or null, format <strong>yyyy-mm-ddTHH:MM:SS.fZ</strong></li>
+<li><em>id</em> - type: int</li>
+<li><em>uid</em> - type: str</li>
+<li><em>cancellation_reason</em> - type: str or null</li>
+<li><em>title</em> - type: str</li>
+<li><em>type_title</em> - type: str</li>
+<li><em>author</em> - type: <strong>complaint author</strong> object or empty object</li>
+<li><em>tenderer_action</em> - type: str or null</li>
+<li><em>date_escalated</em> - type: date str or null, format <strong>yyyy-mm-ddTHH:MM:SS.fZ</strong></li>
+<li><em>visible_name</em> - type: str or null</li>
+<li><em>date_accepted</em> - type: date str or null, format <strong>yyyy-mm-ddTHH:MM:SS.fZ</strong></li>
+<li><em>status_text</em> - type: str</li>
+<li><em>resolution</em> - type: str or null</li>
+</ul>
+<p>complaint author object fields:</p>
+<ul class="list">
+<li><em>organization_name</em> - type: str</li>
+<li><em>organization_address</em> - type: str</li>
+<li><em>contact_name</em> - type: str</li>
+<li><em>contact_email</em> - type: str</li>
+</ul>
+<p>complaint files fields:</p>
+<ul class="list">
+<li><em>purchaseOwnerFiles</em> - type: array of <a href="./view_entity.html">document_instatnces</a> or empty</li>
+<li><em>reviewerAboveOwnerFiles</em> - type: array of <a href="./view_entity.html">document_instatnces</a> or empty</li>
+<li><em>complaintOwnerFiles</em> - type: array of <a href="./view_entity.html">document_instatnces</a> or empty</li>
+<li><em>reviewerOwnerFiles</em> - type: array of <a href="./view_entity.html">document_instatnces</a> or empty</li>
+</ul>
+<blockquote>
+<p>by default success response will contain not full info about claim, 
+it&#39;s because of async sending data, so it&#39;s recommended -
+after you receive &quot;ok&quot; response - make request to <a href="./complaint_view.html">complaints endpoint</a>
+to get more detailed info about created claim</p>
+</blockquote>
+<h1 id="examples"><a class="header-link" href="#examples"></a>Examples</h1>
+<h2 id="system-errors"><a class="header-link" href="#system-errors"></a>system errors</h2>
+<p>request data:</p>
+<pre class="hljs"><code>{
+    <span class="hljs-attr">"no"</span>: <span class="hljs-string">"valid data"</span>
+}</code></pre><p>request:</p>
+<pre class="hljs"><code>curl --header <span class="hljs-string">"Acc-Token: auth_token"</span> --header <span class="hljs-string">"Content-Type: application/json"</span> -X POST <span class="hljs-string">"http://my.example.com:5001/remote/api/v1/claim/add"</span> --data @request_data</code></pre><p>response:</p>
+<pre class="hljs"><code>{
+    <span class="hljs-attr">"status"</span>: <span class="hljs-string">"error"</span>,
+    <span class="hljs-attr">"errors"</span>: [],
+    <span class="hljs-attr">"system"</span>: <span class="hljs-string">"one of state_purchase or state_purchase_lot should be passed"</span>
+}</code></pre><p>request data:</p>
+<pre class="hljs"><code>{
+    <span class="hljs-attr">"state_purchase"</span>: <span class="hljs-string">"0"</span>,
+    <span class="hljs-attr">"state_purchase_lot"</span>: <span class="hljs-string">"0"</span>
+}</code></pre><p>request:</p>
+<pre class="hljs"><code>curl --header <span class="hljs-string">"Acc-Token: auth_token"</span> --header <span class="hljs-string">"Content-Type: application/json"</span> -X POST <span class="hljs-string">"http://my.example.com:5001/remote/api/v1/claim/add"</span> --data @request_data</code></pre><p>response:</p>
+<pre class="hljs"><code>{
+    <span class="hljs-attr">"status"</span>: <span class="hljs-string">"error"</span>,
+    <span class="hljs-attr">"errors"</span>: [],
+    <span class="hljs-attr">"system"</span>: <span class="hljs-string">"state_purchase and state_purchase_lot are not found"</span>
+}</code></pre><p>request data:</p>
+<pre class="hljs"><code>{
+    <span class="hljs-attr">"state_purchase"</span>: <span class="hljs-string">"274011"</span>,
+    <span class="hljs-attr">"state_purchase_lot"</span>: <span class="hljs-string">"52472"</span>
+}</code></pre><p>request:</p>
+<pre class="hljs"><code>curl --header <span class="hljs-string">"Acc-Token: auth_token"</span> --header <span class="hljs-string">"Content-Type: application/json"</span> -X POST <span class="hljs-string">"http://my.example.com:5001/remote/api/v1/claim/add"</span> --data @request_data</code></pre><p>response:</p>
+<pre class="hljs"><code>{
+    <span class="hljs-attr">"status"</span>: <span class="hljs-string">"error"</span>,
+    <span class="hljs-attr">"errors"</span>: [],
+    <span class="hljs-attr">"system"</span>: <span class="hljs-string">"state_purchase_lot must belong to state_purchase"</span>
+}</code></pre><h2 id="validation-errors"><a class="header-link" href="#validation-errors"></a>validation errors</h2>
+<p>request data:</p>
+<pre class="hljs"><code>{
+    <span class="hljs-attr">"state_purchase"</span>: <span class="hljs-string">"274011"</span>
+}</code></pre><p>request:</p>
+<pre class="hljs"><code>curl --header <span class="hljs-string">"Acc-Token: auth_token"</span> --header <span class="hljs-string">"Content-Type: application/json"</span> -X POST <span class="hljs-string">"http://my.example.com:5001/remote/api/v1/claim/add"</span> --data @request_data</code></pre><p>response:</p>
+<pre class="hljs"><code>{
+    <span class="hljs-attr">"status"</span>: <span class="hljs-string">"error"</span>,
+    <span class="hljs-attr">"sustem"</span>: <span class="hljs-string">""</span>,
+    <span class="hljs-attr">"errors"</span>: [
+        {
+            <span class="hljs-attr">"field"</span>: <span class="hljs-string">"name"</span>,
+            <span class="hljs-attr">"messages"</span>: <span class="hljs-string">"\u0426\u0435 \u043f\u043e\u043b\u0435 \u0454 \u043e\u0431\u043e\u0432`\u044f\u0437\u043a\u043e\u0432\u0438\u043c"</span>
+        },
+        {
+            <span class="hljs-attr">"field"</span>: <span class="hljs-string">"description"</span>,
+            <span class="hljs-attr">"messages"</span>: <span class="hljs-string">"\u0426\u0435 \u043f\u043e\u043b\u0435 \u0454 \u043e\u0431\u043e\u0432`\u044f\u0437\u043a\u043e\u0432\u0438\u043c"</span>
+        }
+    ]
+}
+</code></pre><p>request data:</p>
+<pre class="hljs"><code>{
+    <span class="hljs-attr">"state_purchase"</span>: <span class="hljs-string">"274011"</span>,
+    <span class="hljs-attr">"name"</span>: <span class="hljs-string">"name"</span>,
+    <span class="hljs-attr">"description"</span>: <span class="hljs-string">"description"</span>,
+    <span class="hljs-attr">"awardId"</span>: <span class="hljs-number">100500</span>,
+    <span class="hljs-attr">"qualificationId"</span>: <span class="hljs-number">100500</span>
+}</code></pre><p>request:</p>
+<pre class="hljs"><code>curl --header <span class="hljs-string">"Acc-Token: auth_token"</span> --header <span class="hljs-string">"Content-Type: application/json"</span> -X POST <span class="hljs-string">"http://my.example.com:5001/remote/api/v1/claim/add"</span> --data @request_data</code></pre><p>response:</p>
+<pre class="hljs"><code>{
+    <span class="hljs-attr">"status"</span>: <span class="hljs-string">"error"</span>,
+    <span class="hljs-attr">"sustem"</span>: <span class="hljs-string">""</span>,
+    <span class="hljs-attr">"errors"</span>: [
+        {
+            <span class="hljs-attr">"field"</span>: <span class="hljs-string">"awardId"</span>, 
+            <span class="hljs-attr">"messages"</span>: <span class="hljs-string">"Виберіть одного з учасників"</span>
+        },
+        {
+            <span class="hljs-attr">"field"</span>: <span class="hljs-string">"qualificationId"</span>,
+            <span class="hljs-attr">"messages"</span>: <span class="hljs-string">"Виберіть одного з учасників"</span>
+        }
+    ]
+}</code></pre><h2 id="success-response"><a class="header-link" href="#success-response"></a>success response</h2>
+<p>request data:</p>
+<pre class="hljs"><code>{
+    <span class="hljs-attr">"state_purchase"</span>: <span class="hljs-string">"274011"</span>,
+    <span class="hljs-attr">"name"</span>: <span class="hljs-string">"name"</span>,
+    <span class="hljs-attr">"description"</span>: <span class="hljs-string">"description"</span>
+}</code></pre><p>request:</p>
+<pre class="hljs"><code>curl --header <span class="hljs-string">"Acc-Token: auth_token"</span> --header <span class="hljs-string">"Content-Type: application/json"</span> -X POST <span class="hljs-string">"http://my.example.com:5001/remote/api/v1/claim/add"</span> --data @request_data</code></pre><p>response:</p>
+<pre class="hljs"><code>{
+    <span class="hljs-attr">"status"</span>: <span class="hljs-string">"ok"</span>,
+    <span class="hljs-attr">"errors"</span>: [],
+    <span class="hljs-attr">"data"</span>: {
+        <span class="hljs-attr">"status"</span>: <span class="hljs-number">6</span>,
+        <span class="hljs-attr">"files"</span>: {
+            <span class="hljs-attr">"purchaseOwnerFiles"</span>: [],
+            <span class="hljs-attr">"reviewerAboveOwnerFiles"</span>: [],
+            <span class="hljs-attr">"complaintOwnerFiles"</span>: [],
+            <span class="hljs-attr">"reviewerOwnerFiles"</span>: []
+        },
+        <span class="hljs-attr">"description"</span>: <span class="hljs-string">"desctription"</span>,
+        <span class="hljs-attr">"date_decision"</span>: <span class="hljs-literal">null</span>,
+        <span class="hljs-attr">"resolution_type"</span>: <span class="hljs-literal">null</span>,
+        <span class="hljs-attr">"date_submitted"</span>: <span class="hljs-literal">null</span>,
+        <span class="hljs-attr">"satisfied"</span>: <span class="hljs-literal">false</span>,
+        <span class="hljs-attr">"tuid"</span>: <span class="hljs-literal">null</span>,
+        <span class="hljs-attr">"date_answered"</span>: <span class="hljs-literal">null</span>,
+        <span class="hljs-attr">"id"</span>: <span class="hljs-number">4811</span>,
+        <span class="hljs-attr">"uid"</span>: <span class="hljs-literal">null</span>,
+        <span class="hljs-attr">"cancellation_reason"</span>: <span class="hljs-literal">null</span>,
+        <span class="hljs-attr">"title"</span>: <span class="hljs-string">"name"</span>,
+        <span class="hljs-attr">"type_title"</span>: <span class="hljs-string">"\u041e\u0441\u043a\u0430\u0440\u0436\u0435\u043d\u043d\u044f \u0443\u043c\u043e\u0432 \u0442\u0435\u043d\u0434\u0435\u0440\u0443"</span>,
+        <span class="hljs-attr">"author"</span>: {},
+        <span class="hljs-attr">"tenderer_action"</span>: <span class="hljs-literal">null</span>,
+        <span class="hljs-attr">"date_escalated"</span>: <span class="hljs-literal">null</span>,
+        <span class="hljs-attr">"visible_name"</span>: <span class="hljs-string">"\u0421\u043a\u0430\u0440\u0433\u0430"</span>,
+        <span class="hljs-attr">"date_accepted"</span>: <span class="hljs-literal">null</span>,
+        <span class="hljs-attr">"status_text"</span>: <span class="hljs-string">"\u0440\u043e\u0437\u0433\u043b\u044f\u0434\u0430\u0454\u0442\u044c\u0441\u044f \u0437\u0430\u043c\u043e\u0432\u043d\u0438\u043a\u043e\u043c"</span>,
+        <span class="hljs-attr">"resolution"</span>: <span class="hljs-literal">null</span>
+    },
+    <span class="hljs-attr">"system"</span>: <span class="hljs-string">""</span>
+}</code></pre>    </article>
+  </body>
+</html>

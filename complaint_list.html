@@ -1,0 +1,202 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimal-ui">
+    <title>Список жалоб для тендера</title>
+    <link type="text/css" rel="stylesheet" href="assets/css/github-markdown.css">
+    <link type="text/css" rel="stylesheet" href="assets/css/pilcrow.css">
+    <link type="text/css" rel="stylesheet" href="assets/css/hljs-github.min.css"/>
+  </head>
+  <body>
+    <article class="markdown-body"><h1 id="список-жалоб-для-тендера"><a class="header-link" href="#список-жалоб-для-тендера"></a>Список жалоб для тендера</h1>
+<p><strong>GET /remote/api/v2/entity/{id}/complaints</strong></p>
+<p>request headers:</p>
+<ul class="list">
+<li><em>Api-Agent</em> - type: string, reuqired</li>
+<li><em>Acc-Token</em> - type: string, required</li>
+</ul>
+<p>possible response fields:</p>
+<ul class="list">
+<li><em>status</em> - type: str, values: ok/error</li>
+<li><em>errors</em> - type: array of objects, validation errors</li>
+<li><em>data</em> - type: object</li>
+<li><em>system</em> - type: str, system error messages</li>
+</ul>
+<p>response data fields</p>
+<ul class="list">
+<li><em>id</em> - type: int (tender id)</li>
+<li><em>lots</em> - type: array of lot_complaints objects or empty (see below)</li>
+<li><em>complaints</em> - type: array of complaint_view_data objects or empty (see complaint_view doc)</li>
+<li><em>url</em> - type: str</li>
+<li><em>permissions</em>: - type: object, see below</li>
+</ul>
+<p>lot_complaints data fields</p>
+<ul class="list">
+<li><em>id</em> - type: int (lot id)</li>
+<li><em>complaints</em> - type: array of complaint_view_data objects or empty (see complaint_view doc)</li>
+<li><em>url</em> - type: str</li>
+</ul>
+<p>permission object data fields</p>
+<ul class="list">
+<li><em>id</em> - type: int (tender id)</li>
+<li><em>can_create</em> - type: bool</li>
+<li><em>create_until</em> - type: date str or null, format <strong>yyyy-mm-ddTHH:MM:SS.fZ</strong></li>
+<li><em>lots</em> - type: array of lot_permission objects or empty</li>
+<li><em>award_choices</em> - type: array of award_choice objects or empty</li>
+<li><em>qualification_choices</em> - type: array of qualification_choice objects or empty</li>
+<li><em>create_type</em> - type: str, one of <em>award</em>, <em>qualification</em>, <em>tender</em> <strong>work in progress, may change</strong></li>
+<li><em>create_type_title</em> - type: str <strong>work in progress, may change</strong></li>
+</ul>
+<p>lot_permission object data fields</p>
+<ul class="list">
+<li><em>id</em> - type: int (lot id)</li>
+<li><em>can_create</em> - type: bool</li>
+<li><em>create_until</em> - type: date str or null, format <strong>yyyy-mm-ddTHH:MM:SS.fZ</strong></li>
+<li><em>award_choices</em> - type: array of award_choice objects or empty</li>
+<li><em>qualification_choices</em> - type: array of qualification_choice objects or empty</li>
+</ul>
+<p>award_choice object fields</p>
+<ul class="list">
+<li><em>id</em> - type: int (award id)</li>
+<li><em>name</em> - type: str (merchant name)</li>
+</ul>
+<p>qualification_choice object fields</p>
+<ul class="list">
+<li><em>id</em> - type: int (qualification id)</li>
+<li><em>name</em> - type: str (merchant name)</li>
+</ul>
+<p>award_choices and qualification choices are needed to create a claim or complaint on specific supplier during &quot;prequalification_stand_still&quot; and &quot;qualification&quot; tender statuses (see create_claim doc)</p>
+<p>request example:</p>
+<pre class="hljs"><code>curl --H <span class="hljs-string">"Acc-Token: 3ac5d48674759277eaa95fe9d93685301a8cac8c"</span>  -H <span class="hljs-string">"Api-Agent: zk_ios"</span> -X GET <span class="hljs-string">"http://my.zakupki.example.com:8000/remote/api/v2/entity/2697538/complaints"</span></code></pre><p>response example:</p>
+<pre class="hljs"><code>{
+  <span class="hljs-attr">"status"</span>: <span class="hljs-string">"ok"</span>,
+  <span class="hljs-attr">"errors"</span>: [],
+  <span class="hljs-attr">"data"</span>: {
+    <span class="hljs-attr">"complaints"</span>: [
+      {
+        <span class="hljs-attr">"status"</span>: <span class="hljs-number">0</span>,
+        <span class="hljs-attr">"files"</span>: {
+          <span class="hljs-attr">"purchaseOwnerFiles"</span>: [],
+          <span class="hljs-attr">"reviewerAboveOwnerFiles"</span>: [],
+          <span class="hljs-attr">"complaintOwnerFiles"</span>: [
+            {
+              <span class="hljs-attr">"mimetype"</span>: <span class="hljs-string">"image/png"</span>,
+              <span class="hljs-attr">"history"</span>: [],
+              <span class="hljs-attr">"uid"</span>: <span class="hljs-string">"7a0d1e0a0ea848d7b48a5e7539318c1f"</span>,
+              <span class="hljs-attr">"descr"</span>: <span class="hljs-literal">null</span>,
+              <span class="hljs-attr">"title"</span>: <span class="hljs-string">"\u043f\u043e\u0434\u043e\u0440\u043e\u0436\u043d\u0438\u043a.png"</span>,
+              <span class="hljs-attr">"url"</span>: <span class="hljs-string">"https://public.docs-sandbox.openprocurement.org/get/423383fb004b4562b4e3f68361a59e40?KeyID=1331dc52\u0026Signature=VvUKGTeUcPiL1VrrXZzgwGhuW3lELkREgR1P3DlT3hoFM5Fo1NDt7nvwFnM0bF7nCW5VCB1ioTTWcUdcniatDg%253D%253D"</span>,
+              <span class="hljs-attr">"date_created"</span>: <span class="hljs-string">"2018-07-09T10:44:47"</span>,
+              <span class="hljs-attr">"date_modified"</span>: <span class="hljs-string">"2018-07-09T10:44:47"</span>,
+              <span class="hljs-attr">"id"</span>: <span class="hljs-number">15023411</span>,
+              <span class="hljs-attr">"confidentiality"</span>: <span class="hljs-string">"public"</span>
+            }
+          ],
+          <span class="hljs-attr">"reviewerOwnerFiles"</span>: []
+        },
+        <span class="hljs-attr">"description"</span>: <span class="hljs-string">"\u0422\u0435\u043d\u0434\u0435\u0440 - \u043e\u0442\u0441\u0442\u043e\u0439, \u0430\u0432\u0442\u043e\u0440 - \u043d\u0435\u0445\u043e\u0440\u043e\u0448\u0438\u0439 \u0447\u0435\u043b\u043e\u0432\u0435\u043a"</span>,
+        <span class="hljs-attr">"date_decision"</span>: <span class="hljs-literal">null</span>,
+        <span class="hljs-attr">"resolution_type"</span>: <span class="hljs-literal">null</span>,
+        <span class="hljs-attr">"date_submitted"</span>: <span class="hljs-literal">null</span>,
+        <span class="hljs-attr">"satisfied"</span>: <span class="hljs-literal">false</span>,
+        <span class="hljs-attr">"tuid"</span>: <span class="hljs-string">"UA-2018-07-09-000034-a.a2"</span>,
+        <span class="hljs-attr">"date_answered"</span>: <span class="hljs-literal">null</span>,
+        <span class="hljs-attr">"id"</span>: <span class="hljs-number">31907</span>,
+        <span class="hljs-attr">"uid"</span>: <span class="hljs-string">"780d884c26b64f13b014dc62a993f5a8"</span>,
+        <span class="hljs-attr">"cancellation_reason"</span>: <span class="hljs-literal">null</span>,
+        <span class="hljs-attr">"title"</span>: <span class="hljs-string">"\u0416\u0430\u043b\u043e\u0431\u0430 \u043a \u0442\u0435\u043d\u0434\u0435\u0440\u0443"</span>,
+        <span class="hljs-attr">"type_title"</span>: <span class="hljs-string">"\u041e\u0441\u043a\u0430\u0440\u0436\u0435\u043d\u043d\u044f \u0443\u043c\u043e\u0432 \u0442\u0435\u043d\u0434\u0435\u0440\u0443"</span>,
+        <span class="hljs-attr">"author"</span>: {},
+        <span class="hljs-attr">"tenderer_action"</span>: <span class="hljs-literal">null</span>,
+        <span class="hljs-attr">"date_escalated"</span>: <span class="hljs-literal">null</span>,
+        <span class="hljs-attr">"visible_name"</span>: <span class="hljs-string">"\u0421\u043a\u0430\u0440\u0433\u0430"</span>,
+        <span class="hljs-attr">"date_accepted"</span>: <span class="hljs-literal">null</span>,
+        <span class="hljs-attr">"status_text"</span>: <span class="hljs-string">"\u0432\u0456\u0434\u043f\u0440\u0430\u0432\u043b\u0435\u043d\u0430 \u0432 \u043e\u0440\u0433\u0430\u043d \u043e\u0441\u043a\u0430\u0440\u0436\u0435\u043d\u044c"</span>,
+        <span class="hljs-attr">"resolution"</span>: <span class="hljs-literal">null</span>
+      }
+    ],
+    <span class="hljs-attr">"lots"</span>: [
+      {
+        <span class="hljs-attr">"complaints"</span>: [
+          {
+            <span class="hljs-attr">"status"</span>: <span class="hljs-number">0</span>,
+            <span class="hljs-attr">"files"</span>: {
+              <span class="hljs-attr">"purchaseOwnerFiles"</span>: [],
+              <span class="hljs-attr">"reviewerAboveOwnerFiles"</span>: [],
+              <span class="hljs-attr">"complaintOwnerFiles"</span>: [
+                {
+                  <span class="hljs-attr">"mimetype"</span>: <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"history"</span>: [],
+                  <span class="hljs-attr">"uid"</span>: <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"descr"</span>: <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"title"</span>: <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"url"</span>: <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"date_created"</span>: <span class="hljs-string">"2018-07-09T10:48:55"</span>,
+                  <span class="hljs-attr">"date_modified"</span>: <span class="hljs-literal">null</span>,
+                  <span class="hljs-attr">"id"</span>: <span class="hljs-number">15023412</span>,
+                  <span class="hljs-attr">"confidentiality"</span>: <span class="hljs-string">"public"</span>
+                }
+              ],
+              <span class="hljs-attr">"reviewerOwnerFiles"</span>: []
+            },
+            <span class="hljs-attr">"description"</span>: <span class="hljs-string">"\u041c\u0430\u043b\u043e \u044d\u043a\u0448\u0435\u043d\u0430, 4 \u0438\u0437 10."</span>,
+            <span class="hljs-attr">"date_decision"</span>: <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"resolution_type"</span>: <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"date_submitted"</span>: <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"satisfied"</span>: <span class="hljs-literal">false</span>,
+            <span class="hljs-attr">"tuid"</span>: <span class="hljs-string">"UA-2018-07-09-000034-a.a4"</span>,
+            <span class="hljs-attr">"date_answered"</span>: <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"id"</span>: <span class="hljs-number">31909</span>,
+            <span class="hljs-attr">"uid"</span>: <span class="hljs-string">"86689d58210143c7aca7f294f3a46178"</span>,
+            <span class="hljs-attr">"cancellation_reason"</span>: <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"title"</span>: <span class="hljs-string">"\u0416\u0430\u043b\u043e\u0431\u0430 \u043d\u0430 \u043b\u043e\u0442 2"</span>,
+            <span class="hljs-attr">"type_title"</span>: <span class="hljs-string">"\u041e\u0441\u043a\u0430\u0440\u0436\u0435\u043d\u043d\u044f \u0443\u043c\u043e\u0432 \u0442\u0435\u043d\u0434\u0435\u0440\u0443"</span>,
+            <span class="hljs-attr">"author"</span>: {},
+            <span class="hljs-attr">"tenderer_action"</span>: <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"date_escalated"</span>: <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"visible_name"</span>: <span class="hljs-string">"\u0421\u043a\u0430\u0440\u0433\u0430"</span>,
+            <span class="hljs-attr">"date_accepted"</span>: <span class="hljs-literal">null</span>,
+            <span class="hljs-attr">"status_text"</span>: <span class="hljs-string">"\u0432\u0456\u0434\u043f\u0440\u0430\u0432\u043b\u0435\u043d\u0430 \u0432 \u043e\u0440\u0433\u0430\u043d \u043e\u0441\u043a\u0430\u0440\u0436\u0435\u043d\u044c"</span>,
+            <span class="hljs-attr">"resolution"</span>: <span class="hljs-literal">null</span>
+          }
+        ],
+        <span class="hljs-attr">"url"</span>: <span class="hljs-string">"http://zakupki.example.com:8000/gov/tenders/UA-2018-07-09-000034-a/lot-e581b5d8561e4babbc44d1a1478c83d7/complaints"</span>,
+        <span class="hljs-attr">"id"</span>: <span class="hljs-number">206409</span>
+      },
+      {
+        <span class="hljs-attr">"complaints"</span>: [],
+        <span class="hljs-attr">"url"</span>: <span class="hljs-literal">null</span>,
+        <span class="hljs-attr">"id"</span>: <span class="hljs-number">206410</span>
+      }
+    ],
+    <span class="hljs-attr">"url"</span>: <span class="hljs-string">"http://zakupki.example.com:8000/gov/tenders/UA-2018-07-09-000034-a/complaints"</span>,
+    <span class="hljs-attr">"id"</span>: <span class="hljs-number">2697586</span>,
+    <span class="hljs-attr">"permissions"</span>: {
+      <span class="hljs-attr">"award_choices"</span>: [],
+      <span class="hljs-attr">"lots"</span>: [
+        {
+          <span class="hljs-attr">"qualification_choices"</span>: [],
+          <span class="hljs-attr">"award_choices"</span>: [],
+          <span class="hljs-attr">"create_until"</span>: <span class="hljs-string">"2019-07-21T10:40:00"</span>,
+          <span class="hljs-attr">"id"</span>: <span class="hljs-number">206409</span>,
+          <span class="hljs-attr">"can_create"</span>: <span class="hljs-literal">true</span>
+        },
+        {
+          <span class="hljs-attr">"qualification_choices"</span>: [],
+          <span class="hljs-attr">"award_choices"</span>: [],
+          <span class="hljs-attr">"create_until"</span>: <span class="hljs-string">"2019-07-21T10:40:00"</span>,
+          <span class="hljs-attr">"id"</span>: <span class="hljs-number">206410</span>,
+          <span class="hljs-attr">"can_create"</span>: <span class="hljs-literal">true</span>
+        }
+      ],
+      <span class="hljs-attr">"qualification_choices"</span>: [],
+      <span class="hljs-attr">"id"</span>: <span class="hljs-number">2697586</span>,
+      <span class="hljs-attr">"create_until"</span>: <span class="hljs-string">"2019-07-21T10:40:00"</span>,
+      <span class="hljs-attr">"can_create"</span>: <span class="hljs-literal">true</span>
+    }
+  },
+  <span class="hljs-attr">"system"</span>: <span class="hljs-string">""</span>
+}</code></pre>    </article>
+  </body>
+</html>

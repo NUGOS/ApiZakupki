@@ -1,0 +1,56 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimal-ui">
+    <title>API endpoint for save information to Employee about bitrix url and filter_profile_id</title>
+    <link type="text/css" rel="stylesheet" href="../assets/css/github-markdown.css">
+    <link type="text/css" rel="stylesheet" href="../assets/css/pilcrow.css">
+    <link type="text/css" rel="stylesheet" href="../assets/css/hljs-github.min.css"/>
+  </head>
+  <body>
+    <article class="markdown-body"><h1 id="api-endpoint-for-save-information-to-employee-about-bitrix-url-and-filter_profile_id"><a class="header-link" href="#api-endpoint-for-save-information-to-employee-about-bitrix-url-and-filter_profile_id"></a>API endpoint for save information to Employee about bitrix url and filter_profile_id</h1>
+<p><strong>POST remote/api/v3/bitrix_subscription</strong></p>
+<p>request headers:</p>
+<ul class="list">
+<li><em>Api-Agent</em> - type: string, required</li>
+<li><em>Acc-Token</em> - type: string, required</li>
+</ul>
+<p>possible request arguments:</p>
+<ul class="list">
+<li><em>url</em> - type: str</li>
+<li><em>id</em> - type: str</li>
+</ul>
+<p>possible response fields:</p>
+<ul class="list">
+<li><em>status</em> - type: str, values: ok/error</li>
+</ul>
+<p>Examples:</p>
+<p>request:</p>
+<pre class="hljs"><code>clear &amp;&amp; curl -X GET --header <span class="hljs-string">"Acc-Token: 5a119647c3fa191ab60d41ed9fabf784453999d4"</span> --header <span class="hljs-string">"Api-Agent: zk_ios"</span> <span class="hljs-string">"http://my.example.com:5001/remote/api/v3/bitrix_subscription"</span> --data <span class="hljs-string">'{"url": "https://bitrix/some/user/subscription/123456789?param=12345", "id": "9902"}'</span> | json_pp</code></pre><p>response:</p>
+<pre class="hljs"><code>{
+  <span class="hljs-attr">"data"</span>: {},
+  <span class="hljs-attr">"errors"</span>: [],
+  <span class="hljs-attr">"status"</span>: <span class="hljs-string">"ok"</span>,
+  <span class="hljs-attr">"system"</span>: <span class="hljs-string">""</span>
+}</code></pre><p>request:</p>
+<pre class="hljs"><code>clear &amp;&amp; curl -X GET --header <span class="hljs-string">"Acc-Token: 5a119647c3fa191ab60d41ed9fabf784453999d4"</span> --header <span class="hljs-string">"Api-Agent: zk_ios"</span> <span class="hljs-string">"http://my.example.com:5001/remote/api/v3/bitrix_subscription"</span> --data <span class="hljs-string">'{"url": "https://bitrix/some/user/subscription/123456789?param=12345", "id": "990299"}'</span> | json_pp</code></pre><p>response:</p>
+<pre class="hljs"><code>{
+  <span class="hljs-attr">"errors"</span>: [],
+  <span class="hljs-attr">"status"</span>: <span class="hljs-string">"error"</span>,
+  <span class="hljs-attr">"system"</span>: <span class="hljs-string">"employee_filter_profile 990299 not found"</span>
+}</code></pre><p>request:</p>
+<pre class="hljs"><code>clear &amp;&amp; curl -X GET --header <span class="hljs-string">"Acc-Token: 5a119647c3fa191ab60d41ed9fabf784453999d4"</span> --header <span class="hljs-string">"Api-Agent: zk_ios"</span> <span class="hljs-string">"http://my.example.com:5001/remote/api/v3/bitrix_subscription"</span> --data <span class="hljs-string">'{"url": "https://bitrix/some/user/subscription/123456789?param=12345", "id": ""}'</span> | json_pp</code></pre><p>response:</p>
+<pre class="hljs"><code>{
+  <span class="hljs-attr">"errors"</span>: [],
+  <span class="hljs-attr">"status"</span>: <span class="hljs-string">"error"</span>,
+  <span class="hljs-attr">"system"</span>: <span class="hljs-string">"id must be a number"</span>
+}</code></pre><p>request:</p>
+<pre class="hljs"><code>clear &amp;&amp; curl -X GET --header <span class="hljs-string">"Acc-Token: 5a119647c3fa191ab60d41ed9fabf784453999d4"</span> --header <span class="hljs-string">"Api-Agent: zk_ios"</span> <span class="hljs-string">"http://my.example.com:5001/remote/api/v3/bitrix_subscription"</span> --data <span class="hljs-string">'{"id": "9902"}'</span> | json_pp</code></pre><p>response:</p>
+<pre class="hljs"><code>{
+  <span class="hljs-attr">"errors"</span>: [],
+  <span class="hljs-attr">"status"</span>: <span class="hljs-string">"error"</span>,
+  <span class="hljs-attr">"system"</span>: <span class="hljs-string">"url is required field"</span>
+}</code></pre>    </article>
+  </body>
+</html>

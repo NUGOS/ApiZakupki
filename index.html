@@ -1,0 +1,131 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimal-ui">
+    <title>Documentation for feature mobile API</title>
+    <link type="text/css" rel="stylesheet" href="assets/css/github-markdown.css">
+    <link type="text/css" rel="stylesheet" href="assets/css/pilcrow.css">
+    <link type="text/css" rel="stylesheet" href="assets/css/hljs-github.min.css"/>
+  </head>
+  <body>
+    <article class="markdown-body"><h1 id="documentation-for-feature-mobile-api"><a class="header-link" href="#documentation-for-feature-mobile-api"></a>Documentation for feature mobile API</h1>
+<p>Dev domain - <strong><a href="http://my.zk-trunk.uaprom/">http://my.zk-trunk.uaprom/</a></strong></p>
+<p>Production domain - <strong><a href="https://my.zakupki.prom.ua/">https://my.zakupki.prom.ua/</a></strong></p>
+<h2 id="[changelog](v3/changes.md)"><a class="header-link" href="#[changelog](v3/changes.md)"></a><a href="v3/changes.html">CHANGELOG</a></h2>
+<p><strong>UPDATE 2018-05-17</strong></p>
+<blockquote>
+<p>add new api version : <strong>v2</strong></p>
+<p>in V2 - implemented support for commercial purchases search</p>
+</blockquote>
+<p><strong>UPDATE 2018-06-14</strong></p>
+<blockquote>
+<p><strong>Api-Agent</strong> description added</p>
+</blockquote>
+<h3 id="api-agent-header"><a class="header-link" href="#api-agent-header"></a>Api-Agent header</h3>
+<p>Since we allow use api for some 3rd party integrations we need some tool for blocking
+api usage.</p>
+<p>As a simplest one - we have add another &quot;secret&quot; header to api call.</p>
+<p>Each api call should provide <code>Api-Agent</code> header with special value</p>
+<table>
+<thead>
+<tr>
+<th>api agent</th>
+<th>header value</th>
+<th>example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>IOS</td>
+<td>zk_ios</td>
+<td><code>Api-Agent: zk_ios</code></td>
+</tr>
+<tr>
+<td>Android</td>
+<td>zk_android</td>
+<td><code>Api-Agent: zk_android</code></td>
+</tr>
+<tr>
+<td>Custom integrations</td>
+<td>zk_integration</td>
+<td><code>Api-Agent: zk_integration</code></td>
+</tr>
+<tr>
+<td>Bitrix24</td>
+<td>zk-bitrix24</td>
+<td><code>Api-Agent: zk-bitrix24</code></td>
+</tr>
+<tr>
+<td>Zk_zimmer</td>
+<td>zk_zimmer</td>
+<td><code>Api-Agent: zk_zimmer</code></td>
+</tr>
+</tbody>
+</table>
+<p>If client does&#39;t provide <code>Api-Agent</code> header api will response with <code>406</code> http response.</p>
+<p>During some preriod we will allow api calls without this header</p>
+<p><strong>UPDATE 2019-02-19</strong></p>
+<blockquote>
+<p><strong>Multiply purchases view endpoint added</strong></p>
+</blockquote>
+<p>Now you can request more than one purchase at once, more details in <a href="./multiply_view.html">docs</a></p>
+<p><strong>UPDATE 2019-02-25</strong></p>
+<blockquote>
+<p><strong>uid</strong> in <a href="./entity_list.html">list</a> and <a href="./view_entity.html">view</a> purchases response </p>
+</blockquote>
+<p><strong>UPDATE 2019-02-06</strong></p>
+<blockquote>
+<p>#API version 3</p>
+</blockquote>
+<blockquote>
+<p><strong>id</strong> field in <a href="./entity_list.html">list</a> removed, use <strong>uid</strong> instead</p>
+<p>entity <a href="./entity_list.html">list</a> path changed to <strong>/search</strong></p>
+</blockquote>
+<p><strong><a href="v3/index.html">v3</a> specific documentation</strong></p>
+<p><strong><a href="html.tar.gz">DOWNLOAD</a></strong></p>
+<h3 id="table-of-content"><a class="header-link" href="#table-of-content"></a>Table of content</h3>
+<p><a href="./login.html">Auth</a></p>
+<p><a href="./tfa.html">TFA</a></p>
+<p><a href="./registration.html">Registration</a></p>
+<p><a href="./entity_list.html">Purchases list and search</a></p>
+<p><a href="./view_entity.html">View purchase</a></p>
+<p><a href="./view_entity_lot.html">View purchase lot</a></p>
+<p><a href="./favorites_planned.html">Add/remove to/from favorite and add/remove to/from plan participation</a></p>
+<p><a href="./notifications.html">Notifications</a></p>
+<p><a href="./static_data.html">Static data</a></p>
+<p><a href="./primary_classifiers.html">Primary classifiers</a></p>
+<p><a href="./saved_filters_list.html">User saved filters list</a></p>
+<p><a href="./saved_filter.html">User saved filter</a></p>
+<p><a href="./search_results_count.html">Search results count</a></p>
+<p><a href="./merchant_suggester.html">Merchant suggester</a></p>
+<p><a href="./user_profile.html">User profile</a></p>
+<p><a href="./switch_merchant.html">Switch merchant</a></p>
+<p><a href="./time_line.html">Time line</a></p>
+<p><a href="./fcm_token.html">Firebase token registration</a></p>
+<p><a href="./save_custom_filter.html">Save, rename and delete custom filter</a></p>
+<p><a href="./portal_entity_redirect.html">Portal entity redirect</a></p>
+<p><a href="./password_restore.html">Password restore</a></p>
+<p><a href="./complaint_list.html">Complaint list</a></p>
+<p><a href="./complaint_view.html">Complaint view</a></p>
+<p><a href="./claim_list.html">Claim list</a></p>
+<p><a href="./claim_view.html">Claim view</a></p>
+<p><a href="./create_claim.html">Create claim</a></p>
+<p><a href="./cancel_claim.html">Cancel claim</a></p>
+<p><a href="./question_list.html">Question list</a></p>
+<p><a href="./question_view.html">Question view</a></p>
+<p><a href="./guest_session.html">Guest session</a></p>
+<p><a href="./files_upload.html">Upload files</a></p>
+<p><a href="./assign_employees.html">Employees assign</a></p>
+<p><a href="./cabinet_lot_urls_to_api_urls.html">Convert cabinet lot urls to api lot urls</a></p>
+<p><a href="./open_data_bot_proxy.html">OpenDataBot proxy</a></p>
+<p><a href="./list_invoices.html">List invoices</a></p>
+<p><a href="./view_invoice.html">View invoice(pdf)</a></p>
+<p><a href="./list_cashflow.html">List cashflow</a></p>
+<p><a href="./create_invoice.html">Create invoice</a></p>
+<p><a href="./multiply_view.html">View multiply purchases</a></p>
+<p><a href="./auctions_in_range.html">Auctions in range</a></p>
+<p><a href="./list_by_search.html">List of tender uids by search qyery</a></p>
+    </article>
+  </body>
+</html>

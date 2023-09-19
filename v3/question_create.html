@@ -1,0 +1,75 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimal-ui">
+    <title>Create new question</title>
+    <link type="text/css" rel="stylesheet" href="../assets/css/github-markdown.css">
+    <link type="text/css" rel="stylesheet" href="../assets/css/pilcrow.css">
+    <link type="text/css" rel="stylesheet" href="../assets/css/hljs-github.min.css"/>
+  </head>
+  <body>
+    <article class="markdown-body"><h1 id="create-new-question"><a class="header-link" href="#create-new-question"></a>Create new question</h1>
+<p><strong>POST /remote/api/v3/question</strong></p>
+<p>request headers:</p>
+<ul class="list">
+<li><em>Api-Agent</em> - type: string, required</li>
+<li><em>Acc-Token</em> - type: string, required</li>
+</ul>
+<p>possible response fields:</p>
+<ul class="list">
+<li><em>status</em> - type: str, values: ok/error</li>
+<li><em>errors</em> - type: array of objects, validation errors</li>
+<li><em>data</em> - type: object</li>
+<li><em>system</em> - type: str, system error messages</li>
+</ul>
+<p>possible request fields:</p>
+<ul class="list">
+<li><em>state_purchase</em> - type: str, required</li>
+<li><em>state_purchase_lot</em> - type: str, optional if <strong>state_purchase</strong> passed</li>
+<li><em>question</em> - type: str, required</li>
+<li><em>title</em> - type: str, required</li>
+</ul>
+<p>possible response data fields:</p>
+<ul class="list">
+<li>see <a href="./question_view.html">view question</a></li>
+</ul>
+<h2 id="example"><a class="header-link" href="#example"></a>Example</h2>
+<p>request:</p>
+<pre class="hljs"><code>clear &amp;&amp; curl -X POST <span class="hljs-string">"http://my.example.com:5001/remote/api/v3/question"</span> --header <span class="hljs-string">"Content-Type: application/json"</span> --header <span class="hljs-string">"Acc-Token: 0064e3bbac9bd39c6d40af0f16b5852b4f84da22"</span> --header <span class="hljs-string">"Api-Agent: zk_ios"</span> --data <span class="hljs-string">'{"state_purchase": "861092d71ce38fec32e689cb7b672c400be9256b", "question": "q", "title": "t"}'</span> | json_pp</code></pre><p>response:</p>
+<pre class="hljs"><code>{
+   <span class="hljs-attr">"data"</span> : {
+      <span class="hljs-attr">"answer"</span> : <span class="hljs-literal">null</span>,
+      <span class="hljs-attr">"author"</span> : {
+         <span class="hljs-attr">"address"</span> : {
+            <span class="hljs-attr">"country_name"</span> : <span class="hljs-string">"Украина"</span>,
+            <span class="hljs-attr">"locality"</span> : <span class="hljs-string">"dfasdfsdaf"</span>,
+            <span class="hljs-attr">"postal_code"</span> : <span class="hljs-string">"123123"</span>,
+            <span class="hljs-attr">"region"</span> : <span class="hljs-string">"Волынская"</span>,
+            <span class="hljs-attr">"street_address"</span> : <span class="hljs-string">"adfasdf"</span>
+         },
+         <span class="hljs-attr">"contact_point"</span> : {
+            <span class="hljs-attr">"email"</span> : <span class="hljs-string">"some76@mailinator.com"</span>,
+            <span class="hljs-attr">"name"</span> : <span class="hljs-string">"фыафыв adsfasdf фвыаыфва"</span>,
+            <span class="hljs-attr">"telephone"</span> : <span class="hljs-string">"+380509999999"</span>
+         },
+         <span class="hljs-attr">"identifier"</span> : {
+            <span class="hljs-attr">"id"</span> : <span class="hljs-string">"35636178"</span>,
+            <span class="hljs-attr">"legal_name"</span> : <span class="hljs-string">"ООО \"some76\""</span>,
+            <span class="hljs-attr">"scheme"</span> : <span class="hljs-string">"UA-EDR"</span>
+         },
+         <span class="hljs-attr">"name"</span> : <span class="hljs-string">"some76"</span>
+      },
+      <span class="hljs-attr">"date"</span> : <span class="hljs-literal">null</span>,
+      <span class="hljs-attr">"date_answered"</span> : <span class="hljs-literal">null</span>,
+      <span class="hljs-attr">"description"</span> : <span class="hljs-string">"q"</span>,
+      <span class="hljs-attr">"question_of"</span> : <span class="hljs-string">"tender"</span>,
+      <span class="hljs-attr">"title"</span> : <span class="hljs-string">"t"</span>,
+      <span class="hljs-attr">"uid"</span> : <span class="hljs-string">"9a703613bba33f8db1e89e5368cda5dbc336ce1a"</span>
+   },
+   <span class="hljs-attr">"errors"</span> : [],
+   <span class="hljs-attr">"status"</span> : <span class="hljs-string">"ok"</span>,
+   <span class="hljs-attr">"system"</span> : <span class="hljs-string">""</span>
+}</code></pre>    </article>
+  </body>
+</html>

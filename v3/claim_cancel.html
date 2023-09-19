@@ -1,0 +1,54 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimal-ui">
+    <title>Cancel claim</title>
+    <link type="text/css" rel="stylesheet" href="../assets/css/github-markdown.css">
+    <link type="text/css" rel="stylesheet" href="../assets/css/pilcrow.css">
+    <link type="text/css" rel="stylesheet" href="../assets/css/hljs-github.min.css"/>
+  </head>
+  <body>
+    <article class="markdown-body"><h1 id="cancel-claim"><a class="header-link" href="#cancel-claim"></a>Cancel claim</h1>
+<p><strong>POST remote/api/v3/claim/{claim_id}/cancel</strong></p>
+<blockquote>
+<p>id - claim id from <a href="./claims_list.html">claims list</a> page or
+<a href="./view.html">view purchase</a> or <a href="./view_lot.html">view lot</a></p>
+<p>purchase - state_purchase uid from <a href="./view.html">view purchase</a></p>
+<p>purchase_lot - state_purchase_lot uid from <a href="./view_lot.html">view lot</a></p>
+</blockquote>
+<p>request headers:</p>
+<ul class="list">
+<li><em>Api-Agent</em> - type: string, reuqired</li>
+<li><em>Acc-Token</em> - type: string, required</li>
+</ul>
+<p>possible response fields:</p>
+<ul class="list">
+<li><em>status</em> - type: str, values: ok/error</li>
+<li><em>errors</em> - type: array of objects, validation errors</li>
+<li><em>data</em> - type: object</li>
+<li><em>system</em> - type: str, system error messages</li>
+</ul>
+<p>possible request fields:</p>
+<ul class="list">
+<li><em>reason</em> - type: str, required</li>
+<li><em>purchase</em> - type: str, required</li>
+<li><em>purchase_lot</em> - type: str, optional if <strong>purchase</strong> passed</li>
+</ul>
+<p>possible response data fields:</p>
+<ul class="list">
+<li><em>id</em> - type: str</li>
+</ul>
+<h1 id="examples"><a class="header-link" href="#examples"></a>Examples</h1>
+<p>request:</p>
+<pre class="hljs"><code>clear &amp;&amp; curl --header <span class="hljs-string">"Acc-Token: auth_token"</span> --header <span class="hljs-string">"Api-Agent: zk_ios"</span> --header <span class="hljs-string">"Content-Type: application/json"</span> -X POST <span class="hljs-string">"http://my.zakupki.example.com:8000/remote/api/v3/claim/485ae874ce5511e98979cf44cd9c0a51/cancel"</span> --data @request_data</code></pre><p>response:</p>
+<pre class="hljs"><code>{
+  <span class="hljs-attr">"status"</span>: <span class="hljs-string">"ok"</span>,
+  <span class="hljs-attr">"errors"</span>: [],
+  <span class="hljs-attr">"data"</span>: {
+    <span class="hljs-attr">"id"</span>: <span class="hljs-string">"485ae874ce5511e98979cf44cd9c0a51"</span>
+  },
+  <span class="hljs-attr">"system"</span>: <span class="hljs-string">""</span>
+}</code></pre>    </article>
+  </body>
+</html>

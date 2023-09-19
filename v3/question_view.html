@@ -1,0 +1,81 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimal-ui">
+    <title>View single question</title>
+    <link type="text/css" rel="stylesheet" href="../assets/css/github-markdown.css">
+    <link type="text/css" rel="stylesheet" href="../assets/css/pilcrow.css">
+    <link type="text/css" rel="stylesheet" href="../assets/css/hljs-github.min.css"/>
+  </head>
+  <body>
+    <article class="markdown-body"><h1 id="view-single-question"><a class="header-link" href="#view-single-question"></a>View single question</h1>
+<p><strong>GET /remote/api/v3/questions/{tuid}/question/{quid}</strong></p>
+<blockquote>
+<p>tuid - purchase <strong>uid</strong> from <a href="./view.html">purchase view</a> or <a href="./search.html">purchase search</a>
+quid - question <strong>uid</strong> from <a href="./questions.html">questions list</a></p>
+</blockquote>
+<p>request headers:</p>
+<ul class="list">
+<li><em>Api-Agent</em> - type: string, required</li>
+<li><em>Acc-Token</em> - type: string, required</li>
+</ul>
+<p>possible response fields:</p>
+<ul class="list">
+<li><em>status</em> - type: str, values: ok/error</li>
+<li><em>errors</em> - type: array of objects, validation errors</li>
+<li><em>data</em> - type: object</li>
+<li><em>system</em> - type: str, system error messages</li>
+</ul>
+<p>response data fields:</p>
+<ul class="list">
+<li><strong>answer</strong> - type: str or null </li>
+<li><strong>author</strong> - type: <strong>merchant</strong> object or empty, see <a href="./view.html">tender view</a> </li>
+<li><strong>date</strong> - type: date string, format <strong>YYYY-MM-DDTHH:MM:SS</strong> or null</li>
+<li><strong>date_answered</strong> - type: date string, format <strong>YYYY-MM-DDTHH:MM:SS</strong> or null</li>
+<li><strong>description</strong> - type: str</li>
+<li><strong>question_of</strong> - type: str</li>
+<li><strong>title</strong> - type: str</li>
+<li><strong>uid</strong> - type: str</li>
+</ul>
+<p>Example:</p>
+<p>request:</p>
+<pre class="hljs"><code>clear &amp;&amp; curl -X GET <span class="hljs-string">"http://my.example.com:5001/remote/api/v3/questions/f06cc892fd9841fca0b4a8ae4859f4c8/question/46d0bc4ae1954233a8de6c531a46f51d"</span> --header <span class="hljs-string">"Acc-Token: e53e0e4a34784eb359a9abba73b81927e2cb48fa"</span> --header <span class="hljs-string">"Api-Agent: zk_ios"</span> | json_pp</code></pre><p>response:</p>
+<pre class="hljs"><code>{
+   <span class="hljs-attr">"data"</span> : {
+      <span class="hljs-attr">"answer"</span> : <span class="hljs-string">"asdfasdf"</span>,
+      <span class="hljs-attr">"author"</span> : {
+         <span class="hljs-attr">"address"</span> : {
+            <span class="hljs-attr">"countryName"</span> : <span class="hljs-string">"Украина"</span>,
+            <span class="hljs-attr">"locality"</span> : <span class="hljs-string">"sdfdasdfa"</span>,
+            <span class="hljs-attr">"postalCode"</span> : <span class="hljs-string">"12332"</span>,
+            <span class="hljs-attr">"region"</span> : <span class="hljs-string">"Донецкая"</span>,
+            <span class="hljs-attr">"streetAddress"</span> : <span class="hljs-string">"asdfasdfasdf"</span>
+         },
+         <span class="hljs-attr">"contactPoint"</span> : {
+            <span class="hljs-attr">"email"</span> : <span class="hljs-string">"some78@mailinator.com"</span>,
+            <span class="hljs-attr">"name"</span> : <span class="hljs-string">"some dasfasdf some"</span>,
+            <span class="hljs-attr">"telephone"</span> : <span class="hljs-string">"+38042"</span>
+         },
+         <span class="hljs-attr">"identifier"</span> : {
+            <span class="hljs-attr">"id"</span> : <span class="hljs-string">"23412343241"</span>,
+            <span class="hljs-attr">"legalName"</span> : <span class="hljs-string">"Название моей компании"</span>,
+            <span class="hljs-attr">"scheme"</span> : <span class="hljs-string">"UA-EDR"</span>
+         },
+         <span class="hljs-attr">"name"</span> : <span class="hljs-string">"Название моей компании"</span>
+      },
+      <span class="hljs-attr">"date"</span> : <span class="hljs-literal">null</span>,
+      <span class="hljs-attr">"date_answered"</span> : <span class="hljs-literal">null</span>,
+      <span class="hljs-attr">"description"</span> : <span class="hljs-string">"asdfasdf"</span>,
+      <span class="hljs-attr">"question_of"</span> : <span class="hljs-string">"tender"</span>,
+      <span class="hljs-attr">"title"</span> : <span class="hljs-string">"asdfasdf"</span>,
+      <span class="hljs-attr">"uid"</span> : <span class="hljs-string">"3b38e0a2432bb1ae2f334608eca58e8a96472707"</span>,
+      <span class="hljs-attr">"purchase_uid"</span>: <span class="hljs-string">"f06cc892fd9841fca0b4a8ae4859f4c8"</span>,
+      <span class="hljs-attr">"lot_uid"</span>: <span class="hljs-string">"b4c4cbb2f86a4cfe847bb6dc24096e51"</span>
+   },
+   <span class="hljs-attr">"errors"</span> : [],
+   <span class="hljs-attr">"status"</span> : <span class="hljs-string">"ok"</span>,
+   <span class="hljs-attr">"system"</span> : <span class="hljs-string">""</span>
+}</code></pre>    </article>
+  </body>
+</html>
